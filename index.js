@@ -27,6 +27,6 @@ app.get('/', (req, res) => {
 });
 
 // starting the server
-app.listen(3001, () => {
+app.listen(3000, () => {
     console.log('listening on http://localhost:3001');
 });
