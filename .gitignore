@@ -4,3 +4,6 @@
 /.idea/akaitodo-backend2.iml
 /.idea/modules.xml
 /.idea/vcs.xml
+
+/.env.local
+/.env.*.local
