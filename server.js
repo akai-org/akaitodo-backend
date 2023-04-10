@@ -9,10 +9,20 @@ const morgan = require('morgan');
 const { logger } = require('./src/middlewares/logEvents');
 const { errorHandler } = require('./src/middlewares/errorHandler')
 
-// Add env component
-if (process.env.NODE_ENV !== 'production') {
+// Add env component - use only when docker is not used
+if(process.env.SERVICE_NAME === undefined)
+{
+    // --- --- { path: `./.env.${process.env.NODE_ENV}` }
     require('dotenv').config();
+    require('dotenv').config({ path: `.env.local`, override: true });     
 }
+
+const db = require('./src/models');
+
+// Sync database
+(async () => {
+    await db.sequelize.sync();
+})();
 
 const app = express();
 
@@ -22,7 +32,7 @@ app.use(helmet());
 app.use(bodyParser.json());
 
 // enabling CORS for all requests
-app.use(cors());
+app.use(cors({origin: '*'}));  //TODO change after match domain for frontend
 
 // adding morgan to log HTTP requests
 app.use(morgan('combined'));
