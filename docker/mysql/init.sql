@@ -1,0 +1,12 @@
+CREATE DATABASE IF NOT EXISTS akaitodo;
+
+USE akaitodo;
+
+-- DROP TABLE IF EXISTS user;
+
+-- CREATE TABLE user (
+--     id BIGINT UNASSIGNED NOT NULL AUTO_INCREMENT,
+--     name VARCHAR(255) NOT NULL,
+--     PRIMARY KEY (id),
+--     CONSTRAINT UQ_User_Email UNIQUE (email)
+-- )
