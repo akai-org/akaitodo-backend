@@ -15,3 +15,5 @@ router.delete("/:uid", userControllers.deleteUser);
 router.patch("/:uid/passchange", userControllers.updateUserPassword);
 
 router.patch("/:uid/passreset", userControllers.resetUserPassword);
+
+module.exports = router;

@@ -1,8 +1,8 @@
 const db = require("../models/index")
-const Task = require("../models/task.js")(db);
+const Task = db.Task;
 
 // Gets a task
-export const getTask = async (req, res) => {
+const getTask = async (req, res) => {
     const id = req.params["id"];
     try {
         const task = await Task.findOne({
@@ -15,7 +15,7 @@ export const getTask = async (req, res) => {
 };
 
 // Creates a new task
-export const createTask = async (req, res) => {
+const createTask = async (req, res) => {
     const task = req.body; // Task data as JSON/JS object in request body
     try {
         await Task.create({
@@ -31,7 +31,7 @@ export const createTask = async (req, res) => {
 };
 
 // Updates a task
-export const updateTask = async (req, res) => {
+const updateTask = async (req, res) => {
     const id = req.params["id"];
     const { title, content, sheduledAt, isComplered } = req.body;
     let updateValues = {};
@@ -49,7 +49,7 @@ export const updateTask = async (req, res) => {
 };
 
 // Deletes a task
-export const deleteTask = async (req, res) => {
+const deleteTask = async (req, res) => {
     const id = req.params["id"];
     try {
         await Task.destroy({ where: { taskNo: id } });
@@ -59,7 +59,7 @@ export const deleteTask = async (req, res) => {
 };
 
 // Gets a list of tasks defined by start and end date, if both are empty gets a list of all tasks
-export const getTasksByDate = async (req, res) => {
+const getTasksByDate = async (req, res) => {
     const uid = req.params["uid"];
     const startDate = req.params["start_date"];
     const endDate = req.params["end_date"];
@@ -76,3 +76,5 @@ export const getTasksByDate = async (req, res) => {
         console.error(err);
     }
 };
+
+module.exports = { getTask, createTask, updateTask, deleteTask, getTasksByDate }

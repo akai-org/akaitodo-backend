@@ -1,8 +1,8 @@
 const db = require("../models/index")
-const User = require("../models/user.js")(db);
+const User = db.User;
 
 // Get user with a given id
-export const getUser = async (req, res) => {
+const getUser = async (req, res) => {
     const uid = req.params["uid"]; // User id from request parameter
     try {
         const user = await User.findOne({
@@ -15,7 +15,7 @@ export const getUser = async (req, res) => {
 };
 
 // Create a new user
-export const createUser = async (req, res) => {
+const createUser = async (req, res) => {
     const user = req.body; // User data as JSON/JS object in request body
     try {
         await User.create({
@@ -29,7 +29,7 @@ export const createUser = async (req, res) => {
 };
 
 // Update user data
-export const updateUser = async (req, res) => {
+const updateUser = async (req, res) => {
     const uid = req.params["uid"]; // As in getUser
     const { name, email, password } = req.body; // Need to specify which user data can be updated
     let updateValues = {};
@@ -46,7 +46,7 @@ export const updateUser = async (req, res) => {
 };
 
 // Delete a user
-export const deleteUser = async (req, res) => {
+const deleteUser = async (req, res) => {
     const uid = req.params["uid"];
     try {
         User.destroy({ where: { id: uid } });
@@ -56,7 +56,7 @@ export const deleteUser = async (req, res) => {
 };
 
 // Update password
-export const updateUserPassword = async (req, res) => {
+const updateUserPassword = async (req, res) => {
     const uid = req.params["uid"];
     const password = req.body;
     try {
@@ -67,11 +67,13 @@ export const updateUserPassword = async (req, res) => {
 };
 
 // Reset password
-export const resetUserPassword = async (req, res) => {
+const resetUserPassword = async (req, res) => {
     const uid = req.params["uid"];
 };
 
 // Account verification
-export const verifyEmailToken = async (req, res) => {
+const verifyEmailToken = async (req, res) => {
     const token = req.params["token"];
 };
+
+module.exports = { getUser, createUser, updateUser, deleteUser, updateUserPassword, resetUserPassword, verifyEmailToken }

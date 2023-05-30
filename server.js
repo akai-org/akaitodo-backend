@@ -9,6 +9,10 @@ const morgan = require('morgan');
 const { logger } = require('./src/middlewares/logEvents');
 const { errorHandler } = require('./src/middlewares/errorHandler')
 
+const notesApi = require('./src/routes/noteroutes');
+const tasksApi = require('./src/routes/taskroutes');
+const usersApi = require('./src/routes/userroutes');
+
 // Add env component - use only when docker is not used
 if(process.env.SERVICE_NAME === undefined)
 {
@@ -49,7 +53,9 @@ app.get('/', (req, res) => {
     ]);
 });
 
-//app.get('/api', apiRouter);
+app.use('/api/users', usersApi);
+app.use('/api/tasks', tasksApi);
+app.use('/api/notes', notesApi);
 
 // starting the server
 app.listen(process.env.PORT, () => {

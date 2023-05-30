@@ -1,8 +1,8 @@
 const db = require("../models/index")
-const Note = require("../models/note.js")(db);
+const Note = db.Note;
 
 // Gets all notes from a user with a given id
-export const getUserNotes = async (req, res) => {
+const getUserNotes = async (req, res) => {
     const uid = req.params["uid"]; // User id
     try {
         const notes = await Note.findAll({
@@ -15,7 +15,7 @@ export const getUserNotes = async (req, res) => {
 };
 
 // Gets a note with a given number
-export const getNote = async (req, res) => {
+const getNote = async (req, res) => {
     const id = req.params["id"]; // Note number
     try {
         const note = await Note.findOne({
@@ -28,7 +28,7 @@ export const getNote = async (req, res) => {
 };
 
 // Adds a note
-export const addNote = async (req, res) => {
+const addNote = async (req, res) => {
     const note = req.body; // Note data as JSON object
     try {
         await Note.create({
@@ -43,7 +43,7 @@ export const addNote = async (req, res) => {
 };
 
 // Update a note
-export const updateNote = async (req, res) => {
+const updateNote = async (req, res) => {
     const id = req.params["id"]; // Note number
     const { title, content, iconCode } = req.body;
     let updateValues = {};
@@ -60,7 +60,7 @@ export const updateNote = async (req, res) => {
 };
 
 // Delete a note
-export const deleteNote = async (req, res) => {
+const deleteNote = async (req, res) => {
     const id = req.params["id"];
     try {
         await Note.destroy({ where: { noteNo: id } });
@@ -70,7 +70,7 @@ export const deleteNote = async (req, res) => {
 };
 
 // Filters notes by user and name - TODO
-export const filterNote = async (req, res) => {
+const filterNote = async (req, res) => {
     const uid = req.params["uid"];
     const name = req.params["name"];
     try {
@@ -85,3 +85,5 @@ export const filterNote = async (req, res) => {
         console.error(err);
     }
 };
+
+module.exports = { getUserNotes, getNote, addNote, updateNote, deleteNote, filterNote }
