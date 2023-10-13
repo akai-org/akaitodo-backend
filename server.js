@@ -16,9 +16,11 @@ if(process.env.DB_NAME === undefined)
   dotenv.config({ path: ".env.local", override: true });
 }
 
-const notesApi = require("./src/routes/noteroutes");
-const tasksApi = require("./src/routes/taskroutes");
-const usersApi = require("./src/routes/userroutes");
+const notesApi = require('./src/routes/noteroutes');
+const tasksApi = require('./src/routes/taskroutes');
+const usersApi = require('./src/routes/userroutes');
+const tokenApi = require('./src/routes/authrouter');
+const securityApi = require('./src/routes/securityrouter');
 
 const db = require("./src/models");
 
@@ -49,9 +51,13 @@ app.get("/", (req, res) => {
   res.send([{ title: "Hello, world!" }]);
 });
 
-app.use("/api/users", usersApi);
-app.use("/api/tasks", tasksApi);
-app.use("/api/notes", notesApi);
+app.use('/api/users', usersApi);
+app.use('/api/tasks', tasksApi);
+app.use('/api/notes', notesApi);
+app.use('/api/token', tokenApi);
+app.use('/api/login', securityApi.login);
+app.use('/api/register', securityApi.register);
+app.use('/api/logout', securityApi.logout);
 
 // starting the server
 app.listen(process.env.PORT, () => {
