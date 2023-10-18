@@ -14,7 +14,6 @@ services:
       - 3306
     environment:
       MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_ROOT_PASSWORD: ${DB_ADMIN_PASS}
       SERVICE_TAGS: ${APP_TAG}
@@ -35,9 +34,8 @@ services:
     environment:
       PORT: 3000
       DB_HOST: mysqldb # point to mysql db docker service
-      DB_PORT: 3306    # point to internal container port
+      DB_PORT: 3306 # point to internal container port
       DB_DIALECT: mysql
-      DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
       DB_NAME: ${DB_NAME}
       SERVICE_TAGS: ${APP_TAG}

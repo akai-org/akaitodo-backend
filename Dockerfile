@@ -4,5 +4,5 @@ COPY package*.json /usr/code
 RUN npm install
 COPY . .
 EXPOSE 3000
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:dev"]
 #change to start:prod after deployment

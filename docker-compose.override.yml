@@ -1,6 +1,6 @@
 # Instrukcja.
 #
-# 1. Zmienne środowiskowe 'environment' 
+# 1. Zmienne środowiskowe 'environment'
 #     prezentowane są w postaci tablicy, jeśli chcemy zmienić albo dodać jakąś wartość wystarczy ją zmodyfikować/dopisać
 #
 # Przykład
@@ -11,7 +11,7 @@
 #       SERVICE_TAGS: 'dev'
 #
 #
-# 2. Porty 
+# 2. Porty
 #     prezentowane są w następujący sposób: "A:B", gdzie A to port, przez który możemy wejść (np. w przeglądarce) (tz zwenętrzy) na port B w kontenerze (wewnętrzny).
 #
 # Przykład
@@ -22,13 +22,13 @@
 #     ports:
 #       - "3307:3306"
 
-version: '3.9'
+version: "3.9"
 
 services:
   mysqldb:
     environment:
-      SERVICE_TAGS: 'dev'
+      SERVICE_TAGS: "dev"
 
   nodeapp:
     environment:
-      SERVICE_TAGS: 'dev'
+      SERVICE_TAGS: "dev"
