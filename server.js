@@ -24,7 +24,7 @@ const db = require("./src/models");
 
 // Sync database
 (async () => {
-  await db.sequelize.sync();
+  await db.sequelize.sync({ force: true });
 })();
 
 const app = express();

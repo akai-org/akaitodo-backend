@@ -1,5 +1,5 @@
-const db = require("../models/index")
-const User = db.User;
+const db = require("../models/index");
+const User = db.models.User;
 
 // Get user with a given id
 const getUser = async (req, res) => {
@@ -16,16 +16,25 @@ const getUser = async (req, res) => {
 
 // Create a new user
 const createUser = async (req, res) => {
-    const user = req.body; // User data as JSON/JS object in request body
-    try {
-        await User.create({
-            name: user.name,
-            email: user.email,
-            password: user.password,
+    const userData = req.body; // User data as JSON/JS object in request body
+    await User.create(
+        {
+            username: userData.username,
+            email: userData.email,
+            password: userData.password
+        }
+    )
+        .then((user) => {
+            user.save();
+            res.status(200).send({
+                message: "User created!",
+                response: { ...user.dataValues }
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500);
         });
-    } catch (err) {
-        console.error(err);
-    }
 };
 
 // Update user data
@@ -48,11 +57,19 @@ const updateUser = async (req, res) => {
 // Delete a user
 const deleteUser = async (req, res) => {
     const uid = req.params["uid"];
-    try {
-        User.destroy({ where: { id: uid } });
-    } catch (err) {
-        console.error(err);
-    }
+    await User.destroy({ where: { id: uid } })
+        .then((rowNumber) => {
+            rowNumber !== 0
+                ? res.status(200).send({
+                    message: `User with ${uid} deleted`,
+                })
+                : res.status(404).send({
+                    message: "User not found!"
+                })
+        })
+        .catch((err) => {
+            res.status(500).send(err);
+        })
 };
 
 // Update password
@@ -76,4 +93,12 @@ const verifyEmailToken = async (req, res) => {
     const token = req.params["token"];
 };
 
-module.exports = { getUser, createUser, updateUser, deleteUser, updateUserPassword, resetUserPassword, verifyEmailToken }
+module.exports = {
+    getUser,
+    createUser,
+    updateUser,
+    deleteUser,
+    updateUserPassword,
+    resetUserPassword,
+    verifyEmailToken,
+};
