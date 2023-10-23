@@ -2,22 +2,19 @@ version: "3.9"
 
 services:
   mysqldb:
-    image: mysql:latest
+    image: mysql:${MYSQL_TAG}
     container_name: mysql-container
-    command: --authentication_policy=mysql_native_password
+    command: --default_authentication_plugin=caching_sha2_password
     volumes:
       - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/0_init.sql
-      - ./docker/data/database:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     ports:
       - ${DB_PORT}:3306
-    expose:
-      - 3306
     environment:
-      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_DATABASE: akaitodo
+      MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASS}
       MYSQL_ROOT_PASSWORD: ${DB_ADMIN_PASS}
-      SERVICE_TAGS: ${APP_TAG}
-      SERVICE_NAME: mysqldb
     networks:
       - akai-todo-network
 
@@ -27,19 +24,18 @@ services:
     image: nodeapp:v1
     volumes:
       - ./:/usr/code
+      - /usr/code/node_modules
     ports:
       - ${NODE_PORT}:3000
-    expose:
-      - 3000
     environment:
       PORT: 3000
       DB_HOST: mysqldb # point to mysql db docker service
-      DB_PORT: 3306 # point to internal container port
+      DB_PORT: 3306    # point to internal container port
       DB_DIALECT: mysql
+      DB_NAME: akaitodo
+      MYSQL_ROOT_PASSWORD: ${DB_ADMIN_PASS}
+      DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
-      DB_NAME: ${DB_NAME}
-      SERVICE_TAGS: ${APP_TAG}
-      SERVICE_NAME: nodeapp
     depends_on:
       - mysqldb
     networks:
@@ -48,3 +44,6 @@ services:
 networks:
   akai-todo-network:
     driver: bridge
+
+volumes:
+  mysql-data:

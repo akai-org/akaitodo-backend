@@ -2,11 +2,7 @@ CREATE DATABASE IF NOT EXISTS akaitodo;
 
 USE akaitodo;
 
--- DROP TABLE IF EXISTS user;
+-- currently new user is created by docker
+-- CREATE USER 'todouser'@'localhost' IDENTIFIED BY 'todoPass@12';
 
--- CREATE TABLE user (
---     id BIGINT UNASSIGNED NOT NULL AUTO_INCREMENT,
---     name VARCHAR(255) NOT NULL,
---     PRIMARY KEY (id),
---     CONSTRAINT UQ_User_Email UNIQUE (email)
--- )
+-- GRANT ALL PRIVILEGES ON akaitodo.* TO 'todouser'@'localhost';

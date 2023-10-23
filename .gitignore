@@ -9,7 +9,6 @@
 /.env.*.local
 /.docker.env.local
 /.docker.env.*.local
-/docker/data
 
 /akaitodo-backend-moje.code-workspace
 /def.code-workspace

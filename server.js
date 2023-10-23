@@ -9,13 +9,16 @@ const dotenv = require("dotenv");
 const { logger } = require("./src/middlewares/logEvents");
 const { errorHandler } = require("./src/middlewares/errorHandler");
 
+if(process.env.DB_NAME === undefined)
+{
+  dotenv.config();
+  // allow to use .env instead of .env.local
+  dotenv.config({ path: ".env.local", override: true });
+}
+
 const notesApi = require("./src/routes/noteroutes");
 const tasksApi = require("./src/routes/taskroutes");
 const usersApi = require("./src/routes/userroutes");
-
-dotenv.config();
-// comment below if you want to use .env instead of .env.local
-dotenv.config({ path: ".env.local", override: true });
 
 const db = require("./src/models");
 
