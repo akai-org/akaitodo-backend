@@ -1,5 +1,5 @@
-const db = require("../models/index")
-const Task = db.Task;
+const db = require("../models/index");
+const Task = db.models.Task;
 
 // Gets a task
 const getTask = async (req, res) => {
@@ -8,25 +8,32 @@ const getTask = async (req, res) => {
         const task = await Task.findOne({
             where: { taskNo: id },
         });
-        res.send(task.toJSON());
+        if (!task) {
+            return res.status(404).send({ message: `No task with id: ${id}` });
+        }
+        res.status(200).send(task.toJSON());
     } catch (err) {
         console.error(err);
+        res.status(500);
     }
 };
 
 // Creates a new task
 const createTask = async (req, res) => {
-    const task = req.body; // Task data as JSON/JS object in request body
+    const taskData = req.body;
     try {
-        await Task.create({
-            userId: task.userId,
-            title: task.title,
-            content: task.content,
-            sheduledAt: task.sheduledAt,
+        const task = await Task.create({
+            userId: taskData.userId,
+            title: taskData.title,
+            content: taskData.content,
+            sheduledAt: taskData.sheduledAt,
             isComplered: false,
         });
+        task.save();
+        res.status(200).send({ message: "Task added" });
     } catch (err) {
         console.error(err);
+        res.status(500);
     }
 };
 
@@ -40,11 +47,16 @@ const updateTask = async (req, res) => {
     if (sheduledAt) updateValues.title = sheduledAt;
     if (isComplered) updateValues.title = isComplered;
     try {
-        await Task.update(updateValues, {
+        const task = await Task.update(updateValues, {
             where: { taskNo: id },
         });
+        if (!task) {
+            return res.status(404).send({ message: `No task with id: ${id}` });
+        }
+        res.status(200).send({ message: "Task updated" });
     } catch (err) {
         console.error(err);
+        res.status(500);
     }
 };
 
@@ -53,8 +65,10 @@ const deleteTask = async (req, res) => {
     const id = req.params["id"];
     try {
         await Task.destroy({ where: { taskNo: id } });
+        res.status(200).send({ message: "Task deleted or doesn't exist" });
     } catch (err) {
         console.error(err);
+        res.status(500);
     }
 };
 
@@ -71,10 +85,17 @@ const getTasksByDate = async (req, res) => {
         const tasks = await Task.findAll({
             where: filter,
         });
-        res.send(tasks);
+        res.status(200).send(tasks.toJSON());
     } catch (err) {
         console.error(err);
+        res.status(500);
     }
 };
 
-module.exports = { getTask, createTask, updateTask, deleteTask, getTasksByDate }
+module.exports = {
+    getTask,
+    createTask,
+    updateTask,
+    deleteTask,
+    getTasksByDate,
+};

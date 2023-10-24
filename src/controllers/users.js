@@ -3,73 +3,70 @@ const User = db.models.User;
 
 // Get user with a given id
 const getUser = async (req, res) => {
-    const uid = req.params["uid"]; // User id from request parameter
+    const uid = req.params["uid"];
     try {
         const user = await User.findOne({
             where: { id: uid },
         });
-        res.send(user.toJSON());
+        if (!user) {
+            return res.status(404).send({ message: `No user with id: ${uid}` });
+        }
+        res.status(200).send(user.toJSON());
     } catch (err) {
         console.error(err);
+        res.status(500);
     }
 };
 
 // Create a new user
 const createUser = async (req, res) => {
-    const userData = req.body; // User data as JSON/JS object in request body
-    await User.create(
-        {
+    const userData = req.body;
+    try {
+        const user = await User.create({
             username: userData.username,
             email: userData.email,
-            password: userData.password
-        }
-    )
-        .then((user) => {
-            user.save();
-            res.status(200).send({
-                message: "User created!",
-                response: { ...user.dataValues }
-            });
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500);
+            password: userData.password,
         });
+        user.save();
+        res.status(200).send({ message: "User created" });
+    } catch (err) {
+        console.error(err);
+        res.status(500);
+    }
 };
 
 // Update user data
 const updateUser = async (req, res) => {
-    const uid = req.params["uid"]; // As in getUser
-    const { name, email, password } = req.body; // Need to specify which user data can be updated
+    const uid = req.params["uid"];
+    const { username, email, password } = req.body;
     let updateValues = {};
-    if (name) updateValues.name = name;
+    if (username) updateValues.username = username;
     if (email) updateValues.email = email;
     if (password) updateValues.password = password;
     try {
-        await User.update(updateValues, {
+        const user = await User.update(updateValues, {
             where: { id: uid },
         });
+        if (!user) {
+            return res.status(404).send({ message: `No user with id: ${uid}` });
+        }
+        res.status(200).send({ message: "User data updated" });
     } catch (err) {
         console.error(err);
+        res.status(500);
     }
 };
 
 // Delete a user
 const deleteUser = async (req, res) => {
     const uid = req.params["uid"];
-    await User.destroy({ where: { id: uid } })
-        .then((rowNumber) => {
-            rowNumber !== 0
-                ? res.status(200).send({
-                    message: `User with ${uid} deleted`,
-                })
-                : res.status(404).send({
-                    message: "User not found!"
-                })
-        })
-        .catch((err) => {
-            res.status(500).send(err);
-        })
+    try {
+        User.destroy({ where: { id: uid } });
+        res.status(200).send({ message: "User deleted or doesn't exist" });
+    } catch (err) {
+        console.error(err);
+        res.status(500);
+    }
 };
 
 // Update password
@@ -77,9 +74,17 @@ const updateUserPassword = async (req, res) => {
     const uid = req.params["uid"];
     const password = req.body;
     try {
-        await User.update({ password: password }, { where: { id: uid } });
+        const user = await User.update(
+            { password: password },
+            { where: { id: uid } }
+        );
+        if (!user) {
+            return res.status(404).send({ message: `No user with id: ${uid}` });
+        }
+        res.status(200).send({ message: "User password updated" });
     } catch (err) {
         console.error(err);
+        res.status(500);
     }
 };
 
