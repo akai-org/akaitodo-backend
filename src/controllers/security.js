@@ -40,6 +40,42 @@ const register = async (req, res) => {
     // 2. Save in db User sequelize model
     // 3. Return success response or go to jwt auth logic and return authorized login
     // 4. Or send email with auth link which redirect to jwt auth logic and return key
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
+
+    try {
+	
+        if(!username || !email || !password) {
+            res.status(400).send({error: `Incomplete data!!!`});
+            return;
+        }
+
+        crypto.randomBytes(32, async function(err, salt) {
+            const passwordHash = await argon2
+                .hash(password, salt)
+                .then(hash => {
+                    return hash;
+                });
+
+            const newUser = await User.create({ username: username, password: passwordHash, email: email, createdAt: new Date(), updatedAt: new Date() });
+                // .catch(error => {
+                //     res.status(500).send({error: `Unexpected error: ${error}`});
+                //     return;
+                // });
+
+            const validUser = {...newUser.dataValues, password: ""};
+
+            return res.status(200).send(validUser);
+		});
+    }catch(error) {
+        if(error.name === 'SequelizeUniqueConstraintError') {
+            req.status(400).send({error: `Query error: $error.message}`});
+        }else {
+            res.status(500).send({error: `Unexpected error: ${error}`});
+        }
+    }
+    
 };
 
 const logout = async (req, res) => {
