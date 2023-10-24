@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     const Session  = sequelize.define('session', {
         id: {
             type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey: true
         },
         userId: {

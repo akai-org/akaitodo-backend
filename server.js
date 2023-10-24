@@ -55,9 +55,7 @@ app.use('/api/users', usersApi);
 app.use('/api/tasks', tasksApi);
 app.use('/api/notes', notesApi);
 app.use('/api/token', tokenApi);
-app.use('/api/login', securityApi.login);
-app.use('/api/register', securityApi.register);
-app.use('/api/logout', securityApi.logout);
+app.use('/api', securityApi);
 
 // starting the server
 app.listen(process.env.PORT, () => {

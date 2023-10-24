@@ -4,12 +4,12 @@ const authController = require("../controllers/auth.js");
 
 const router = express.Router();
 
-router.getToken('/generate', authController.generate);
+// router.get('/generate', authController.generate);
 
-router.isTokenExpired('/check', authController.isExpired);
+// router.get('/check', authController.isExpired);
 
-router.refreshToken('/refresh', authController.refresh);
+// router.post('/refresh', authController.refresh);
 
-router.refreshToken('/remove', authController.remove);
+// router.delete('/remove', authController.remove);
 
 module.exports = router;

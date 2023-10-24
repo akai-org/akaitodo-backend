@@ -25,7 +25,8 @@
   },
   "homepage": "https://github.com/akai-org/akaitodo-backend#readme",
   "dependencies": {
-    "body-parser": "^1.20.1",
+    "argon2": "^0.31.1",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "date-fns": "^2.29.3",

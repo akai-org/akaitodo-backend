@@ -1,5 +1,5 @@
 const db = require("../models/index")
-const AccessToken = db.AccessToken;
+const AccessToken = db.models.AccessToken;
 
 // Function to generate new token
 // & after auth user login request
