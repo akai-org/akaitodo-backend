@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     const Task = sequelize.define('task', {
         taskNo: {
             type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey: true,
         },
         userId: {

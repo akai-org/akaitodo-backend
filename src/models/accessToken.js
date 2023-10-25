@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     const AccessToken = sequelize.define('access_token', {
         id: {
             type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey: true
         },
         userId: {

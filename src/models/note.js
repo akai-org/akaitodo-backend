@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     const Note = sequelize.define('note', {
         noteNo: {
             type: DataTypes.INTEGER,
+            autoIncrement: true,
             primaryKey: true,
         },
         userId: {

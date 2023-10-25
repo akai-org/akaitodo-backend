@@ -1,5 +1,5 @@
 const db = require("../models/index")
-const User = db.User;
+const User = db.models.User;
 
 // Get user with a given id
 const getUser = async (req, res) => {
