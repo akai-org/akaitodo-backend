@@ -55,7 +55,10 @@ app.use(tokenCheck);
 
 // defining an endpoint to return
 app.get("/", (req, res) => {
-  res.send([{ title: "Hi you have acces!"}]);
+  res.send([{ title: "Hello world!"}]);
+});
+app.get("/access", (req, res) => {
+  res.send([{ title: "Hi, you have access with your token!"}]);
 });
 
 app.use('/api/users', usersApi);

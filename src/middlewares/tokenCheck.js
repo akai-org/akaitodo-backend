@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const secret = require("./secret.js");
 
 const tokenCheck = (req, res, next) => { // Guard
-    const ignoreUrls = ['/api/auth/login','/login','/api/auth/register','/register'];
+    const ignoreUrls = ['/','/api/login','/api/register'];
     // console.log(req.path);
     // console.log(ignoreUrls.includes(req.path));
     if(ignoreUrls.includes(req.path))return next();
@@ -10,8 +10,8 @@ const tokenCheck = (req, res, next) => { // Guard
     // console.log("-----NOT WORKING--------");
     // console.log(req.path);
     // console.log(ignoreUrls.includes(req.path));
-    const token=req.get('TOKEN');
-    if(token==null)return res.status(401).send([{message: "No token"}]); // TODO better error handler
+    const token=req.get('dodo-token');
+    if(!token)return res.status(401).send([{message: "No token"}]); // TODO better error handler
     try{
         jwt.verify(token, secret.getSecretKeyNow(), function(err, decoded) {
             if(err){
@@ -26,7 +26,7 @@ const tokenCheck = (req, res, next) => { // Guard
             // console.log(decoded.refreshTime);
             // console.log(new Date().getTime());
             if(decoded.refreshTime < new Date().getTime()){
-            res.setHeader('TOKEN', getToken(decoded.id));
+            res.setHeader('dodo-token', getToken(decoded.id));
             }
             next();
             

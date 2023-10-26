@@ -4,6 +4,8 @@ const db = require("../models/index")
 
 const User = db.models.User;
 
+const { tokenCheck ,getToken} = require("../middlewares/tokenCheck");
+
 // Get user with a given id
 const login = async (req, res) => {
     const email = req.body.email;
@@ -13,7 +15,7 @@ const login = async (req, res) => {
         // check if there is user with login and pass in DB
         const loggedUser = await User.findOne({ where: {email}});
 
-        if(loggedUser === undefined || loggedUser === null) {
+        if(!loggedUser) {
             res.status(400).send({error: `Login for username not found in user database`})
             return;
         }
@@ -22,9 +24,10 @@ const login = async (req, res) => {
             /* clear user password */
             const validUser = {...loggedUser.dataValues, password: ""};
 
-            if(success == true)
+            if(success){
+                res.setHeader('dodo-token', getToken(validUser.id));
                 res.status(200).send(validUser);
-            else
+            }else
                 res.status(500).send({error: `Wrong password for user: ${email}!!!`});
         }).catch((error) => {
             res.status(500).send({error: `Unexpected error validating hash: ${error}`});
@@ -50,7 +53,10 @@ const register = async (req, res) => {
             res.status(400).send({error: `Incomplete data!!!`});
             return;
         }
-
+        if(await User.findOne({ where: {email}})){
+            res.status(400).send({error: `Account with this email alredy exists!!!`});
+            return;
+        }
         crypto.randomBytes(32, async function(err, salt) {
             const passwordHash = await argon2
                 .hash(password, salt)
