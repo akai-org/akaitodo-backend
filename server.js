@@ -12,11 +12,11 @@ const cron = require("node-cron");
 const { logger } = require("./src/middlewares/logEvents");
 const { errorHandler } = require("./src/middlewares/errorHandler");
 
-const { tokenCheck ,getToken} = require("./src/middlewares/tokenCheck");
+const { tokenCheck } = require("./src/middlewares/tokenCheck");
 
 if(process.env.DB_NAME === undefined)
 {
-  dotenv.config();
+  dotenv.config({ path: ".env"});
   // allow to use .env instead of .env.local
   dotenv.config({ path: ".env.local", override: true });
 }
@@ -25,7 +25,6 @@ const secret = require("./src/middlewares/secret.js");
 const notesApi = require('./src/routes/noteroutes');
 const tasksApi = require('./src/routes/taskroutes');
 const usersApi = require('./src/routes/userroutes');
-const authApi = require("./src/routes/authroutes");
 const securityApi = require('./src/routes/securityrouter');
 
 const db = require("./src/models");
@@ -64,7 +63,6 @@ app.get("/access", (req, res) => {
 app.use('/api/users', usersApi);
 app.use('/api/tasks', tasksApi);
 app.use('/api/notes', notesApi);
-app.use("/api/auth", authApi); 
 app.use('/api', securityApi);
 
 //Generating first secret key
@@ -73,8 +71,12 @@ secret.regenerateSecret();
 app.listen(process.env.PORT, () => {
   console.log(`listening on http://localhost:${process.env.PORT}`);
 });
+console.log(`Token expiration time:${process.env.TOKEN_EXPIRATION_TIME}`);
+console.log(`Token refresh time:${process.env.TOKEN_REFERESH_TIME}`);
 
-//JWT Secret key regegeneration
-cron.schedule("*/30 * * * *", function () {
+//JWT Secret key regegeneration 
+// "0 3 * * 1" => “At 03:00 on Monday.”
+cron.schedule("0 3 * * 1", function () {
   secret.regenerateSecret();
+  setTimeout(secret.setSecretKeyPreviousToNull,(process.env.TOKEN_EXPIRATION_TIME|0))*1000;
 });

@@ -4,7 +4,7 @@ const db = require("../models/index")
 
 const User = db.models.User;
 
-const { tokenCheck ,getToken} = require("../middlewares/tokenCheck");
+const { getToken } = require("../middlewares/tokenCheck");
 
 // Get user with a given id
 const login = async (req, res) => {

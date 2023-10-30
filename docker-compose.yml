@@ -36,6 +36,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ADMIN_PASS}
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
+      TOKEN_EXPIRATION_TIME: ${TOKEN_EXPIRATION_TIME} # expiration time of token
+      TOKEN_REFERESH_TIME: ${TOKEN_REFERESH_TIME} # time after which token will be refreshed
     depends_on:
       - mysqldb
     networks:

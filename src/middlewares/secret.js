@@ -1,14 +1,14 @@
 const crypto = require('crypto');
 
-let secretKeyPrevious='0';
-let secretKeyNow='0';
+let secretKeyPrevious=null;
+let secretKeyNow=null;
 
 function regenerateSecret(){
     secretKeyPrevious=secretKeyNow;
-    secretKeyNow=crypto.randomBytes(16).toString('base64');
-    console.log("---------------------");
-    console.log("secretKeyPrevious "+secretKeyPrevious);
-    console.log("secretKeyNow      "+secretKeyNow);
+    secretKeyNow=crypto.randomBytes(256).toString('base64');
 }
 
-module.exports = {regenerateSecret, getSecretKeyPrevious: () => secretKeyPrevious, getSecretKeyNow: () => secretKeyNow,};
+function setSecretKeyPreviousToNull() {
+    secretKeyPrevious = null;
+}
+module.exports = {regenerateSecret,setSecretKeyPreviousToNull, getSecretKeyPrevious: () => secretKeyPrevious, getSecretKeyNow: () => secretKeyNow,};
