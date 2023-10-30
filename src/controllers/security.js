@@ -47,12 +47,33 @@ const register = async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
+    const usernameMaxLength = 30;
+
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const emailMaxLength = 30;
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!])(?!.*\s).{8,}$/;
+    const passwordMaxLength = 30;
+
     try {
 	
         if(!username || !email || !password) {
             res.status(400).send({error: `Incomplete data!!!`});
             return;
         }
+        if(!(username.length <= usernameMaxLength)){
+            res.status(400).send({error: `Username isn't corerect!!!`});
+            return;
+        }
+        if(!(email.length <= emailMaxLength && emailRegex.test(email))){
+            res.status(400).send({error: `Email isn't corerect!!!`});
+            return;
+        }
+        if(!(password.length <= passwordMaxLength && passwordRegex.test(password))){
+            res.status(400).send({error: `Password isn't corerect!!!`});
+            return;
+        }
+
         if(await User.findOne({ where: {email}})){
             res.status(400).send({error: `Account with this email alredy exists!!!`});
             return;
