@@ -1,47 +1,59 @@
-const db = require("../models/index")
-const User = db.User;
+const db = require("../models/index");
+const User = db.models.User;
 
 // Get user with a given id
 const getUser = async (req, res) => {
-    const uid = req.params["uid"]; // User id from request parameter
+    const uid = req.params["uid"];
     try {
         const user = await User.findOne({
             where: { id: uid },
         });
-        res.send(user.toJSON());
+        if (!user) {
+            return res.status(404).send({ message: `No user with id: ${uid}` });
+        }
+        res.status(200).send(user.toJSON());
     } catch (err) {
         console.error(err);
+        res.status(500);
     }
 };
 
 // Create a new user
 const createUser = async (req, res) => {
-    const user = req.body; // User data as JSON/JS object in request body
+    const userData = req.body;
     try {
-        await User.create({
-            name: user.name,
-            email: user.email,
-            password: user.password,
+        const user = await User.create({
+            username: userData.username,
+            email: userData.email,
+            password: userData.password,
         });
+        user.save();
+        res.status(200).send({ message: "User created" });
     } catch (err) {
         console.error(err);
+        res.status(500);
     }
 };
 
 // Update user data
 const updateUser = async (req, res) => {
-    const uid = req.params["uid"]; // As in getUser
-    const { name, email, password } = req.body; // Need to specify which user data can be updated
+    const uid = req.params["uid"];
+    const { username, email, password } = req.body;
     let updateValues = {};
-    if (name) updateValues.name = name;
+    if (username) updateValues.username = username;
     if (email) updateValues.email = email;
     if (password) updateValues.password = password;
     try {
-        await User.update(updateValues, {
+        const user = await User.update(updateValues, {
             where: { id: uid },
         });
+        if (!user) {
+            return res.status(404).send({ message: `No user with id: ${uid}` });
+        }
+        res.status(200).send({ message: "User data updated" });
     } catch (err) {
         console.error(err);
+        res.status(500);
     }
 };
 
@@ -50,8 +62,10 @@ const deleteUser = async (req, res) => {
     const uid = req.params["uid"];
     try {
         User.destroy({ where: { id: uid } });
+        res.status(200).send({ message: "User deleted or doesn't exist" });
     } catch (err) {
         console.error(err);
+        res.status(500);
     }
 };
 
@@ -60,9 +74,17 @@ const updateUserPassword = async (req, res) => {
     const uid = req.params["uid"];
     const password = req.body;
     try {
-        await User.update({ password: password }, { where: { id: uid } });
+        const user = await User.update(
+            { password: password },
+            { where: { id: uid } }
+        );
+        if (!user) {
+            return res.status(404).send({ message: `No user with id: ${uid}` });
+        }
+        res.status(200).send({ message: "User password updated" });
     } catch (err) {
         console.error(err);
+        res.status(500);
     }
 };
 
@@ -76,4 +98,12 @@ const verifyEmailToken = async (req, res) => {
     const token = req.params["token"];
 };
 
-module.exports = { getUser, createUser, updateUser, deleteUser, updateUserPassword, resetUserPassword, verifyEmailToken }
+module.exports = {
+    getUser,
+    createUser,
+    updateUser,
+    deleteUser,
+    updateUserPassword,
+    resetUserPassword,
+    verifyEmailToken,
+};
