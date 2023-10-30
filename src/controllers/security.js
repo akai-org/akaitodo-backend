@@ -85,15 +85,18 @@ const register = async (req, res) => {
                     return hash;
                 });
 
-            const newUser = await User.create({ username: username, password: passwordHash, email: email, createdAt: new Date(), updatedAt: new Date() });
-                // .catch(error => {
-                //     res.status(500).send({error: `Unexpected error: ${error}`});
-                //     return;
-                // });
+            await User.create({ username: username, password: passwordHash, email: email, createdAt: new Date(), updatedAt: new Date() })
+                .then(newUser => {
+                    const validUser = {...newUser.dataValues, password: ""};
+                    res.status(200).send(validUser);
+                    return;
+                })
+                .catch(err => {
+                    res.status(500).send({error: err});
+                    return;
+                });
 
-            const validUser = {...newUser.dataValues, password: ""};
 
-            return res.status(200).send(validUser);
 		});
     }catch(error) {
         if(error.name === 'SequelizeUniqueConstraintError') {
