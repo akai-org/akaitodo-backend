@@ -6,6 +6,6 @@ const errorHandler = (err, req, res, next) => {
     res.status(500).send(JSON.stringify(err.lineNumber));
 
     next();
-}
+};
 
 module.exports = { errorHandler };

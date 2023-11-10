@@ -1,9 +1,9 @@
-const db = require("../models/index");
+const db = require('../models/index');
 const Note = db.models.Note;
 
 // Gets all notes from a user with a given id
 const getUserNotes = async (req, res) => {
-    const uid = req.params["uid"];
+    const uid = req.params['uid'];
     try {
         const notes = await Note.findAll({
             where: { userId: uid },
@@ -17,7 +17,7 @@ const getUserNotes = async (req, res) => {
 
 // Gets a note with a given id
 const getNote = async (req, res) => {
-    const id = req.params["id"];
+    const id = req.params['id'];
     try {
         const note = await Note.findOne({
             where: { noteNo: id },
@@ -43,7 +43,7 @@ const addNote = async (req, res) => {
             iconCode: noteData.iconCode,
         });
         note.save();
-        res.status(200).send({ message: "Note added" });
+        res.status(200).send({ message: 'Note added' });
     } catch (err) {
         console.error(err);
         res.status(500);
@@ -52,7 +52,7 @@ const addNote = async (req, res) => {
 
 // Update a note
 const updateNote = async (req, res) => {
-    const id = req.params["id"];
+    const id = req.params['id'];
     const { title, content, iconCode } = req.body;
     let updateValues = {};
     if (title) updateValues.title = title;
@@ -65,7 +65,7 @@ const updateNote = async (req, res) => {
         if (!note) {
             return res.status(404).send({ message: `No note with id: ${id}` });
         }
-        res.status(200).send({ message: "Note updated" });
+        res.status(200).send({ message: 'Note updated' });
     } catch (err) {
         console.error(err);
         res.status(500);
@@ -74,7 +74,7 @@ const updateNote = async (req, res) => {
 
 // Delete a note
 const deleteNote = async (req, res) => {
-    const id = req.params["id"];
+    const id = req.params['id'];
     try {
         await Note.destroy({ where: { noteNo: id } });
         res.status(200).send({ message: "Note deleted or doesn't exist" });
@@ -86,8 +86,8 @@ const deleteNote = async (req, res) => {
 
 // Filters notes by user and name - TODO
 const filterNote = async (req, res) => {
-    const uid = req.params["uid"];
-    const name = req.params["name"];
+    const uid = req.params['uid'];
+    const name = req.params['name'];
     try {
         const notes = await Note.findAll({
             where: {

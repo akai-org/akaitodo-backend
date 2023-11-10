@@ -1,10 +1,10 @@
-const crypto = require("crypto")
-const argon2 = require("argon2")
-const db = require("../models/index")
+const crypto = require('crypto');
+const argon2 = require('argon2');
+const db = require('../models/index');
 
 const User = db.models.User;
 
-const { getToken } = require("../middlewares/tokenCheck");
+const { getToken } = require('../middlewares/tokenCheck');
 
 // Get user with a given id
 const login = async (req, res) => {
@@ -13,28 +13,36 @@ const login = async (req, res) => {
 
     try {
         // check if there is user with login and pass in DB
-        const loggedUser = await User.findOne({ where: {email}});
+        const loggedUser = await User.findOne({ where: { email } });
 
-        if(!loggedUser) {
-            res.status(400).send({error: `Login for username not found in user database`})
+        if (!loggedUser) {
+            res.status(400).send({
+                error: `Login for username not found in user database`,
+            });
             return;
         }
-        
-        argon2.verify(loggedUser.password, password).then((success) => {
-            /* clear user password */
-            const validUser = {...loggedUser.dataValues, password: ""};
 
-            if(success){
-                res.setHeader('dodo-token', getToken(validUser.id));
-                res.status(200).send(validUser);
-            }else
-                res.status(500).send({error: `Wrong password for user: ${email}!!!`});
-        }).catch((error) => {
-            res.status(500).send({error: `Unexpected error validating hash: ${error}`});
-        });
-        
+        argon2
+            .verify(loggedUser.password, password)
+            .then((success) => {
+                /* clear user password */
+                const validUser = { ...loggedUser.dataValues, password: '' };
+
+                if (success) {
+                    res.setHeader('dodo-token', getToken(validUser.id));
+                    res.status(200).send(validUser);
+                } else
+                    res.status(500).send({
+                        error: `Wrong password for user: ${email}!!!`,
+                    });
+            })
+            .catch((error) => {
+                res.status(500).send({
+                    error: `Unexpected error validating hash: ${error}`,
+                });
+            });
     } catch (error) {
-        res.status(500).send({error: `Unexpected error: ${error}`});
+        res.status(500).send({ error: `Unexpected error: ${error}` });
     }
 };
 
@@ -56,56 +64,65 @@ const register = async (req, res) => {
     const passwordMaxLength = 30;
 
     try {
-	
-        if(!username || !email || !password) {
-            res.status(400).send({error: `Incomplete data!!!`});
+        if (!username || !email || !password) {
+            res.status(400).send({ error: `Incomplete data!!!` });
             return;
         }
-        if(!(username.length <= usernameMaxLength)){
-            res.status(400).send({error: `Username isn't corerect!!!`});
+        if (!(username.length <= usernameMaxLength)) {
+            res.status(400).send({ error: `Username isn't corerect!!!` });
             return;
         }
-        if(!(email.length <= emailMaxLength && emailRegex.test(email))){
-            res.status(400).send({error: `Email isn't corerect!!!`});
+        if (!(email.length <= emailMaxLength && emailRegex.test(email))) {
+            res.status(400).send({ error: `Email isn't corerect!!!` });
             return;
         }
-        if(!(password.length <= passwordMaxLength && passwordRegex.test(password))){
-            res.status(400).send({error: `Password isn't corerect!!!`});
+        if (
+            !(
+                password.length <= passwordMaxLength &&
+                passwordRegex.test(password)
+            )
+        ) {
+            res.status(400).send({ error: `Password isn't corerect!!!` });
             return;
         }
 
-        if(await User.findOne({ where: {email}})){
-            res.status(400).send({error: `Account with this email alredy exists!!!`});
+        if (await User.findOne({ where: { email } })) {
+            res.status(400).send({
+                error: `Account with this email alredy exists!!!`,
+            });
             return;
         }
-        crypto.randomBytes(32, async function(err, salt) {
+        crypto.randomBytes(32, async function (err, salt) {
             const passwordHash = await argon2
                 .hash(password, salt)
-                .then(hash => {
+                .then((hash) => {
                     return hash;
                 });
 
-            await User.create({ username: username, password: passwordHash, email: email, createdAt: new Date(), updatedAt: new Date() })
-                .then(newUser => {
-                    const validUser = {...newUser.dataValues, password: ""};
+            await User.create({
+                username: username,
+                password: passwordHash,
+                email: email,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            })
+                .then((newUser) => {
+                    const validUser = { ...newUser.dataValues, password: '' };
                     res.status(200).send(validUser);
                     return;
                 })
-                .catch(err => {
-                    res.status(500).send({error: err});
+                .catch((err) => {
+                    res.status(500).send({ error: err });
                     return;
                 });
-
-
-		});
-    }catch(error) {
-        if(error.name === 'SequelizeUniqueConstraintError') {
-            req.status(400).send({error: `Query error: $error.message}`});
-        }else {
-            res.status(500).send({error: `Unexpected error: ${error}`});
+        });
+    } catch (error) {
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            req.status(400).send({ error: `Query error: $error.message}` });
+        } else {
+            res.status(500).send({ error: `Unexpected error: ${error}` });
         }
     }
-    
 };
 
 const logout = async (req, res) => {
@@ -114,4 +131,4 @@ const logout = async (req, res) => {
     // 3. Return ok
 };
 
-module.exports = { login, register, logout }
+module.exports = { login, register, logout };

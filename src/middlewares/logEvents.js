@@ -1,4 +1,4 @@
-const { Logger }    = require('./Logger/Logger');
+const { Logger } = require('./Logger/Logger');
 const { LogFormat } = require('./Logger/LogFormat');
 
 const logger = (req, res, next) => {
@@ -7,21 +7,17 @@ const logger = (req, res, next) => {
         .withMethod(req.method)
         .withOrigin(req.headers.origin)
         .withUrl(req.url)
-        .getMessage()
-    ;
-
+        .getMessage();
     new Logger().logRequest(logMessage);
 
     next();
-}
+};
 
 const errorLogger = (err, req, res) => {
     const logMessage = new LogFormat()
         .withMessage(`${err.name}: ${err.message}`)
-        .getMessage()
-    ;
-
+        .getMessage();
     new Logger().logError(logMessage);
-}
+};
 
 module.exports = { logger, errorLogger };

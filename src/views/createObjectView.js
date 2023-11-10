@@ -1,4 +1,4 @@
-const views = require("./index");
+const views = require('./index');
 
 const createObjectView = (viewType, destObject) => {
     const template = views[viewType];

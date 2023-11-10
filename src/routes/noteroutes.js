@@ -1,11 +1,11 @@
-const express = require("express");
+const express = require('express');
 
-const noteControllers = require("../controllers/notes.js");
+const noteControllers = require('../controllers/notes.js');
 
 const router = express.Router();
 
-router.delete("/:id", noteControllers.deleteNote);
+router.delete('/:id', noteControllers.deleteNote);
 
-router.get("/:uid/:name", noteControllers.filterNote);
+router.get('/:uid/:name', noteControllers.filterNote);
 
 module.exports = router;

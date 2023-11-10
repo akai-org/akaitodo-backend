@@ -8,20 +8,22 @@ class Logger {
     constructor() {
         this.filename = {
             log: `log-${process.env.NODE_ENV}.txt`,
-            error: `log-error-${process.env.NODE_ENV}.txt`
+            error: `log-error-${process.env.NODE_ENV}.txt`,
         };
     }
 
     /* Generic method for logging message */
     async logEvent(message, logFileLocation, filename) {
-
         try {
-            if(!fs.existsSync(logFileLocation)) {
+            if (!fs.existsSync(logFileLocation)) {
                 await fsPromises.mkdir(logFileLocation);
             }
 
-            await fsPromises.appendFile(path.join(logFileLocation, filename), message);
-        } catch(err) {
+            await fsPromises.appendFile(
+                path.join(logFileLocation, filename),
+                message,
+            );
+        } catch (err) {
             console.log(err);
         }
     }
@@ -32,9 +34,7 @@ class Logger {
             .withDateTime()
             .withUuid()
             .withMessage(message)
-            .getMessage(true)
-        ;
-
+            .getMessage(true);
         const logFilePath = path.join(__dirname, '../../..', 'logs');
 
         await this.logEvent(logItem, logFilePath, this.filename.log);
@@ -45,9 +45,7 @@ class Logger {
             .withDateTime()
             .withUuid()
             .withMessage(message)
-            .getMessage(true)
-        ;
-
+            .getMessage(true);
         const logFilePath = path.join(__dirname, '../../..', 'logs');
 
         await this.logEvent(logItem, logFilePath, this.filename.error);

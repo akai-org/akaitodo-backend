@@ -1,5 +1,5 @@
 const { format } = require('date-fns');
-const {v4: uuid } = require('uuid');
+const { v4: uuid } = require('uuid');
 
 class LogFormat {
     constructor() {
@@ -38,15 +38,14 @@ class LogFormat {
         return this;
     }
 
-    getMessage(withNewLine = false)
-    {
+    getMessage(withNewLine = false) {
         let logMessage = '';
 
         for (var p in this.message) {
-            logMessage += this.message[p] + '\t';   
+            logMessage += this.message[p] + '\t';
         }
 
-        if(withNewLine) logMessage += '\n';
+        if (withNewLine) logMessage += '\n';
 
         return logMessage;
     }

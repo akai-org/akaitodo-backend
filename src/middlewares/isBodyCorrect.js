@@ -1,4 +1,4 @@
-// todo 
+// todo
 // korzystajac z view
 // weź odpowiedni widok
 // sprawdz czy request body pokrywa sie z widokiem

@@ -1,5 +1,5 @@
-const userView = require("./user");
+const userView = require('./user');
 
 module.exports = {
     ...userView,
-}
+};

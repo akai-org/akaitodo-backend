@@ -1,17 +1,8 @@
-const UserDTO = [
-    "id",
-    "username",
-    "password",
-    "email"
-];
+const UserDTO = ['id', 'username', 'password', 'email'];
 
-const UserDTOBasic = [
-    "id",
-    "username",
-    "email"
-];
+const UserDTOBasic = ['id', 'username', 'email'];
 
 module.exports = {
     UserDTO,
-    UserDTOBasic
-}
+    UserDTOBasic,
+};
