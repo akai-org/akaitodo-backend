@@ -1,5 +1,6 @@
 /node_modules/
 /package-lock.json
+/docker/data
 /.idea/.gitignore
 /.idea/akaitodo-backend2.iml
 /.idea/modules.xml
