@@ -1,120 +1,73 @@
-# AKAI TODO (backend)
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+</p>
 
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-## Run
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-### Manually
+## Description
 
-1. Copy `.env` file
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-```
-$ cp .env .env.local
-```
-
-And set `NODE_ENV=dev`. Optionally you can fix all others parameters
-
-2. Run node service
-
-```
-$ npm start
-```
-
-You can also use `start:dev` or `start:prod`
-
-
-**Note**
-
-If you don't use docker you can run server using **background** process
+## Installation
 
 ```bash
-pm2 start server.js --watch
+$ npm install
 ```
 
-Extension `pm2-runtime` is required only to prevent killing container after invoking process
+## Running the app
 
+```bash
+# development
+$ npm run start
 
-### On Docker
-In this way project will be using **env** variables passed from `.docker.env` by `docker-compose.yml` file and overwrite params in `.env ` file used defaulty
+# watch mode
+$ npm run start:dev
 
-1. Create **local** `.docker.env` file instance and setup database connection parameters
-
-```
-$ cp .docker.env .docker.env.local
-```
-
-2. To build first time
-
-```
-$ docker compose --env-file=".docker.env.local" up --build -d
+# production mode
+$ npm run start:prod
 ```
 
-To **up** application use (optionally you can add `-d` flat to hide logs):
+## Test
 
-```
-$ docker compose --env-file=".docker.env.local" up
-```
+```bash
+# unit tests
+$ npm run test
 
-**Note**
-To change `production` to `development` mode you must change `Dockerfile`
-from:
+# e2e tests
+$ npm run test:e2e
 
-```yml
-CMD ["npm", "run", "start:prod"]
-```
-
-to
-
-```yml
-CMD ["npm", "run", "start:dev"]
+# test coverage
+$ npm run test:cov
 ```
 
-## Monitoring
-### 1. Production
+## Support
 
-On production to monitoring all processes launched use [pm2](https://pm2.keymetrics.io/)
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-**Note**
+## Stay in touch
 
-Command `pm2` don't exists in container standalone so we need to use it with `npx` prefix
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
 
+## License
 
-1. Monitoring speedbar
-
-  ```
-  $ npx pm2 set pm2:sysmonit true
-  $ npm pm2 update
-  ```
-
-### 2. Development
-
-- nodemon
-- supervisior
-
-**Why we dont use it on production also?**
-
-Answer:
-- [freecodecamp](https://www.freecodecamp.org/news/you-should-never-ever-run-directly-against-node-js-in-production-maybe-7fdfaed51ec6/)
-- [stackoverflow](https://stackoverflow.com/questions/67719335/do-i-need-nodemon-in-production)
-
-## Troubleshooting
-
-- starting **prod environoment**
-
-Custom `pm2` worker run in background which cause stopping container after starting process.
-
-[Solution](https://stackoverflow.com/questions/55936473/docker-exits-with-code-0-when-using-pm2-start)
-
-
-
-
-- Check relations in db (foreign keys)
-
-```sql
-SELECT 
-  TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
-FROM
-  INFORMATION_SCHEMA.KEY_COLUMN_USAGE
-WHERE
-  REFERENCED_TABLE_SCHEMA = '<database>' AND
-  REFERENCED_TABLE_NAME = '<table>';
-```
+Nest is [MIT licensed](LICENSE).
