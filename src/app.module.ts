@@ -8,7 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: `.${process.env.RUNTIME}.env`,
       isGlobal: true,
       load: [AppConfig, DatabaseConfig],
     }),
