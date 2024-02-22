@@ -1,16 +1,17 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthDTO, JwtTokenDTO } from './dto';
+import { AuthDTO, JwtTokenDTO, RegisterDTO } from './dto';
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authservice: AuthService) {}
 
     @Post('register')
-    register(@Body() authdto: AuthDTO): Promise<JwtTokenDTO> {
-        return this.authservice.register(authdto);
+    register(@Body() registerdto: RegisterDTO): Promise<JwtTokenDTO> {
+        return this.authservice.register(registerdto);
     }
 
+    @HttpCode(HttpStatus.OK)
     @Post('login')
     login(@Body() authdto: AuthDTO): Promise<JwtTokenDTO> {
         return this.authservice.getAuthByUser(authdto);

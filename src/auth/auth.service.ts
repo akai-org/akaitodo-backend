@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../database/entities/user.entity';
 import { QueryFailedError, Repository } from 'typeorm';
-import { AuthDTO, JwtTokenDTO } from './dto';
+import { AuthDTO, JwtTokenDTO, RegisterDTO } from './dto';
 import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -21,12 +21,12 @@ export class AuthService {
         readonly configservice: ConfigService,
     ) {}
 
-    async register(authdto: AuthDTO): Promise<JwtTokenDTO> {
-        const hashedPassword = await argon.hash(authdto.password);
+    async register(registerdto: RegisterDTO): Promise<JwtTokenDTO> {
+        const hashedPassword = await argon.hash(registerdto.password);
         try {
             const user = this.userRepository.create({
-                username: authdto.username,
-                email: authdto.email,
+                username: registerdto.username,
+                email: registerdto.email,
                 password: hashedPassword,
             });
             await this.userRepository.save(user);
