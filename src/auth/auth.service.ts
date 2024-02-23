@@ -29,7 +29,7 @@ export class AuthService {
                 email: registerdto.email,
                 password: hashedPassword,
             });
-            await this.userRepository.save(user);
+            await this.userRepository.insert(user);
             return this.signToken(user.id, user.email);
         } catch (error) {
             if (error instanceof QueryFailedError)
@@ -39,10 +39,8 @@ export class AuthService {
     }
 
     async getAuthByUser(authdto: AuthDTO): Promise<JwtTokenDTO> {
-        const user = await this.userRepository.findOne({
-            where: {
-                email: authdto.email,
-            },
+        const user = await this.userRepository.findOneBy({
+            email: authdto.email,
         });
         if (!user) throw new NotFoundException('User not found');
 

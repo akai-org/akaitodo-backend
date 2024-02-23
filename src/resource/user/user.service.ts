@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { Repository } from 'typeorm';
+import { EditUserDTO } from './dto';
 
 @Injectable()
 export class UserService {
@@ -10,7 +11,21 @@ export class UserService {
         private readonly userRepository: Repository<UserEntity>,
     ) {}
 
-    getAll() {
-        return this.userRepository.find();
+    async editUser(
+        userID: number,
+        edituserdto: EditUserDTO,
+    ): Promise<UserEntity> {
+        const user = await this.userRepository.findOneBy({ id: userID });
+        if (!user) throw new NotFoundException('User not found');
+        await this.userRepository.update(
+            {
+                id: userID,
+            },
+            {
+                ...edituserdto,
+            },
+        );
+        delete user.password;
+        return user;
     }
 }

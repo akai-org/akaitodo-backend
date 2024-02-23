@@ -1,23 +1,26 @@
-import { Controller, Get, Patch, UseGuards } from '@nestjs/common';
-import { UserService } from './user.service';
+import { Body, Controller, Get, Patch, Post, UseGuards } from '@nestjs/common';
 import { GetUser } from '../../auth/decorator';
 import { UserEntity } from '../../database/entities/user.entity';
 import { JwtGuard } from '../../auth/guard';
-@UseGuards(JwtGuard)
+import { EditUserDTO } from './dto';
+import { UserService } from './user.service';
+
 @Controller('users')
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userservice: UserService) {}
 
+    @UseGuards(JwtGuard)
     @Get('me')
-    getMe(@GetUser() user: UserEntity) {
+    getMe(@GetUser() user: UserEntity): UserEntity {
         return user;
     }
 
+    @UseGuards(JwtGuard)
     @Patch('me')
-    editUser() {}
-
-    @Get()
-    async getAll() {
-        return this.userService.getAll();
+    editUser(
+        @GetUser('id') userID: number,
+        @Body() edituserdto: EditUserDTO,
+    ): Promise<UserEntity> {
+        return this.userservice.editUser(userID, edituserdto);
     }
 }
