@@ -8,8 +8,4 @@ export class EditUserDTO {
     @IsEmail()
     @IsOptional()
     email?: string;
-
-    @IsString()
-    @IsOptional()
-    password?: string;
 }

@@ -24,7 +24,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         email: string;
     }): Promise<UserEntity> {
         const user = await this.userRepository.findOneBy({ id: payload.sub });
-        delete user.password;
+        delete user.hash;
         return user;
     }
 }

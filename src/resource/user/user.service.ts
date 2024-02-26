@@ -25,7 +25,7 @@ export class UserService {
                 ...edituserdto,
             },
         );
-        delete user.password;
+        delete user.hash;
         return user;
     }
 }

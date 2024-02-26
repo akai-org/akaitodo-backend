@@ -27,7 +27,7 @@ export class AuthService {
             const user = this.userRepository.create({
                 username: registerdto.username,
                 email: registerdto.email,
-                password: hashedPassword,
+                hash: hashedPassword,
             });
             await this.userRepository.insert(user);
             return this.signToken(user.id, user.email);
@@ -45,7 +45,7 @@ export class AuthService {
         if (!user) throw new NotFoundException('User not found');
 
         const passwordMatch = await argon.verify(
-            user.password,
+            user.hash,
             authdto.password,
         );
         if (!passwordMatch)
