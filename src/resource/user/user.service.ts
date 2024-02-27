@@ -29,7 +29,7 @@ export class UserService {
         return result;
     }
 
-    async getAllUsers() {
-        const users = await this.userRepository.find();
+    async getUserById(userID: number) {
+        return await this.userRepository.findOneBy({ id: userID });
     }
 }
