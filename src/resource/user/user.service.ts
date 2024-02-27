@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { Repository } from 'typeorm';
-import { EditUserDTO } from './dto';
+import { EditUserDTO, ReturnUserDTO } from './dto';
 
 @Injectable()
 export class UserService {
@@ -11,10 +11,10 @@ export class UserService {
         private readonly userRepository: Repository<UserEntity>,
     ) {}
 
-    async editUser(
+    async editMe(
         userID: number,
         edituserdto: EditUserDTO,
-    ): Promise<UserEntity> {
+    ): Promise<ReturnUserDTO> {
         const user = await this.userRepository.findOneBy({ id: userID });
         if (!user) throw new NotFoundException('User not found');
         await this.userRepository.update(
@@ -25,7 +25,11 @@ export class UserService {
                 ...edituserdto,
             },
         );
-        delete user.hash;
-        return user;
+        const { hash, ...result } = user;
+        return result;
+    }
+
+    async getAllUsers() {
+        const users = await this.userRepository.find();
     }
 }
