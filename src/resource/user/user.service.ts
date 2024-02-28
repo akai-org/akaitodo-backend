@@ -12,24 +12,28 @@ export class UserService {
     ) {}
 
     async editMe(
-        userID: number,
+        userId: number,
         edituserdto: EditUserDTO,
     ): Promise<ReturnUserDTO> {
-        const user = await this.userRepository.findOneBy({ id: userID });
+        const user = await this.userRepository.findOneBy({ id: userId });
         if (!user) throw new NotFoundException('User not found');
         await this.userRepository.update(
             {
-                id: userID,
+                id: userId,
             },
             {
                 ...edituserdto,
             },
         );
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { hash, ...result } = user;
         return result;
     }
 
-    async getUserById(userID: number) {
-        return await this.userRepository.findOneBy({ id: userID });
+    async getUserById(userId: number): Promise<ReturnUserDTO> {
+        const user = await this.userRepository.findOneBy({ id: userId });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { hash, ...result } = user;
+        return result;
     }
 }

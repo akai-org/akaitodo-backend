@@ -7,12 +7,13 @@ import {
     Patch,
     UseGuards,
 } from '@nestjs/common';
-import { GetUser, ForRole } from '../../decorators';
-import { UserEntity, UserRole } from '../../database/entities/user.entity';
-import { JwtGuard } from '../../auth/guard';
+import { ForRole, GetUser } from 'src/decorators';
+import { UserEntity } from 'src/database/entities/user.entity';
+import { JwtGuard } from 'src/auth/guard';
 import { EditUserDTO, ReturnUserDTO } from './dto';
 import { UserService } from './user.service';
 import { UserRoleGuard } from './guard';
+import { UserRole } from 'src/types/enums';
 
 @UseGuards(JwtGuard)
 @Controller('users')
@@ -20,22 +21,26 @@ export class UserController {
     constructor(private readonly userservice: UserService) {}
 
     @Get('me')
-    getMe(@GetUser() user: UserEntity): UserEntity {
-        return user;
+    getMe(@GetUser() user: UserEntity): ReturnUserDTO {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { hash, ...result } = user;
+        return result;
     }
 
     @Patch('me')
     editMe(
-        @GetUser('id') userID: number,
+        @GetUser('id') userId: number,
         @Body() edituserdto: EditUserDTO,
     ): Promise<ReturnUserDTO> {
-        return this.userservice.editMe(userID, edituserdto);
+        return this.userservice.editMe(userId, edituserdto);
     }
 
-    @ForRole(UserRole.Admin)
+    @ForRole(UserRole.ADMIN)
     @UseGuards(UserRoleGuard)
     @Get(':id')
-    getUserById(@Param('id', ParseIntPipe) userID: number) {
-        return this.userservice.getUserById(userID);
+    getUserById(
+        @Param('id', ParseIntPipe) userId: number,
+    ): Promise<ReturnUserDTO> {
+        return this.userservice.getUserById(userId);
     }
 }
