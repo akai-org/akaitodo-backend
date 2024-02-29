@@ -44,10 +44,7 @@ export class AuthService {
         });
         if (!user) throw new NotFoundException('User not found');
 
-        const passwordMatch = await argon.verify(
-            user.hash,
-            authdto.password,
-        );
+        const passwordMatch = await argon.verify(user.hash, authdto.password);
         if (!passwordMatch)
             throw new UnauthorizedException('Incorrect password');
 

@@ -1,26 +1,46 @@
-import { Body, Controller, Get, Patch, Post, UseGuards } from '@nestjs/common';
-import { GetUser } from '../../auth/decorator';
-import { UserEntity } from '../../database/entities/user.entity';
-import { JwtGuard } from '../../auth/guard';
-import { EditUserDTO } from './dto';
+import {
+    Body,
+    Controller,
+    Get,
+    Param,
+    ParseIntPipe,
+    Patch,
+    UseGuards,
+} from '@nestjs/common';
+import { ForRole, GetUser } from 'src/decorators';
+import { UserEntity } from 'src/database/entities/user.entity';
+import { JwtGuard } from 'src/auth/guard';
+import { EditUserDTO, ReturnUserDTO } from './dto';
 import { UserService } from './user.service';
+import { UserRoleGuard } from './guard';
+import { UserRole } from 'src/types/enums';
 
+@UseGuards(JwtGuard)
 @Controller('users')
 export class UserController {
     constructor(private readonly userservice: UserService) {}
 
-    @UseGuards(JwtGuard)
     @Get('me')
-    getMe(@GetUser() user: UserEntity): UserEntity {
-        return user;
+    getMe(@GetUser() user: UserEntity): ReturnUserDTO {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { hash, ...result } = user;
+        return result;
     }
 
-    @UseGuards(JwtGuard)
     @Patch('me')
-    editUser(
-        @GetUser('id') userID: number,
+    editMe(
+        @GetUser('id') userId: number,
         @Body() edituserdto: EditUserDTO,
-    ): Promise<UserEntity> {
-        return this.userservice.editUser(userID, edituserdto);
+    ): Promise<ReturnUserDTO> {
+        return this.userservice.editMe(userId, edituserdto);
+    }
+
+    @ForRole(UserRole.ADMIN)
+    @UseGuards(UserRoleGuard)
+    @Get(':id')
+    getUserById(
+        @Param('id', ParseIntPipe) userId: number,
+    ): Promise<ReturnUserDTO> {
+        return this.userservice.getUserById(userId);
     }
 }
