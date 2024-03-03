@@ -11,7 +11,7 @@ import { NoteService } from './notes.service';
 import { NoteDTO } from './dto';
 import { JwtGuard } from '../../auth/guard';
 import { editNoteDTO } from './dto/editNote.dto';
-import { GetUser } from '../../auth/decorator';
+import { GetUser } from '../../decorators';
 import { UserEntity } from 'src/database/entities/user.entity';
 
 @UseGuards(JwtGuard)

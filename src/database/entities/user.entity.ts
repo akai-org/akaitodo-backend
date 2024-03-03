@@ -22,6 +22,6 @@ export class UserEntity {
         default: UserRole.USER,
     })
     role: UserRole;
-    @OneToMany(() => NotesEntity, (note) => note.user)
-    notes: NotesEntity[];
+    @OneToMany(() => NoteEntity, (note) => note.user)
+    notes: NoteEntity[];
 }
