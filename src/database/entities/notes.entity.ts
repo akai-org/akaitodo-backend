@@ -5,18 +5,21 @@ export class NotesEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ default: 'Title !' })
     title: string;
 
-    @Column({ default: 'Write here !' })
+    @Column({ default: 'Write something here! ' })
     body: string;
 
-    @Column({ default: new Date() })
-    createdAt: Date;
+    @Column({ type: 'timestamp', default: () => 'NOW()' })
+    createdAt?: Date;
 
-    @Column()
+    @Column({ default: 0 })
+    timezoneOffset: number;
+
+    @Column({ nullable: true })
     Icon?: string;
 
-    @Column()
+    @Column({ default: 'red' })
     Color: string;
 }
