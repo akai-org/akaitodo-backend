@@ -20,8 +20,8 @@ export class NoteController {
     constructor(private notesService: NoteService) {}
 
     @Get()
-    fetchNotes(@GetUser() user: UserEntity) {
-        return this.notesService.fetchNotes(user);
+    fetchUserNotes(@GetUser() user: UserEntity) {
+        return this.notesService.fetchUserNotes(user);
     }
 
     @Post(':id')

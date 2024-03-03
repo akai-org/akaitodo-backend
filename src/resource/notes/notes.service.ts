@@ -9,11 +9,11 @@ import { UserEntity } from 'src/database/entities/user.entity';
 export class NoteService {
     constructor(
         @InjectRepository(NoteEntity)
-        private notesRepository: Repository<NoteEntity>,
+        private noteRepository: Repository<NoteEntity>,
     ) {}
 
-    async fetchNotes(user: UserEntity) {
-        return this.notesRepository.find({
+    async fetchUserNotes(user: UserEntity) {
+        return this.noteRepository.find({
             relations: ['user'],
             where: { user },
         });
@@ -22,12 +22,12 @@ export class NoteService {
     async addNote(user: UserEntity, noteDto: NoteDTO) {
         if (!user)
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-        const newNote = this.notesRepository.create({ ...noteDto, user });
+        const newNote = this.noteRepository.create({ ...noteDto, user });
 
-        return this.notesRepository.save(newNote);
+        return this.noteRepository.save(newNote);
     }
 
     async editNoteById(id: number, noteDto: editNoteDTO) {
-        return this.notesRepository.update({ id }, { ...noteDto });
+        return this.noteRepository.update({ id }, { ...noteDto });
     }
 }
