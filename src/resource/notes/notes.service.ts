@@ -49,7 +49,6 @@ export class NotesService {
 
         const newNote = this.notesRepository.create({ ...noteDto, user });
 
-        // Don't need to make the function async when returning the Promise
         return this.notesRepository.save(newNote);
     }
 
