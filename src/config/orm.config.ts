@@ -2,11 +2,11 @@ import { DataSource } from 'typeorm';
 
 const ormConfig = new DataSource({
     type: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    username: 'dodo',
-    password: 'dodo',
-    database: 'dodobase',
+    host: process.env.DB_HOSTNAME,
+    port: parseInt(process.env.DB_PORT, 10),
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     entities: ['src/database/entities/*.entity{.ts,.js}'],
     synchronize: process.env.NODE_ENV === 'dev',
     logging: process.env.NODE_ENV === 'dev',
