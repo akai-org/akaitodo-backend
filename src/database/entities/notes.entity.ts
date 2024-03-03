@@ -2,27 +2,24 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
 
 @Entity({ name: 'notes' })
-export class NotesEntity {
+export class NoteEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ default: 'Title !' })
+    @Column({ default: 'Title' })
     title: string;
 
-    @Column({ default: 'Write something here! ' })
+    @Column({ default: 'Write something here!' })
     body: string;
 
     @Column({ type: 'timestamp', default: () => 'NOW()' })
     createdAt?: Date;
 
-    @Column({ default: 0 })
-    timezoneOffset: number;
-
     @Column({ nullable: true })
-    Icon?: string;
+    icon?: string;
 
     @Column({ default: 'red' })
-    Color: string;
+    color: string;
 
     @ManyToOne(() => UserEntity, (user) => user.notes)
     user: UserEntity;

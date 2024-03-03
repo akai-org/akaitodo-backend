@@ -1,52 +1,27 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { NotesEntity } from 'src/database/entities/notes.entity';
+import { NoteEntity } from 'src/database/entities/notes.entity';
 import { Repository } from 'typeorm';
 import { NoteDTO, editNoteDTO } from './dto';
 import { UserEntity } from 'src/database/entities/user.entity';
 
 @Injectable()
-export class NotesService {
+export class NoteService {
     constructor(
-        @InjectRepository(NotesEntity)
-        private notesRepository: Repository<NotesEntity>,
-        @InjectRepository(UserEntity)
-        private userRepository: Repository<UserEntity>,
+        @InjectRepository(NoteEntity)
+        private notesRepository: Repository<NoteEntity>,
     ) {}
 
-    async fetchAllNotes(userId: number) {
-        const user = await this.userRepository.findOneBy({ id: userId });
-
+    async fetchNotes(user: UserEntity) {
         return this.notesRepository.find({
             relations: ['user'],
             where: { user },
         });
     }
 
-    async addNote(id: number, noteDto: NoteDTO) {
-        const user = await this.userRepository.findOneBy({ id });
-
+    async addNote(user: UserEntity, noteDto: NoteDTO) {
         if (!user)
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-
-        if (noteDto.timezoneOffset !== undefined) {
-            noteDto.createdAt = new Date();
-            const correctTimeStampWithOffset = (
-                date: Date,
-                offset: number,
-            ): Date => {
-                const offSetMilliseconds = offset * 60 * 1000;
-                const correctDate = new Date(
-                    date.getTime() + offSetMilliseconds,
-                );
-                return correctDate;
-            };
-            noteDto.createdAt = correctTimeStampWithOffset(
-                noteDto.createdAt,
-                noteDto.timezoneOffset,
-            );
-        }
-
         const newNote = this.notesRepository.create({ ...noteDto, user });
 
         return this.notesRepository.save(newNote);

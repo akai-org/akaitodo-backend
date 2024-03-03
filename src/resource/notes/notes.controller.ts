@@ -6,31 +6,31 @@ import {
     Patch,
     Param,
     UseGuards,
-    ParseIntPipe,
 } from '@nestjs/common';
-import { NotesService } from './notes.service';
+import { NoteService } from './notes.service';
 import { NoteDTO } from './dto';
 import { JwtGuard } from '../../auth/guard';
 import { editNoteDTO } from './dto/editNote.dto';
+import { GetUser } from '../../auth/decorator';
+import { UserEntity } from 'src/database/entities/user.entity';
 
 @UseGuards(JwtGuard)
 @Controller('notes')
-export class NotesController {
-    constructor(private notesService: NotesService) {}
+export class NoteController {
+    constructor(private notesService: NoteService) {}
 
     @Get()
-    fetchAllNotes(@Param('id', ParseIntPipe) userId: number) {
-        return this.notesService.fetchAllNotes(userId);
+    fetchNotes(@GetUser() user: UserEntity) {
+        return this.notesService.fetchNotes(user);
     }
 
     @Post(':id')
-    addNote(@Param('id', ParseIntPipe) id: number, @Body() noteDto: NoteDTO) {
-        return this.notesService.addNote(id, noteDto);
+    addNote(@GetUser() user: UserEntity, @Body() noteDto: NoteDTO) {
+        return this.notesService.addNote(user, noteDto);
     }
 
     @Patch(':id')
     editNoteById(@Param('id') id: number, @Body() noteDto: editNoteDTO) {
-        console.log('id', id);
         return this.notesService.editNoteById(id, noteDto);
     }
 }

@@ -1,6 +1,6 @@
 import { UserRole } from 'src/types/enums';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { NotesEntity } from './notes.entity';
+import { NoteEntity } from './notes.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {

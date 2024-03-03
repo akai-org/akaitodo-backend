@@ -1,4 +1,4 @@
-import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class editNoteDTO {
     id: number;
@@ -13,15 +13,11 @@ export class editNoteDTO {
 
     @IsString()
     @IsOptional()
-    createdAt: Date;
+    createdAt?: Date;
 
     @IsOptional()
-    Icon?: string;
+    icon?: string;
 
     @IsOptional()
-    Color?: string;
-
-    @IsNumber()
-    @IsOptional()
-    timezoneOffset?: number;
+    color?: string;
 }
