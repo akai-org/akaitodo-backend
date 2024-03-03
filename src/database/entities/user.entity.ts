@@ -1,5 +1,6 @@
 import { UserRole } from 'src/types/enums';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { NotesEntity } from './notes.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -21,4 +22,6 @@ export class UserEntity {
         default: UserRole.USER,
     })
     role: UserRole;
+    @OneToMany(() => NotesEntity, (note) => note.user)
+    notes: NotesEntity[];
 }

@@ -1,6 +1,6 @@
 import { IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class NoteDTO {
+export class editNoteDTO {
     id: number;
 
     @IsString()

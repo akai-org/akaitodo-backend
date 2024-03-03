@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { UserEntity } from './user.entity';
 
 @Entity({ name: 'notes' })
 export class NotesEntity {
@@ -22,4 +23,7 @@ export class NotesEntity {
 
     @Column({ default: 'red' })
     Color: string;
+
+    @ManyToOne(() => UserEntity, (user) => user.notes)
+    user: UserEntity;
 }
