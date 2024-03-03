@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { Repository } from 'typeorm';
-import { EditUserDTO } from './dto';
+import { EditUserDTO, ReturnUserDTO } from './dto';
 
 @Injectable()
 export class UserService {
@@ -11,21 +11,29 @@ export class UserService {
         private readonly userRepository: Repository<UserEntity>,
     ) {}
 
-    async editUser(
-        userID: number,
+    async editMe(
+        userId: number,
         edituserdto: EditUserDTO,
-    ): Promise<UserEntity> {
-        const user = await this.userRepository.findOneBy({ id: userID });
+    ): Promise<ReturnUserDTO> {
+        const user = await this.userRepository.findOneBy({ id: userId });
         if (!user) throw new NotFoundException('User not found');
         await this.userRepository.update(
             {
-                id: userID,
+                id: userId,
             },
             {
                 ...edituserdto,
             },
         );
-        delete user.hash;
-        return user;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { hash, ...result } = user;
+        return result;
+    }
+
+    async getUserById(userId: number): Promise<ReturnUserDTO> {
+        const user = await this.userRepository.findOneBy({ id: userId });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { hash, ...result } = user;
+        return result;
     }
 }
