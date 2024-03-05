@@ -6,6 +6,7 @@ import { AppConfig, DatabaseConfig } from './config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './resource/user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { TaskModule } from './resource/task/task.module';
 
 @Module({
     imports: [
@@ -26,6 +27,7 @@ import { AuthModule } from './auth/auth.module';
         // General controllers
         UserModule,
         AuthModule,
+        TaskModule,
     ],
     controllers: [AppController],
     providers: [AppService],
