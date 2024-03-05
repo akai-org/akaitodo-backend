@@ -12,5 +12,4 @@ export class EditTaskDTO {
     @IsOptional()
     @IsBoolean()
     isDone?: boolean;
-
 }
