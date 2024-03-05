@@ -21,9 +21,7 @@ export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
     @Get(':id')
-    getTask(
-        @Param('id', ParseIntPipe) taskId: number,
-    ): Promise<ReturnTaskDTO> {
+    getTask(@Param('id', ParseIntPipe) taskId: number): Promise<ReturnTaskDTO> {
         return this.taskService.getTask(taskId);
     }
 
