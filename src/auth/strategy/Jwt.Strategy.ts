@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { Repository } from 'typeorm';
+import { JwtPayloadDto } from '../dto';
+import { ReturnUserDTO } from '../../resource/user/dto';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -19,12 +21,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         });
     }
 
-    async validate(payload: {
-        sub: number;
-        email: string;
-    }): Promise<UserEntity> {
+    async validate(payload: JwtPayloadDto): Promise<ReturnUserDTO> {
         const user = await this.userRepository.findOneBy({ id: payload.sub });
-        delete user.hash;
-        return user;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { hash, ...result } = user;
+        return result;
     }
 }
