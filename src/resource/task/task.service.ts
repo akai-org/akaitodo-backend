@@ -11,38 +11,33 @@ export class TaskService {
         private readonly taskRepository: Repository<TaskEntity>,
     ) {}
 
-    //TODO: Add userId requirement
-    async editTask(
-        taskId: number,
-        editTask: EditTaskDTO,
-    ): Promise<ReturnTaskDTO> {
-        const task = await this.taskRepository.findOneBy({ id: taskId });
-        if (!task) throw new NotFoundException('Task not found');
-        await this.taskRepository.update({ id: taskId }, { ...editTask });
-        const { userId, ...result } = task;
-        return result;
+    async editTask(taskId: number,userId: number, editTask: EditTaskDTO): Promise<ReturnTaskDTO> {
+        const task = await this.taskRepository.findOneBy({ id: taskId,userId: userId });
+        if (!task) {
+            throw new NotFoundException('Task not found');
+        }
+        await this.taskRepository.update({ id: taskId ,userId: userId}, { ...editTask });
+        return task;
+    }
+    
+
+    async getTask(userId:number,taskId: number): Promise<ReturnTaskDTO> {
+        return await this.taskRepository.findOneBy({ userId:userId,id: taskId });
     }
 
-    async getTask(taskId: number): Promise<ReturnTaskDTO> {
-        const task = await this.taskRepository.findOneBy({ id: taskId });
-        const { userId, ...result } = task;
-        return result;
+    async getAllTasks(userId: number): Promise<ReturnTaskDTO[]> {
+        return await this.taskRepository.find({ where: { userId: userId } });
     }
 
-    async getAllTasks(): Promise<ReturnTaskDTO[]> {
-        const tasks = await this.taskRepository.find();
-        return tasks.map(({ userId, ...result }) => result);
-    }
-
-    async addTask(createTaskDTO: CreateTaskDTO): Promise<ReturnTaskDTO> {
+    async addTask(userId: any,createTaskDTO: CreateTaskDTO): Promise<ReturnTaskDTO> {
+        console.log('userId:', userId);
         const newTask = this.taskRepository.create(createTaskDTO);
-        const savedTask = await this.taskRepository.save(newTask);
-        const { userId, ...result } = savedTask;
-        return result;
+        newTask.userId = userId;
+        return await this.taskRepository.save(newTask);
     }
 
-    async deleteTask(taskId: number): Promise<void> {
-        const task = await this.taskRepository.findOneBy({ id: taskId });
+    async deleteTask(userId: number,taskId: number): Promise<void> {
+        const task = await this.taskRepository.findOneBy({ id: taskId, userId: userId });
         if (!task) {
             throw new NotFoundException('Task not found');
         }
