@@ -10,7 +10,8 @@ import {
     Delete,
 } from '@nestjs/common';
 
-import { GetTask } from 'src/decorators';
+import { UserEntity } from 'src/database/entities/user.entity';
+import { GetTask,GetUser } from 'src/decorators';
 import { JwtGuard } from 'src/auth/guard';
 import { EditTaskDTO, ReturnTaskDTO, CreateTaskDTO } from './dto';
 import { TaskService } from './task.service';
@@ -21,30 +22,43 @@ export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
     @Get(':id')
-    getTask(@Param('id', ParseIntPipe) taskId: number): Promise<ReturnTaskDTO> {
-        return this.taskService.getTask(taskId);
+    getTask(
+        @GetUser('id') userId: number,
+        @Param('id', ParseIntPipe) taskId: number
+    ): Promise<ReturnTaskDTO> {
+        return this.taskService.getTask(userId,taskId);
     }
 
     @Get()
-    getAllTasks(): Promise<ReturnTaskDTO[]> {
-        return this.taskService.getAllTasks();
+    getAllTasks(
+        @GetUser('id') userId: number)
+    : Promise<ReturnTaskDTO[]> {
+        return this.taskService.getAllTasks(userId);
     }
 
     @Post()
-    addTask(@Body() createTaskDTO: CreateTaskDTO): Promise<ReturnTaskDTO> {
-        return this.taskService.addTask(createTaskDTO);
+    addTask(
+        @GetUser('id') userId: any,
+        @Body() createTaskDTO: CreateTaskDTO
+    ): Promise<ReturnTaskDTO> {
+        console.log('12345654323userId:', userId);
+        return this.taskService.addTask(userId,createTaskDTO);
     }
 
     @Patch(':id')
     editTask(
         @Param('id', ParseIntPipe) taskId: number,
+        @GetUser('id') userId: number,
         @Body() editTask: EditTaskDTO,
     ): Promise<ReturnTaskDTO> {
-        return this.taskService.editTask(taskId, editTask);
+        return this.taskService.editTask(taskId,userId, editTask);
     }
 
     @Delete(':id')
-    async deleteTask(@Param('id', ParseIntPipe) taskId: number): Promise<void> {
-        await this.taskService.deleteTask(taskId);
+    async deleteTask(
+        @GetUser('id') userId: number,
+        @Param('id', ParseIntPipe) taskId: number
+    ): Promise<void> {
+        await this.taskService.deleteTask(userId,taskId);
     }
 }
