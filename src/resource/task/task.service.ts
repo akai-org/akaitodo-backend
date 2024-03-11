@@ -14,7 +14,7 @@ export class TaskService {
     async editTask(taskId: number,userId: number, editTask: EditTaskDTO): Promise<ReturnTaskDTO> {
         const task = await this.taskRepository.findOneBy({ id: taskId,userId: userId });
         if (!task) {
-            return null;
+            throw new NotFoundException('Task not found');
         }
         await this.taskRepository.update({ id: taskId ,userId: userId}, { ...editTask });
         return await this.taskRepository.findOneBy({ id: taskId,userId: userId });;
