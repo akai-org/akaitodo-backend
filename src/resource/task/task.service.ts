@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TaskEntity } from 'src/database/entities/task.entity';
-import { IsNull, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { EditTaskDTO, ReturnTaskDTO, CreateTaskDTO } from './dto';
 
 @Injectable()
@@ -15,7 +15,6 @@ export class TaskService {
         const task = await this.taskRepository.findOneBy({ id: taskId,userId: userId });
         if (!task) {
             throw new NotFoundException('Task not found');
-            return null;
         }
         await this.taskRepository.update({ id: taskId ,userId: userId}, { ...editTask });
         return await this.taskRepository.findOneBy({ id: taskId,userId: userId });;
