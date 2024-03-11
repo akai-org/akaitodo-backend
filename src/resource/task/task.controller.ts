@@ -2,12 +2,15 @@ import {
     Body,
     Controller,
     Get,
+    HttpStatus,
     Param,
     ParseIntPipe,
     Patch,
     UseGuards,
     Post,
     Delete,
+    Req,
+    Res,
 } from '@nestjs/common';
 
 import { UserEntity } from 'src/database/entities/user.entity';
@@ -15,6 +18,9 @@ import { GetTask,GetUser } from 'src/decorators';
 import { JwtGuard } from 'src/auth/guard';
 import { EditTaskDTO, ReturnTaskDTO, CreateTaskDTO } from './dto';
 import { TaskService } from './task.service';
+import { Response } from 'express';
+import { NOTFOUND } from 'dns';
+
 
 @UseGuards(JwtGuard)
 @Controller('tasks')
@@ -22,11 +28,17 @@ export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
     @Get(':id')
-    getTask(
-        @GetUser('id') userId: number,
-        @Param('id', ParseIntPipe) taskId: number
-    ): Promise<ReturnTaskDTO> {
-        return this.taskService.getTask(userId,taskId);
+    async getTask(
+      @GetUser('id') userId: number,
+      @Param('id', ParseIntPipe) taskId: number,
+      @Res() res: Response,
+    ): Promise<void> {
+      const task = await this.taskService.getTask(userId, taskId);
+      if(task){
+        res.status(HttpStatus.OK).json(task);
+      }else{
+        res.status(HttpStatus.NOT_FOUND).json({ message: 'Task not found' });
+      }
     }
 
     @Get()
@@ -38,11 +50,10 @@ export class TaskController {
 
     @Post()
     addTask(
-        @GetUser('id') userId: any,
-        @Body() createTaskDTO: CreateTaskDTO
+        @Body() createTaskDTO: CreateTaskDTO,
+        @GetUser('id') userId: number,
     ): Promise<ReturnTaskDTO> {
-        console.log('12345654323userId:', userId);
-        return this.taskService.addTask(userId,createTaskDTO);
+        return this.taskService.addTask(userId, createTaskDTO);
     }
 
     @Patch(':id')
@@ -50,15 +61,21 @@ export class TaskController {
         @Param('id', ParseIntPipe) taskId: number,
         @GetUser('id') userId: number,
         @Body() editTask: EditTaskDTO,
-    ): Promise<ReturnTaskDTO> {
+    ): Promise<ReturnTaskDTO|null> {
         return this.taskService.editTask(taskId,userId, editTask);
     }
 
     @Delete(':id')
     async deleteTask(
         @GetUser('id') userId: number,
-        @Param('id', ParseIntPipe) taskId: number
+        @Param('id', ParseIntPipe) taskId: number,
+        @Res() res: Response,
     ): Promise<void> {
-        await this.taskService.deleteTask(userId,taskId);
+        const task = await this.taskService.deleteTask(userId,taskId);
+        if(!task){
+            res.status(HttpStatus.NOT_FOUND).json({ message: 'Task not found' });
+        }else{
+            res.status(HttpStatus.OK).json({ message: 'Task deleted' });
+        }
     }
 }
