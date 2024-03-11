@@ -52,12 +52,18 @@ export class TaskController {
     }
 
     @Patch(':id')
-    editTask(
+    async editTask(
         @Param('id', ParseIntPipe) taskId: number,
         @GetUser('id') userId: number,
         @Body() editTask: EditTaskDTO,
-    ): Promise<ReturnTaskDTO|null> {
-        return this.taskService.editTask(taskId,userId, editTask);
+        @Res() res: Response,
+    ): Promise<void> {
+        const task = await this.taskService.editTask(taskId,userId, editTask);
+        if(task){
+            res.status(HttpStatus.OK).json(task);
+          }else{
+            res.status(HttpStatus.NOT_FOUND).json({ message: 'Task not found' });
+          }
     }
 
     @Delete(':id')
