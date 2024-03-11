@@ -9,18 +9,14 @@ import {
     UseGuards,
     Post,
     Delete,
-    Req,
     Res,
 } from '@nestjs/common';
 
-import { UserEntity } from 'src/database/entities/user.entity';
-import { GetTask,GetUser } from 'src/decorators';
+import { GetUser } from 'src/decorators';
 import { JwtGuard } from 'src/auth/guard';
 import { EditTaskDTO, ReturnTaskDTO, CreateTaskDTO } from './dto';
 import { TaskService } from './task.service';
 import { Response } from 'express';
-import { NOTFOUND } from 'dns';
-
 
 @UseGuards(JwtGuard)
 @Controller('tasks')
