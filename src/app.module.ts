@@ -6,6 +6,7 @@ import { AppConfig, DatabaseConfig } from './config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './resource/user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { TaskModule } from './resource/task/task.module';
 import { NoteModule } from './resource/notes/notes.module';
 
 @Module({
@@ -28,6 +29,7 @@ import { NoteModule } from './resource/notes/notes.module';
         UserModule,
         NoteModule,
         AuthModule,
+        TaskModule,
     ],
     controllers: [AppController],
     providers: [AppService],

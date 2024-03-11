@@ -6,6 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    depends_on:
+      - mysql
     ports:
       - ${PORT}:${PORT}
     environment:
