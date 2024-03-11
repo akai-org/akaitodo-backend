@@ -6,11 +6,12 @@ import {
     HttpStatus,
     Post,
     Req,
+    Res,
     UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDTO, JwtTokenDTO, RegisterDTO } from './dto';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { GoogleGuard } from './guard';
 import { User } from '../types';
 
@@ -32,7 +33,10 @@ export class AuthController {
     @UseGuards(GoogleGuard)
     @Get('google/callback')
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async googleAuthCallback(@Req() req: Request): Promise<JwtTokenDTO> {
+    async googleAuthCallback(
+        @Req() req: Request,
+        @Res() res: Response,
+    ): Promise<void> {
         const user: User = req.user;
         const { username, email, password } = user;
         const registerDTO: RegisterDTO = {
@@ -40,6 +44,10 @@ export class AuthController {
             email: email,
             password: password,
         };
-        return this.authservice.registerUserByGoogle(registerDTO);
+        res.cookie('jwt_token', {
+            accessToken: this.authservice.registerUserByGoogle(registerDTO),
+        });
+        res.redirect('http://localhost:5173');
+        // return this.authservice.registerUserByGoogle(registerDTO);
     }
 }
