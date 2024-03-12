@@ -24,22 +24,22 @@ export class TaskController {
 
     @Get(':id')
     async getTask(
-      @GetUser('id') userId: number,
-      @Param('id', ParseIntPipe) taskId: number,
-      @Res() res: Response,
+        @GetUser('id') userId: number,
+        @Param('id', ParseIntPipe) taskId: number,
+        @Res() res: Response,
     ): Promise<void> {
-      const task = await this.taskService.getTask(userId, taskId);
-      if(task){
-        res.status(HttpStatus.OK).json(task);
-      }else{
-        res.status(HttpStatus.NOT_FOUND).json({ message: 'Task not found' });
-      }
+        const task = await this.taskService.getTask(userId, taskId);
+        if (task) {
+            res.status(HttpStatus.OK).json(task);
+        } else {
+            res.status(HttpStatus.NOT_FOUND).json({
+                message: 'Task not found',
+            });
+        }
     }
 
     @Get()
-    getAllTasks(
-        @GetUser('id') userId: number)
-    : Promise<ReturnTaskDTO[]> {
+    getAllTasks(@GetUser('id') userId: number): Promise<ReturnTaskDTO[]> {
         return this.taskService.getAllTasks(userId);
     }
 
@@ -58,12 +58,14 @@ export class TaskController {
         @Body() editTask: EditTaskDTO,
         @Res() res: Response,
     ): Promise<void> {
-        const task = await this.taskService.editTask(taskId,userId, editTask);
-        if(task){
+        const task = await this.taskService.editTask(taskId, userId, editTask);
+        if (task) {
             res.status(HttpStatus.OK).json(task);
-          }else{
-            res.status(HttpStatus.NOT_FOUND).json({ message: 'Task not found' });
-          }
+        } else {
+            res.status(HttpStatus.NOT_FOUND).json({
+                message: 'Task not found',
+            });
+        }
     }
 
     @Delete(':id')
@@ -72,10 +74,12 @@ export class TaskController {
         @Param('id', ParseIntPipe) taskId: number,
         @Res() res: Response,
     ): Promise<void> {
-        const task = await this.taskService.deleteTask(userId,taskId);
-        if(!task){
-            res.status(HttpStatus.NOT_FOUND).json({ message: 'Task not found' });
-        }else{
+        const task = await this.taskService.deleteTask(userId, taskId);
+        if (!task) {
+            res.status(HttpStatus.NOT_FOUND).json({
+                message: 'Task not found',
+            });
+        } else {
             res.status(HttpStatus.OK).json({ message: 'Task deleted' });
         }
     }
