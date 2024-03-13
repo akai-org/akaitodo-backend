@@ -31,7 +31,7 @@ export class TaskController {
         if (!task) {
             throw new NotFoundException('Task not found');
         }
-        return task;
+        return { ...task, user };
     }
 
     @Get()
