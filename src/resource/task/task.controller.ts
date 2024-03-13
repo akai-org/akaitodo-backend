@@ -35,7 +35,9 @@ export class TaskController {
     }
 
     @Get()
-    async getAllTasks(@GetUser() user: UserEntity): Promise<ReturnTaskDTO[]> {
+    async getAllUserTasks(
+        @GetUser() user: UserEntity,
+    ): Promise<ReturnTaskDTO[]> {
         return await this.taskService.getAllUserTasks(user);
     }
 
