@@ -11,7 +11,6 @@ export class TaskService {
         @InjectRepository(TaskEntity)
         private readonly taskRepository: Repository<TaskEntity>,
     ) {}
-
     async editTask(
         user: UserEntity,
         id: number,
@@ -24,18 +23,11 @@ export class TaskService {
         if (!task) {
             throw new NotFoundException('Task not found');
         }
-        await this.taskRepository.update({ id, user }, { ...editTask });
-        return await this.taskRepository.findOneBy({
-            id,
-            user,
-        });
+        return await this.taskRepository.save({ id, user, ...editTask });
     }
 
     async getTask(user: UserEntity, id: number): Promise<ReturnTaskDTO> {
-        return await this.taskRepository.findOneBy({
-            id,
-            user,
-        });
+        return this.taskRepository.findOneBy({ id, user });
     }
 
     async getAllUserTasks(user: UserEntity): Promise<ReturnTaskDTO[]> {
