@@ -12,35 +12,35 @@ export class TaskService {
     ) {}
 
     async editTask(
-        taskId: number,
+        id: number,
         userId: number,
         editTask: EditTaskDTO,
     ): Promise<ReturnTaskDTO> {
         const task = await this.taskRepository.findOneBy({
-            id: taskId,
-            userId: userId,
+            id,
+            userId,
         });
         if (!task) {
             throw new NotFoundException('Task not found');
         }
         await this.taskRepository.update(
-            { id: taskId, userId: userId },
+            { id, userId: userId },
             { ...editTask },
         );
         return await this.taskRepository.findOneBy({
-            id: taskId,
+            id,
             userId: userId,
         });
     }
 
-    async getTask(userId: number, taskId: number): Promise<ReturnTaskDTO> {
+    async getTask(id: number, userId: number): Promise<ReturnTaskDTO> {
         return await this.taskRepository.findOneBy({
+            id,
             userId: userId,
-            id: taskId,
         });
     }
 
-    async getAllTasks(userId: number): Promise<ReturnTaskDTO[]> {
+    async getAllUserTasks(userId: number): Promise<ReturnTaskDTO[]> {
         return await this.taskRepository.find({ where: { userId: userId } });
     }
 
@@ -49,19 +49,18 @@ export class TaskService {
         createTaskDTO: CreateTaskDTO,
     ): Promise<ReturnTaskDTO> {
         const newTask = this.taskRepository.create(createTaskDTO);
-        newTask.userId = userId;
-        return await this.taskRepository.save(newTask);
+        return await this.taskRepository.save({ ...newTask, userId });
     }
 
-    async deleteTask(userId: number, taskId: number): Promise<boolean> {
+    async deleteTask(userId: number, id: number): Promise<boolean> {
         const task = await this.taskRepository.findOneBy({
-            id: taskId,
+            id,
             userId: userId,
         });
-        if (!task) {
-            return false;
+        if (task) {
+            this.taskRepository.remove(task);
+            return true;
         }
-        await this.taskRepository.remove(task);
-        return true;
+        return false;
     }
 }

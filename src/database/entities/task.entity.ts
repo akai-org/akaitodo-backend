@@ -8,10 +8,10 @@ export class TaskEntity {
     @Column()
     userId: number;
 
-    @Column({ type: 'text'})
+    @Column({ type: 'text' })
     name: string;
 
-    @Column({ type: 'text'})
+    @Column({ type: 'text' })
     description: string;
 
     @Column({ type: 'boolean', default: false })

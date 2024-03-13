@@ -2,12 +2,11 @@ import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class CreateTaskDTO {
     @IsString()
-    @IsOptional()
-    name?: string = 'No name';
+    name?: string;
 
     @IsString()
     @IsOptional()
-    description?: string = 'No Description';
+    description?: string = '';
 
     @IsOptional()
     @IsBoolean()
