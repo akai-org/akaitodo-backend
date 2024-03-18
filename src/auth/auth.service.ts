@@ -41,7 +41,21 @@ export class AuthService {
         }
     }
 
-    async registerGoogle() {}
+    async registerGoogle(payload: TokenPayload): Promise<JwtTokenDTO> {
+        try {
+            const user = this.userRepository.create({
+                username: payload.name,
+                email: payload.email,
+                isLocal: false,
+            });
+            await this.userRepository.insert(user);
+            return this.signToken(user.id, user.email);
+        } catch (error) {
+            if (error instanceof QueryFailedError)
+                throw new ConflictException('Email already used');
+            throw error;
+        }
+    }
 
     async getAuthByUser(authdto: AuthDTO): Promise<JwtTokenDTO> {
         const user = await this.userRepository.findOneBy({
@@ -81,17 +95,16 @@ export class AuthService {
         const userExists = await this.userRepository.existsBy({
             email: payload.email,
         });
+
         if (!userExists) {
-            const user = this.userRepository.create({
-                username: payload.name,
-                email: payload.email,
-            });
-            await this.userRepository.insert(user);
-            return this.signToken(user.id, user.email);
+            return this.registerGoogle(payload);
         }
-        return this.signToken(
-            +ticket.getPayload().sub,
-            ticket.getPayload().email,
-        );
+
+        const user = await this.userRepository.findOneBy({
+            email: payload.email,
+        });
+        if (!user) throw new NotFoundException('User not found');
+
+        return this.signToken(user.id, user.email);
     }
 }
