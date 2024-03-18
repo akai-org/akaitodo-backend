@@ -91,18 +91,13 @@ export class AuthService {
             idToken: googleToken,
         });
         const payload: TokenPayload = ticket.getPayload();
-        const userExists = await this.userRepository.existsBy({
-            email: payload.email,
-        });
-
-        if (!userExists) {
-            return this.registerGoogle(payload);
-        }
-
         const user = await this.userRepository.findOneBy({
             email: payload.email,
         });
-        if (!user) throw new NotFoundException('User not found');
+
+        if (!user) {
+            return this.registerGoogle(payload);
+        }
 
         return this.signToken(user.id, user.email);
     }
