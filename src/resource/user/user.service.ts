@@ -32,7 +32,6 @@ export class UserService {
 
     async getUserById(userId: number): Promise<ReturnUserDTO> {
         const user = await this.userRepository.findOneBy({ id: userId });
-        console.log(user);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { hash, ...result } = user;
         return result;
