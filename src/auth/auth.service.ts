@@ -51,20 +51,6 @@ export class AuthService {
         return this.signToken(user.id, user.email);
     }
 
-    async registerUserByGoogle(registerDTO: RegisterDTO): Promise<JwtTokenDTO> {
-        if (!registerDTO) throw new Error('No user');
-
-        const user = await this.userRepository.findOneBy({
-            email: registerDTO.email,
-        });
-        if (user) {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { username, ...authDTO } = registerDTO;
-            return this.getAuthByUser(authDTO);
-        }
-        return this.register(registerDTO);
-    }
-
     async signToken(userId: number, email: string): Promise<JwtTokenDTO> {
         const payload = {
             sub: userId,
