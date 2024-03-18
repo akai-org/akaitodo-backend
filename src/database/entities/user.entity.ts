@@ -13,8 +13,10 @@ export class UserEntity {
     @Column({ length: 30, unique: true })
     email: string;
 
-    @Column()
+    @Column({ nullable: true })
     hash: string;
+
+    isLocal: boolean = true;
 
     @Column({
         type: 'enum',

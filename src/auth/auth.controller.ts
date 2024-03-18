@@ -16,4 +16,12 @@ export class AuthController {
     login(@Body() authdto: AuthDTO): Promise<JwtTokenDTO> {
         return this.authservice.getAuthByUser(authdto);
     }
+
+    @HttpCode(HttpStatus.OK)
+    @Post('google/login')
+    async googleLogin(
+        @Body('gToken') googleToken: string,
+    ): Promise<JwtTokenDTO> {
+        return this.authservice.handleGoogleAuth(googleToken);
+    }
 }

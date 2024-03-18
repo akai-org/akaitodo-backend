@@ -11,12 +11,15 @@ import { AuthDTO, JwtTokenDTO, RegisterDTO } from './dto';
 import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { GoogleClient } from './GoogleClient';
+import { TokenPayload } from 'google-auth-library';
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepository: Repository<UserEntity>,
+        private readonly googleclient: GoogleClient,
         private readonly jwtservice: JwtService,
         readonly configservice: ConfigService,
     ) {}
@@ -37,6 +40,8 @@ export class AuthService {
             throw error;
         }
     }
+
+    async registerGoogle() {}
 
     async getAuthByUser(authdto: AuthDTO): Promise<JwtTokenDTO> {
         const user = await this.userRepository.findOneBy({
@@ -65,5 +70,28 @@ export class AuthService {
         return {
             accessToken: token,
         };
+    }
+
+    async handleGoogleAuth(googleToken: string): Promise<JwtTokenDTO> {
+        const ticket = await this.googleclient.verifyIdToken({
+            idToken: googleToken,
+            audience: this.configservice.get('GOOGLE_ID'),
+        });
+        const payload: TokenPayload = ticket.getPayload();
+        const userExists = await this.userRepository.existsBy({
+            email: payload.email,
+        });
+        if (!userExists) {
+            const user = this.userRepository.create({
+                username: payload.name,
+                email: payload.email,
+            });
+            await this.userRepository.insert(user);
+            return this.signToken(user.id, user.email);
+        }
+        return this.signToken(
+            +ticket.getPayload().sub,
+            ticket.getPayload().email,
+        );
     }
 }
