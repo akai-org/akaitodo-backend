@@ -13,7 +13,7 @@ export class UserService {
 
     async editMe(
         userId: number,
-        edituserdto: EditUserDTO,
+        editUserDto: EditUserDTO,
     ): Promise<ReturnUserDTO> {
         const user = await this.userRepository.findOneBy({ id: userId });
         if (!user) throw new NotFoundException('User not found');
@@ -22,7 +22,7 @@ export class UserService {
                 id: userId,
             },
             {
-                ...edituserdto,
+                ...editUserDto,
             },
         );
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

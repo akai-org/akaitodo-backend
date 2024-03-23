@@ -10,13 +10,6 @@ import { OAuth2Client } from 'google-auth-library';
 @Module({
     imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule.register({})],
     controllers: [AuthController],
-    providers: [
-        AuthService,
-        JwtStrategy,
-        {
-            provide: 'googleClient',
-            useClass: OAuth2Client,
-        },
-    ],
+    providers: [AuthService, JwtStrategy, OAuth2Client],
 })
 export class AuthModule {}

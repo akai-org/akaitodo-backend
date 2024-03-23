@@ -1,6 +1,6 @@
 import {
     ConflictException,
-    Inject,
+    ForbiddenException,
     Injectable,
     NotFoundException,
     UnauthorizedException,
@@ -19,17 +19,17 @@ export class AuthService {
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepository: Repository<UserEntity>,
-        @Inject('googleClient') private readonly googleclient: OAuth2Client,
-        private readonly jwtservice: JwtService,
-        readonly configservice: ConfigService,
+        private readonly googleClient: OAuth2Client,
+        private readonly jwtService: JwtService,
+        readonly configService: ConfigService,
     ) {}
 
-    async register(registerdto: RegisterDTO): Promise<JwtTokenDTO> {
-        const hashedPassword = await argon.hash(registerdto.password);
+    async register(registerDto: RegisterDTO): Promise<JwtTokenDTO> {
+        const hashedPassword = await argon.hash(registerDto.password);
         try {
             const user = this.userRepository.create({
-                username: registerdto.username,
-                email: registerdto.email,
+                username: registerDto.username,
+                email: registerDto.email,
                 hash: hashedPassword,
             });
             await this.userRepository.insert(user);
@@ -57,13 +57,15 @@ export class AuthService {
         }
     }
 
-    async getAuthByUser(authdto: AuthDTO): Promise<JwtTokenDTO> {
+    async getAuthByUser(authDto: AuthDTO): Promise<JwtTokenDTO> {
         const user = await this.userRepository.findOneBy({
-            email: authdto.email,
+            email: authDto.email,
         });
         if (!user) throw new NotFoundException('User not found');
+        if (!user.isLocal || user.hash == null)
+            throw new ForbiddenException('Forbidden login method');
 
-        const passwordMatch = await argon.verify(user.hash, authdto.password);
+        const passwordMatch = await argon.verify(user.hash, authDto.password);
         if (!passwordMatch)
             throw new UnauthorizedException('Incorrect password');
 
@@ -76,9 +78,9 @@ export class AuthService {
             email,
         };
 
-        const token = await this.jwtservice.signAsync(payload, {
+        const token = await this.jwtService.signAsync(payload, {
             expiresIn: '5h',
-            secret: this.configservice.get('JWT_SECRET'),
+            secret: this.configService.get('JWT_SECRET'),
         });
 
         return {
@@ -87,11 +89,16 @@ export class AuthService {
     }
 
     async handleGoogleAuth(googleToken: string): Promise<JwtTokenDTO> {
-        const ticket = await this.googleclient.verifyIdToken({
-            idToken: googleToken,
-            audience: this.configservice.get('GOOGLE_ID'),
-        });
-        const payload = ticket.getPayload();
+        const payload = await this.googleClient
+            .verifyIdToken({
+                idToken: googleToken,
+                audience: this.configService.get('GOOGLE_ID'),
+            })
+            .then((res) => res.getPayload())
+            .catch(() => {
+                throw new ForbiddenException();
+            });
+
         const user = await this.userRepository.findOneBy({
             email: payload.email,
         });

@@ -4,17 +4,17 @@ import { AuthDTO, JwtTokenDTO, RegisterDTO } from './dto';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authservice: AuthService) {}
+    constructor(private readonly authService: AuthService) {}
 
     @Post('register')
-    register(@Body() registerdto: RegisterDTO): Promise<JwtTokenDTO> {
-        return this.authservice.register(registerdto);
+    register(@Body() registerDto: RegisterDTO): Promise<JwtTokenDTO> {
+        return this.authService.register(registerDto);
     }
 
     @HttpCode(HttpStatus.OK)
     @Post('login')
-    login(@Body() authdto: AuthDTO): Promise<JwtTokenDTO> {
-        return this.authservice.getAuthByUser(authdto);
+    login(@Body() authDto: AuthDTO): Promise<JwtTokenDTO> {
+        return this.authService.getAuthByUser(authDto);
     }
 
     @HttpCode(HttpStatus.OK)
@@ -22,6 +22,6 @@ export class AuthController {
     async googleLogin(
         @Body('gToken') googleToken: string,
     ): Promise<JwtTokenDTO> {
-        return this.authservice.handleGoogleAuth(googleToken);
+        return this.authService.handleGoogleAuth(googleToken);
     }
 }
