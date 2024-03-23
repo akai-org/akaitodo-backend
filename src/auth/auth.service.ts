@@ -89,6 +89,7 @@ export class AuthService {
     async handleGoogleAuth(googleToken: string): Promise<JwtTokenDTO> {
         const ticket = await this.googleclient.verifyIdToken({
             idToken: googleToken,
+            audience: this.configservice.get('GOOGLE_ID'),
         });
         const payload = ticket.getPayload();
         const user = await this.userRepository.findOneBy({
