@@ -1,5 +1,6 @@
 import {
     ConflictException,
+    Inject,
     Injectable,
     NotFoundException,
     UnauthorizedException,
@@ -11,15 +12,14 @@ import { AuthDTO, JwtTokenDTO, RegisterDTO } from './dto';
 import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { GoogleClient } from './GoogleClient';
-import { TokenPayload } from 'google-auth-library';
+import { OAuth2Client, TokenPayload } from 'google-auth-library';
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepository: Repository<UserEntity>,
-        private readonly googleclient: GoogleClient,
+        @Inject('googleClient') private readonly googleclient: OAuth2Client,
         private readonly jwtservice: JwtService,
         readonly configservice: ConfigService,
     ) {}
@@ -90,7 +90,7 @@ export class AuthService {
         const ticket = await this.googleclient.verifyIdToken({
             idToken: googleToken,
         });
-        const payload: TokenPayload = ticket.getPayload();
+        const payload = ticket.getPayload();
         const user = await this.userRepository.findOneBy({
             email: payload.email,
         });
