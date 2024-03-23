@@ -13,8 +13,11 @@ export class UserEntity {
     @Column({ length: 30, unique: true })
     email: string;
 
-    @Column()
+    @Column({ nullable: true })
     hash: string;
+
+    @Column({ type: 'boolean', default: true })
+    isLocal: boolean;
 
     @Column({
         type: 'enum',
@@ -22,6 +25,7 @@ export class UserEntity {
         default: UserRole.USER,
     })
     role: UserRole;
+
     @OneToMany(() => NoteEntity, (note) => note.user)
     notes: NoteEntity[];
 }

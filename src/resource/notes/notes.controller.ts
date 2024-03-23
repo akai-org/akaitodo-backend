@@ -10,7 +10,7 @@ import {
 import { NoteService } from './notes.service';
 import { NoteDTO } from './dto';
 import { JwtGuard } from '../../auth/guard';
-import { editNoteDTO } from './dto/editNote.dto';
+import { editNoteDTO } from './dto';
 import { GetUser } from '../../decorators';
 import { UserEntity } from 'src/database/entities/user.entity';
 

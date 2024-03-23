@@ -30,9 +30,9 @@ export class UserController {
     @Patch('me')
     editMe(
         @GetUser('id') userId: number,
-        @Body() edituserdto: EditUserDTO,
+        @Body() editUserDto: EditUserDTO,
     ): Promise<ReturnUserDTO> {
-        return this.userservice.editMe(userId, edituserdto);
+        return this.userservice.editMe(userId, editUserDto);
     }
 
     @ForRole(UserRole.ADMIN)
