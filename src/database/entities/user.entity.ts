@@ -2,6 +2,7 @@ import { UserRole } from '../../types/enums';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { NoteEntity } from './notes.entity';
 import { TaskEntity } from './task.entity';
+import { EventEntity } from './event.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -32,4 +33,7 @@ export class UserEntity {
 
     @OneToMany(() => TaskEntity, (task) => task.user)
     tasks: TaskEntity[];
+
+    @OneToMany(() => EventEntity, (event) => event.createdBy)
+    events: EventEntity[];
 }

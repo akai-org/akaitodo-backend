@@ -8,6 +8,7 @@ import { UserModule } from './resource/user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { NoteModule } from './resource/notes/notes.module';
 import { TaskModule } from './resource/task/task.module';
+import { EventsModule } from './resource/events/events.module';
 
 @Module({
     imports: [
@@ -30,6 +31,7 @@ import { TaskModule } from './resource/task/task.module';
         NoteModule,
         AuthModule,
         TaskModule,
+        EventsModule,
     ],
     controllers: [AppController],
     providers: [AppService],
