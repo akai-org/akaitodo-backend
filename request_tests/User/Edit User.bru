@@ -1,0 +1,19 @@
+meta {
+  name: Edit User
+  type: http
+  seq: 5
+}
+
+patch {
+  url: http://localhost:5000/users/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "s.mazik2002@gmail.com",
+    "password": "passoword",
+    "role": "ADMIN"
+  }
+}
