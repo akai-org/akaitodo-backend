@@ -1,0 +1,11 @@
+meta {
+  name: Get current user
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:5000/users/me
+  body: none
+  auth: bearer
+}
