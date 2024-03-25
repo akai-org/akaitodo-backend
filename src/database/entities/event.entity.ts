@@ -4,6 +4,7 @@ import {
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn,
+    RelationId,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 
@@ -38,6 +39,9 @@ export class EventEntity {
         type: 'timestamp',
     })
     createdAt: Date;
+
+    @RelationId((event: EventEntity) => event.createdBy)
+    creatorId: number;
 
     @ManyToOne(() => UserEntity, (user) => user.events)
     createdBy: UserEntity;
