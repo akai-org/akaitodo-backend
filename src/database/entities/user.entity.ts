@@ -1,4 +1,4 @@
-import { UserRole } from '../../types/enums';
+import { UserRole } from 'src/types/enums';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { NoteEntity } from './notes.entity';
 import { TaskEntity } from './task.entity';
