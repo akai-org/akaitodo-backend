@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsISO8601, IsOptional, IsString } from 'class-validator';
 
 export class EditEventDto {
     @IsString()
@@ -9,19 +9,17 @@ export class EditEventDto {
     @IsOptional()
     description?: string;
 
-    @IsDate()
+    @IsISO8601({ strict: false, strictSeparator: false })
     @IsOptional()
     startDate?: Date;
 
-    @IsDate()
+    @IsISO8601({ strict: false, strictSeparator: false })
     @IsOptional()
     endDate?: Date;
 
-    @IsDate()
     @IsOptional()
     startTime?: Date;
 
-    @IsDate()
     @IsOptional()
     endTime?: Date;
 

@@ -1,7 +1,10 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
+    HttpCode,
+    HttpStatus,
     Param,
     Patch,
     Post,
@@ -23,11 +26,11 @@ export class EventsController {
     getCurrentUserEvents(
         @GetUser('id') userId: number,
     ): Promise<EventEntity[]> {
-        return this.eventService.getNotesByUserId(userId);
+        return this.eventService.getEventsByUserId(userId);
     }
 
     @Post()
-    createEventByUserId(
+    createEventByCurrentUser(
         @GetUser('id') userId: number,
         @Body() eventDto: CreateEventDto,
     ): Promise<ReturnEventDto> {
@@ -36,9 +39,15 @@ export class EventsController {
 
     @Patch(':id')
     editEvent(
-        @Param('id') noteId: number,
+        @Param('id') eventId: number,
         @Body() editEventDto: EditEventDto,
     ): Promise<ReturnEventDto> {
-        return this.eventService.editEventById(noteId, editEventDto);
+        return this.eventService.editEventById(eventId, editEventDto);
+    }
+
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @Delete(':id')
+    deleteEvent(@Param('id') eventId: number): Promise<void> {
+        return this.eventService.removeEventById(eventId);
     }
 }

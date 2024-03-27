@@ -1,10 +1,9 @@
 import {
     IsBoolean,
-    IsDate,
+    IsISO8601,
     IsNotEmpty,
     IsOptional,
     IsString,
-    MinDate,
 } from 'class-validator';
 
 export class CreateEventDto {
@@ -16,23 +15,17 @@ export class CreateEventDto {
     @IsOptional()
     description?: string;
 
-    @IsDate()
-    @MinDate(new Date())
+    @IsISO8601({ strict: false, strictSeparator: false })
     @IsNotEmpty()
     startDate: Date;
 
-    @IsDate()
-    @MinDate(new Date())
+    @IsISO8601({ strict: false, strictSeparator: false })
     @IsOptional()
     endDate?: Date;
 
-    @IsDate()
-    @MinDate(new Date())
     @IsOptional()
     startTime?: Date;
 
-    @IsDate()
-    @MinDate(new Date())
     @IsOptional()
     endTime?: Date;
 

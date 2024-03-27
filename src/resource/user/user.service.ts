@@ -11,13 +11,11 @@ export class UserService {
         private readonly userRepository: Repository<UserEntity>,
     ) {}
 
-    async editMe(
+    async editUserById(
         userId: number,
         editUserDto: EditUserDTO,
     ): Promise<ReturnUserDTO> {
-        const user = await this.userRepository.findOneBy({ id: userId });
-        if (!user) throw new NotFoundException('User not found');
-        await this.userRepository.update(
+        const { affected } = await this.userRepository.update(
             {
                 id: userId,
             },
@@ -25,8 +23,11 @@ export class UserService {
                 ...editUserDto,
             },
         );
+        if (affected == 0) throw new NotFoundException('User not found');
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { hash, ...result } = user;
+        const { hash, ...result } = await this.userRepository.findOneBy({
+            id: userId,
+        });
         return result;
     }
 
