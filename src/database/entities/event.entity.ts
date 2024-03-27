@@ -4,7 +4,6 @@ import {
     Entity,
     ManyToOne,
     PrimaryGeneratedColumn,
-    RelationId,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 
@@ -13,22 +12,22 @@ export class EventEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ default: 'New event', nullable: false })
+    @Column({ default: 'New event' })
     name: string;
 
-    @Column()
+    @Column({ nullable: true })
     description: string;
 
-    @Column({ name: 'start_date', type: 'date', nullable: false })
+    @Column({ name: 'start_date', type: 'date' })
     startDate: Date;
 
-    @Column({ name: 'end_date', type: 'date' })
+    @Column({ name: 'end_date', type: 'date', nullable: true })
     endDate: Date;
 
-    @Column({ name: 'start_time', type: 'time' })
+    @Column({ name: 'start_time', type: 'time', nullable: true })
     startTime: Date;
 
-    @Column({ name: 'end_time', type: 'time' })
+    @Column({ name: 'end_time', type: 'time', nullable: true })
     endTime: Date;
 
     @Column({ name: 'is_full_day', type: 'boolean' })
@@ -40,7 +39,7 @@ export class EventEntity {
     })
     createdAt: Date;
 
-    @RelationId((event: EventEntity) => event.createdBy)
+    @Column({ nullable: false })
     creatorId: number;
 
     @ManyToOne(() => UserEntity, (user) => user.events)
