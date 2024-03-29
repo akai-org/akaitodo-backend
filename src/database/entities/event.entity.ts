@@ -18,17 +18,11 @@ export class EventEntity {
     @Column({ nullable: true })
     description: string;
 
-    @Column({ name: 'start_date', type: 'date' })
+    @Column({ name: 'start_date', type: 'datetime' })
     startDate: Date;
 
-    @Column({ name: 'end_date', type: 'date', nullable: true })
+    @Column({ name: 'end_date', type: 'datetime', nullable: true })
     endDate: Date;
-
-    @Column({ name: 'start_time', type: 'time', nullable: true })
-    startTime: Date;
-
-    @Column({ name: 'end_time', type: 'time', nullable: true })
-    endTime: Date;
 
     @Column({ name: 'is_full_day', type: 'boolean' })
     isFullDay: boolean;

@@ -4,8 +4,6 @@ export class ReturnEventDto {
     description?: string;
     startDate: Date;
     endDate?: Date;
-    startTime?: Date;
-    endTime?: Date;
     isFullDay: boolean;
     creatorId: number;
 }
