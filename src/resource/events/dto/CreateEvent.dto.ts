@@ -1,6 +1,6 @@
 import {
     IsBoolean,
-    IsISO8601,
+    IsDateString,
     IsNotEmpty,
     IsOptional,
     IsString,
@@ -15,19 +15,13 @@ export class CreateEventDto {
     @IsOptional()
     description?: string;
 
-    @IsISO8601({ strict: false, strictSeparator: false })
+    @IsDateString()
     @IsNotEmpty()
     startDate: Date;
 
-    @IsISO8601({ strict: false, strictSeparator: false })
+    @IsDateString()
     @IsOptional()
     endDate?: Date;
-
-    @IsOptional()
-    startTime?: Date;
-
-    @IsOptional()
-    endTime?: Date;
 
     @IsBoolean()
     @IsNotEmpty()
