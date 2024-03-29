@@ -29,6 +29,11 @@ export class EventsController {
         return this.eventService.getEventsByUserId(userId);
     }
 
+    @Get(':id')
+    getEventById(@Param('id') eventId: number): Promise<EventEntity> {
+        return this.eventService.getEventById(eventId);
+    }
+
     @Post()
     createEventByCurrentUser(
         @GetUser('id') userId: number,

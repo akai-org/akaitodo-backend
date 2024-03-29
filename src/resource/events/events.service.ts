@@ -12,6 +12,10 @@ export class EventsService {
         private eventRepository: Repository<EventEntity>,
     ) {}
 
+    async getEventById(eventId: number): Promise<EventEntity> {
+        return this.eventRepository.findOneBy({ id: eventId });
+    }
+
     async getEventsByUserId(userId: number): Promise<EventEntity[]> {
         return this.eventRepository.findBy({ creatorId: userId });
     }
