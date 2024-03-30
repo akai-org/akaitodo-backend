@@ -25,7 +25,6 @@ export class UserService {
                 ...editUserDto,
             },
         );
-
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { hash, ...result } = user;
         return result;

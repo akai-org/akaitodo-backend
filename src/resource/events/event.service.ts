@@ -6,7 +6,7 @@ import { CreateEventDto, ReturnEventDto } from 'src/resource/events/dto';
 import { EditEventDto } from 'src/resource/events/dto/EditEvent.dto';
 
 @Injectable()
-export class EventsService {
+export class EventService {
     constructor(
         @InjectRepository(EventEntity)
         private eventRepository: Repository<EventEntity>,
