@@ -13,11 +13,13 @@ export class EventsService {
     ) {}
 
     async getEventById(eventId: number): Promise<EventEntity> {
-        return this.eventRepository.findOneBy({ id: eventId });
+        const event = await this.eventRepository.findOneBy({ id: eventId });
+        if (!event) throw new NotFoundException('Note not found');
+        return event;
     }
 
     async getEventsByUserId(userId: number): Promise<EventEntity[]> {
-        return this.eventRepository.findBy({ creatorId: userId });
+        return this.eventRepository.findBy({ createdById: userId });
     }
 
     async createEvent(
@@ -26,7 +28,7 @@ export class EventsService {
     ): Promise<ReturnEventDto> {
         const event = this.eventRepository.create({
             ...eventDto,
-            creatorId: userId,
+            createdById: userId,
         });
         return await this.eventRepository.save(event);
     }
