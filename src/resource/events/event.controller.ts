@@ -11,7 +11,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard';
-import { EventsService } from 'src/resource/events/events.service';
+import { EventService } from 'src/resource/events/event.service';
 import { GetUser } from 'src/decorators';
 import { EventEntity } from 'src/database/entities/event.entity';
 import { CreateEventDto, ReturnEventDto } from 'src/resource/events/dto';
@@ -19,8 +19,8 @@ import { EditEventDto } from 'src/resource/events/dto/EditEvent.dto';
 
 @UseGuards(JwtGuard)
 @Controller('events')
-export class EventsController {
-    constructor(private eventService: EventsService) {}
+export class EventController {
+    constructor(private eventService: EventService) {}
 
     @Get()
     getCurrentUserEvents(

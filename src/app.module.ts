@@ -7,7 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './resource/user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { NoteModule } from './resource/notes/notes.module';
-import { EventsModule } from './resource/events/events.module';
+import { EventModule } from './resource/events/event.module';
 
 @Module({
     imports: [
@@ -29,7 +29,7 @@ import { EventsModule } from './resource/events/events.module';
         UserModule,
         NoteModule,
         AuthModule,
-        EventsModule,
+        EventModule,
     ],
     controllers: [AppController],
     providers: [AppService],
