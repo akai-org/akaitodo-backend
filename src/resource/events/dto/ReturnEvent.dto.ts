@@ -5,5 +5,5 @@ export class ReturnEventDto {
     startDate: Date;
     endDate?: Date;
     isFullDay: boolean;
-    creatorId: number;
+    createdById: number;
 }
