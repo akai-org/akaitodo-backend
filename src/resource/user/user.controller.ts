@@ -32,7 +32,7 @@ export class UserController {
         @GetUser('id') userId: number,
         @Body() editUserDto: EditUserDTO,
     ): Promise<ReturnUserDTO> {
-        return this.userservice.editUserById(userId, editUserDto);
+        return this.userservice.editMe(userId, editUserDto);
     }
 
     @ForRole(UserRole.ADMIN)
