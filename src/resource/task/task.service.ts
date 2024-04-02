@@ -14,14 +14,12 @@ export class TaskService {
 
     async getUserTask(user: UserEntity, id: number): Promise<TaskEntity> {
         return await this.taskRepository.findOne({
-            relations: ['user'],
             where: { id, user },
         });
     }
 
     async getAllUserTasks(user: UserEntity): Promise<ReturnTaskDTO[]> {
         return await this.taskRepository.find({
-            relations: ['user'],
             where: { user },
         });
     }

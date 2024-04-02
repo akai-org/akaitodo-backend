@@ -22,7 +22,14 @@ import { UserEntity } from 'src/database/entities/user.entity';
 export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
-    @Get(':id')
+    @Get('/user/all')
+    async getAllUserTasks(
+        @GetUser() user: UserEntity,
+    ): Promise<ReturnTaskDTO[]> {
+        return await this.taskService.getAllUserTasks(user);
+    }
+
+    @Get('/user/:id')
     async getUserTask(
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
@@ -33,13 +40,6 @@ export class TaskController {
         }
 
         return task;
-    }
-
-    @Get()
-    async getAllUserTasks(
-        @GetUser() user: UserEntity,
-    ): Promise<ReturnTaskDTO[]> {
-        return await this.taskService.getAllUserTasks(user);
     }
 
     @Post()

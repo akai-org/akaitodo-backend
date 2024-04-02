@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker compose --env-file=".docker.env.local" up --build -d
+docker compose --env-file="../.docker.env" up --build -d
