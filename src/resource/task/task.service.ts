@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TaskEntity } from 'src/database/entities/task.entity';
 import { Repository } from 'typeorm';
@@ -11,23 +11,12 @@ export class TaskService {
         @InjectRepository(TaskEntity)
         private readonly taskRepository: Repository<TaskEntity>,
     ) {}
-    async editTask(
-        user: UserEntity,
-        id: number,
-        editTask: EditTaskDTO,
-    ): Promise<ReturnTaskDTO> {
-        const task = await this.taskRepository.findOneBy({
-            id,
-            user,
-        });
-        if (!task) {
-            throw new NotFoundException('Task not found');
-        }
-        return await this.taskRepository.save({ id, user, ...editTask });
-    }
 
-    async getTask(user: UserEntity, id: number): Promise<ReturnTaskDTO> {
-        return this.taskRepository.findOneBy({ id, user });
+    async getUserTask(user: UserEntity, id: number): Promise<TaskEntity> {
+        return await this.taskRepository.findOne({
+            relations: ['user'],
+            where: { id, user },
+        });
     }
 
     async getAllUserTasks(user: UserEntity): Promise<ReturnTaskDTO[]> {
@@ -45,15 +34,34 @@ export class TaskService {
         return await this.taskRepository.save({ ...newTask, user });
     }
 
+    async editTask(
+        user: UserEntity,
+        editTask: EditTaskDTO,
+    ): Promise<ReturnTaskDTO> {
+        const task = await this.taskRepository.findOneBy({
+            id: editTask.id,
+            user,
+        });
+        if (!task) {
+            throw new NotFoundException('Task not found');
+        }
+        return await this.taskRepository.save({ ...editTask });
+    }
+
     async deleteTask(user: UserEntity, id: number): Promise<boolean> {
         const task = await this.taskRepository.findOneBy({
             id,
             user,
         });
         if (task) {
-            await this.taskRepository.remove(task);
-            return true;
+            try {
+                await this.taskRepository.remove(task);
+                return true;
+            } catch {
+                return false;
+            }
         }
+
         return false;
     }
 }

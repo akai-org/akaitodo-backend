@@ -23,15 +23,16 @@ export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
     @Get(':id')
-    async getTask(
+    async getUserTask(
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
     ): Promise<ReturnTaskDTO> {
-        const task = await this.taskService.getTask(user, taskId);
+        const task = await this.taskService.getUserTask(user, taskId);
         if (!task) {
             throw new NotFoundException('Task not found');
         }
-        return { ...task, user };
+
+        return task;
     }
 
     @Get()
@@ -49,13 +50,12 @@ export class TaskController {
         return await this.taskService.addTask(user, createTaskDTO);
     }
 
-    @Patch(':id')
+    @Patch()
     async editTask(
         @GetUser() user: UserEntity,
-        @Param('id', ParseIntPipe) taskId: number,
         @Body() editTask: EditTaskDTO,
     ): Promise<ReturnTaskDTO> {
-        const task = await this.taskService.editTask(user, taskId, editTask);
+        const task = await this.taskService.editTask(user, editTask);
         if (!task) {
             throw new NotFoundException('Task not found');
         }
