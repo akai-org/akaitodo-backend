@@ -1,4 +1,5 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+import { UserRole } from '../../../types/enums';
 
 export class EditUserDTO {
     @IsString()
@@ -8,4 +9,8 @@ export class EditUserDTO {
     @IsEmail()
     @IsOptional()
     email?: string;
+
+    @IsEnum(UserRole)
+    @IsOptional()
+    role?: UserRole;
 }
