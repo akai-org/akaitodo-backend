@@ -36,6 +36,6 @@ export class EventEntity {
     @Column({ nullable: false })
     createdById: number;
 
-    @ManyToOne(() => UserEntity, (user) => user.events)
+    @ManyToOne(() => UserEntity)
     createdBy: UserEntity;
 }

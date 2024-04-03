@@ -1,6 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { NoteEntity } from './notes.entity';
-import { EventEntity } from './event.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { UserRole } from '../../types/enums';
 
 @Entity({ name: 'users' })
@@ -26,10 +24,4 @@ export class UserEntity {
         default: UserRole.USER,
     })
     role: UserRole;
-
-    @OneToMany(() => NoteEntity, (note) => note.user)
-    notes: NoteEntity[];
-
-    @OneToMany(() => EventEntity, (event) => event.createdBy)
-    events: EventEntity[];
 }
