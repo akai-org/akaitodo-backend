@@ -6,7 +6,7 @@ import {
     CreateEventDTO,
     EditEventDTO,
     ReturnEventDTO,
-} from 'src/resource/events/dto';
+} from 'src/resource/event/dto';
 
 @Injectable()
 export class EventService {

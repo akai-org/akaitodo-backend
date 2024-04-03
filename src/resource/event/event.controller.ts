@@ -11,10 +11,10 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard';
-import { EventService } from 'src/resource/events/event.service';
+import { EventService } from 'src/resource/event/event.service';
 import { GetUser } from 'src/decorators';
-import { CreateEventDTO, ReturnEventDTO } from 'src/resource/events/dto';
-import { EditEventDTO } from 'src/resource/events/dto/EditEvent.dto';
+import { CreateEventDTO, ReturnEventDTO } from 'src/resource/event/dto';
+import { EditEventDTO } from 'src/resource/event/dto/EditEvent.dto';
 
 @UseGuards(JwtGuard)
 @Controller('events')
