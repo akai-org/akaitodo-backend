@@ -21,6 +21,6 @@ export class NoteEntity {
     @Column({ default: 'red' })
     color: string;
 
-    @ManyToOne(() => UserEntity, (user) => user.notes)
+    @ManyToOne(() => UserEntity)
     user: UserEntity;
 }
