@@ -1,9 +1,9 @@
 export class ReturnEventDTO {
     id: number;
     name: string;
-    description?: string;
+    description: string;
     startDate: Date;
-    endDate?: Date;
+    endDate: Date;
     isFullDay: boolean;
     createdById: number;
 }
