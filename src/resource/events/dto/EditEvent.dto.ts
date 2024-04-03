@@ -1,6 +1,6 @@
 import { IsBoolean, IsDateString, IsOptional, IsString } from 'class-validator';
 
-export class EditEventDto {
+export class EditEventDTO {
     @IsString()
     @IsOptional()
     name?: string;
