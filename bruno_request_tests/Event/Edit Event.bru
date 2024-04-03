@@ -1,0 +1,18 @@
+meta {
+  name: Edit Event
+  type: http
+  seq: 4
+}
+
+patch {
+  url: http://localhost:5000/events/1
+  body: json
+  auth: bearer
+}
+
+body:json {
+  {
+    "name": "Edited",
+    "description": "Added description"
+  }
+}

@@ -1,0 +1,23 @@
+meta {
+  name: Add Event by Current User
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:5000/events/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: 
+}
+
+body:json {
+  {
+    "name": "My event",
+    "startDate": "2024-03-27",
+    "isFullDay": true
+  }
+}

@@ -1,0 +1,17 @@
+meta {
+  name: Filter users
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:5000/users/filter
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "Stanle"
+  }
+}

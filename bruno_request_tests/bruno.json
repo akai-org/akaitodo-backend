@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "AKAI DoDo",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
