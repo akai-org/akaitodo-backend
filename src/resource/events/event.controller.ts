@@ -13,9 +13,8 @@ import {
 import { JwtGuard } from 'src/auth/guard';
 import { EventService } from 'src/resource/events/event.service';
 import { GetUser } from 'src/decorators';
-import { EventEntity } from 'src/database/entities/event.entity';
-import { CreateEventDto, ReturnEventDto } from 'src/resource/events/dto';
-import { EditEventDto } from 'src/resource/events/dto/EditEvent.dto';
+import { CreateEventDTO, ReturnEventDTO } from 'src/resource/events/dto';
+import { EditEventDTO } from 'src/resource/events/dto/EditEvent.dto';
 
 @UseGuards(JwtGuard)
 @Controller('events')
@@ -23,30 +22,28 @@ export class EventController {
     constructor(private eventService: EventService) {}
 
     @Get()
-    getCurrentUserEvents(
-        @GetUser('id') userId: number,
-    ): Promise<EventEntity[]> {
+    getUserEvents(@GetUser('id') userId: number): Promise<ReturnEventDTO[]> {
         return this.eventService.getEventsByUserId(userId);
     }
 
     @Get(':id')
-    getEventById(@Param('id') eventId: number): Promise<EventEntity> {
+    getEventById(@Param('id') eventId: number): Promise<ReturnEventDTO> {
         return this.eventService.getEventById(eventId);
     }
 
     @Post()
     createEventByCurrentUser(
         @GetUser('id') userId: number,
-        @Body() eventDto: CreateEventDto,
-    ): Promise<ReturnEventDto> {
+        @Body() eventDto: CreateEventDTO,
+    ): Promise<ReturnEventDTO> {
         return this.eventService.createEvent(userId, eventDto);
     }
 
     @Patch(':id')
     editEvent(
         @Param('id') eventId: number,
-        @Body() editEventDto: EditEventDto,
-    ): Promise<ReturnEventDto> {
+        @Body() editEventDto: EditEventDTO,
+    ): Promise<ReturnEventDTO> {
         return this.eventService.editEventById(eventId, editEventDto);
     }
 

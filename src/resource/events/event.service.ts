@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EventEntity } from 'src/database/entities/event.entity';
 import { Repository } from 'typeorm';
 import {
-    CreateEventDto,
-    ReturnEventDto,
-    EditEventDto,
+    CreateEventDTO,
+    EditEventDTO,
+    ReturnEventDTO,
 } from 'src/resource/events/dto';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class EventService {
 
     async getEventById(eventId: number): Promise<EventEntity> {
         const event = await this.eventRepository.findOneBy({ id: eventId });
-        if (!event) throw new NotFoundException('Note not found');
+        if (!event) throw new NotFoundException('Event not found');
         return event;
     }
 
@@ -27,8 +27,8 @@ export class EventService {
 
     async createEvent(
         userId: number,
-        eventDto: CreateEventDto,
-    ): Promise<ReturnEventDto> {
+        eventDto: CreateEventDTO,
+    ): Promise<ReturnEventDTO> {
         const event = this.eventRepository.create({
             ...eventDto,
             createdById: userId,
@@ -38,7 +38,7 @@ export class EventService {
 
     async editEventById(
         noteId: number,
-        editEventDto: EditEventDto,
+        editEventDto: EditEventDTO,
     ): Promise<any> {
         const { affected } = await this.eventRepository.update(
             {
@@ -48,7 +48,7 @@ export class EventService {
                 ...editEventDto,
             },
         );
-        if (affected == 0) throw new NotFoundException("Note doesn't exist");
+        if (affected == 0) throw new NotFoundException("Event doesn't exist");
 
         return await this.eventRepository.findOneBy({ id: noteId });
     }

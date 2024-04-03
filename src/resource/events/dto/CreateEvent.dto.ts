@@ -6,7 +6,7 @@ import {
     IsString,
 } from 'class-validator';
 
-export class CreateEventDto {
+export class CreateEventDTO {
     @IsString()
     @IsNotEmpty()
     name: string;

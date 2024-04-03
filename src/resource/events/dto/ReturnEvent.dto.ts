@@ -1,4 +1,4 @@
-export class ReturnEventDto {
+export class ReturnEventDTO {
     id: number;
     name: string;
     description?: string;
