@@ -15,6 +15,6 @@ export class TaskEntity {
     @Column({ type: 'boolean', default: false })
     isDone: boolean;
 
-    @ManyToOne(() => UserEntity, (user) => user.tasks)
+    @ManyToOne(() => UserEntity)
     user: UserEntity;
 }
