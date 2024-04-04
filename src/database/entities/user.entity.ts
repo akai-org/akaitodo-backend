@@ -1,7 +1,5 @@
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { UserRole } from '../../types/enums';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { NoteEntity } from './notes.entity';
-import { TaskEntity } from './task.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -26,10 +24,4 @@ export class UserEntity {
         default: UserRole.USER,
     })
     role: UserRole;
-
-    @OneToMany(() => NoteEntity, (note) => note.user)
-    notes: NoteEntity[];
-
-    @OneToMany(() => TaskEntity, (task) => task.user)
-    tasks: TaskEntity[];
 }
