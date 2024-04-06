@@ -30,4 +30,8 @@ export class NoteService {
     async editNoteById(id: number, noteDto: editNoteDTO) {
         return this.noteRepository.update({ id }, { ...noteDto });
     }
+
+    async deleteNoteById(id: number) {
+        return this.noteRepository.delete({ id });
+    }
 }

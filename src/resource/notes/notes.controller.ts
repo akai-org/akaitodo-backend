@@ -4,6 +4,7 @@ import {
     Post,
     Body,
     Patch,
+    Delete,
     Param,
     UseGuards,
 } from '@nestjs/common';
@@ -32,5 +33,10 @@ export class NoteController {
     @Patch(':id')
     editNoteById(@Param('id') id: number, @Body() noteDto: editNoteDTO) {
         return this.notesService.editNoteById(id, noteDto);
+    }
+
+    @Delete(':id')
+    deleteNoteById(@Param('id') id: number) {
+        return this.notesService.deleteNoteById(id);
     }
 }

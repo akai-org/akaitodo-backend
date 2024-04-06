@@ -11,7 +11,6 @@ export class BaseNotes1711718428656 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`DELETE FROM notes WHERE id = 1`);
-        await queryRunner.query(`DELETE FROM notes WHERE id = 2`);
+        await queryRunner.query(`DELETE FROM notes WHERE id > 0`);
     }
 }
