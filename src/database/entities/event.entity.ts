@@ -2,7 +2,9 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
     ManyToOne,
+    OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
@@ -27,15 +29,23 @@ export class EventEntity {
     @Column({ name: 'is_full_day', type: 'boolean' })
     isFullDay: boolean;
 
+    @Column({ name: 'is_recurring', type: 'boolean', default: false })
+    isRecurring: boolean;
+
     @CreateDateColumn({
         name: 'created_at',
         type: 'timestamp',
     })
     createdAt: Date;
 
-    @Column({ nullable: false })
+    @Column({ name: 'created_by_id' })
     createdById: number;
 
     @ManyToOne(() => UserEntity)
+    @JoinColumn({ name: 'created_by_id' })
     createdBy: UserEntity;
+
+    @OneToOne(() => EventEntity, (event) => event.id)
+    @JoinColumn({ name: 'parent_event_id' })
+    parentEventId: EventEntity;
 }
