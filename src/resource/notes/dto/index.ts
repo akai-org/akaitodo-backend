@@ -1,2 +1,2 @@
-export * from './notes.dto';
+export * from './note.dto';
 export * from './editNote.dto';

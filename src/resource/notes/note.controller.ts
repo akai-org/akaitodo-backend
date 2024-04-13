@@ -8,7 +8,7 @@ import {
     Param,
     UseGuards,
 } from '@nestjs/common';
-import { NoteService } from './notes.service';
+import { NoteService } from './note.service';
 import { NoteDTO } from './dto';
 import { JwtGuard } from '../../auth/guard';
 import { editNoteDTO } from './dto';

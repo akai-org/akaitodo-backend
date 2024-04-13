@@ -6,7 +6,7 @@ import { AppConfig, DatabaseConfig } from './config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './resource/user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { NoteModule } from './resource/notes/notes.module';
+import { NoteModule } from './resource/notes/note.module';
 
 @Module({
     imports: [
