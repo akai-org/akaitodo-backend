@@ -9,5 +9,6 @@ import { UserEntity } from 'src/database/entities/user.entity';
     imports: [TypeOrmModule.forFeature([TaskEntity, UserEntity])],
     providers: [TaskService],
     controllers: [TaskController],
+    exports: [TaskService],
 })
 export class TaskModule {}

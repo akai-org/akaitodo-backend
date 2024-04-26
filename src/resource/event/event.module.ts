@@ -8,5 +8,6 @@ import { EventEntity } from '../../database/entities/event.entity';
     controllers: [EventController],
     providers: [EventService],
     imports: [TypeOrmModule.forFeature([EventEntity])],
+    exports: [EventService],
 })
 export class EventModule {}
