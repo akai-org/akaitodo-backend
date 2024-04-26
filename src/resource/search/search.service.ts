@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-
 import { UserEntity } from 'src/database/entities/user.entity';
-
 import { NoteService } from '../notes/notes.service';
 import { TaskService } from '../task/task.service';
 import { EventService } from '../event/event.service';
