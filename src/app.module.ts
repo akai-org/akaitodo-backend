@@ -8,6 +8,7 @@ import { UserModule } from './resource/user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { NoteModule } from './resource/notes/notes.module';
 import { EventModule } from './resource/event/event.module';
+import { TaskModule } from './resource/task/task.module';
 
 @Module({
     imports: [
@@ -27,8 +28,9 @@ import { EventModule } from './resource/event/event.module';
 
         // General controllers
         UserModule,
-        NoteModule,
         AuthModule,
+        NoteModule,
+        TaskModule,
         EventModule,
     ],
     controllers: [AppController],
