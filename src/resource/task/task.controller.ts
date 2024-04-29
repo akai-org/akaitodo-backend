@@ -10,6 +10,7 @@ import {
     Post,
     Delete,
     NotFoundException,
+    BadRequestException,
 } from '@nestjs/common';
 import { GetUser } from 'src/decorators';
 import { JwtGuard } from 'src/auth/guard';
@@ -50,11 +51,16 @@ export class TaskController {
         return await this.taskService.addTask(user, createTaskDTO);
     }
 
-    @Patch()
+    @Patch(':id')
     async editTask(
+        @Param('id') id: number,
         @GetUser() user: UserEntity,
         @Body() editTask: EditTaskDTO,
     ): Promise<ReturnTaskDTO> {
+        if (id != editTask.id) {
+            throw new BadRequestException('ID is not valid in URL and body');
+        }
+
         const task = await this.taskService.editTask(user, editTask);
         if (!task) {
             throw new NotFoundException('Task not found');
