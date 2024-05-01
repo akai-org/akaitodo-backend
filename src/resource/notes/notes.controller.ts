@@ -24,7 +24,7 @@ export class NoteController {
         return this.notesService.fetchUserNotes(user);
     }
 
-    @Post()
+    @Post(':id')
     addNote(@GetUser() user: UserEntity, @Body() noteDto: NoteDTO) {
         return this.notesService.addNote(user, noteDto);
     }

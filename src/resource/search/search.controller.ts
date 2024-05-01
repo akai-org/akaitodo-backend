@@ -1,7 +1,7 @@
 import {
     Controller,
     Get,
-    Query,
+    Param,
     UseGuards,
 } from '@nestjs/common';
 import { SearchService } from './search.service';
@@ -14,23 +14,23 @@ import { UserEntity } from 'src/database/entities/user.entity';
 export class SearchController {
     constructor(private searchService: SearchService) {}
 
-    @Get('/all')
-    searchAll(@GetUser() user: UserEntity, @Query('query') query: string) {
-        return this.searchService.fetchAllBySearch(user, query);
+    @Get('/all/:search')
+    searchAll(@GetUser() user: UserEntity, @Param('search') search: string) {
+        return this.searchService.fetchAllBySearch(user, search);
     }
 
-    @Get('/notes')
-    searchNotes(@GetUser() user: UserEntity, @Query('query') query: string) {
-        return this.searchService.fetchNotesBySearch(user, query);
+    @Get('/notes/:search')
+    searchNotes(@GetUser() user: UserEntity, @Param('search') search: string) {
+        return this.searchService.fetchNotesBySearch(user, search);
     }
 
-    @Get('/tasks')
-    searchTasks(@GetUser() user: UserEntity, @Query('query') query: string) {
-        return this.searchService.fetchTasksBySearch(user, query);
+    @Get('/tasks/:search')
+    searchTasks(@GetUser() user: UserEntity, @Param('search') search: string) {
+        return this.searchService.fetchTasksBySearch(user, search);
     }
 
-    @Get('/events')
-    searchEvents(@GetUser() user: UserEntity, @Query('query') query: string) {
-        return this.searchService.fetchEventsBySearch(user, query);
+    @Get('/events/:search')
+    searchEvents(@GetUser() user: UserEntity, @Param('search') search: string) {
+        return this.searchService.fetchEventsBySearch(user, search);
     }
 }
