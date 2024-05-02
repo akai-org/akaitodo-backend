@@ -2,7 +2,7 @@ import {
     Column,
     Entity,
     JoinColumn,
-    ManyToOne,
+    OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RecurrenceType } from '../../types/enums';
@@ -21,7 +21,7 @@ export class RecurrenceEntity {
     })
     recurrenceType: RecurrenceType;
 
-    @Column({ name: 'separation_count', nullable: true })
+    @Column({ name: 'separation_count', default: 0 })
     separationCount: number;
 
     @Column({ name: 'occurrence_count', nullable: true })
@@ -30,19 +30,19 @@ export class RecurrenceEntity {
     @Column({ name: 'day_of_week', nullable: true })
     dayOfWeek: number;
 
-    @Column({ name: 'week_of_month', nullable: true })
-    weekOfMonth: number;
-
     @Column({ name: 'day_of_month', nullable: true })
     dayOfMonth: number;
 
     @Column({ name: 'month_of_year', nullable: true })
     monthOfYear: number;
 
-    @Column({ name: 'event_id' })
+    @Column({ name: 'event_id', nullable: true })
     eventId: number;
 
-    @ManyToOne(() => EventEntity)
+    @OneToOne(() => EventEntity, (event) => event.recurrencePattern, {
+        nullable: true,
+        onDelete: 'CASCADE',
+    })
     @JoinColumn({ name: 'event_id' })
     event: EventEntity;
 }

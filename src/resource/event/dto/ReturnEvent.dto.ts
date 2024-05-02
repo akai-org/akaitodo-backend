@@ -1,3 +1,5 @@
+import { ReturnEventRecurrenceDTO } from './ReturnEventRecurrence.dto';
+
 export class ReturnEventDTO {
     id: number;
     name: string;
@@ -6,4 +8,5 @@ export class ReturnEventDTO {
     endDate: Date;
     isFullDay: boolean;
     createdById: number;
+    recurrencePattern?: ReturnEventRecurrenceDTO;
 }

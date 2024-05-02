@@ -8,6 +8,7 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
+import { RecurrenceEntity } from './recurrence.entity';
 
 @Entity({ name: 'events' })
 export class EventEntity {
@@ -29,9 +30,6 @@ export class EventEntity {
     @Column({ name: 'is_full_day', type: 'boolean' })
     isFullDay: boolean;
 
-    @Column({ name: 'is_recurring', type: 'boolean', default: false })
-    isRecurring: boolean;
-
     @CreateDateColumn({
         name: 'created_at',
         type: 'timestamp',
@@ -45,7 +43,9 @@ export class EventEntity {
     @JoinColumn({ name: 'created_by_id' })
     createdBy: UserEntity;
 
-    @OneToOne(() => EventEntity, (event) => event.id)
-    @JoinColumn({ name: 'parent_event_id' })
-    parentEventId: EventEntity;
+    @OneToOne(() => RecurrenceEntity, (recurrence) => recurrence.event, {
+        cascade: true,
+        nullable: true,
+    })
+    recurrencePattern: RecurrenceEntity;
 }

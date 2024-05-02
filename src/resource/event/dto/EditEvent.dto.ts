@@ -1,4 +1,13 @@
-import { IsBoolean, IsDateString, IsOptional, IsString } from 'class-validator';
+import {
+    IsBoolean,
+    IsDateString,
+    IsOptional,
+    IsString,
+    ValidateIf,
+    ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { EditEventRecurrenceDTO } from './EditEventRecurrence.dto';
 
 export class EditEventDTO {
     @IsString()
@@ -20,4 +29,13 @@ export class EditEventDTO {
     @IsBoolean()
     @IsOptional()
     isFullDay?: boolean;
+
+    @IsBoolean()
+    @IsOptional()
+    deleteRecurrence?: boolean;
+
+    @ValidateIf((o) => o.recurrencePattern != null)
+    @ValidateNested()
+    @Type(() => EditEventRecurrenceDTO)
+    recurrencePattern: EditEventRecurrenceDTO;
 }
