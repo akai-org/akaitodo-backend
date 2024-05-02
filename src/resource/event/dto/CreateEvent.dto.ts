@@ -4,7 +4,11 @@ import {
     IsNotEmpty,
     IsOptional,
     IsString,
+    ValidateIf,
+    ValidateNested,
 } from 'class-validator';
+import { CreateEventRecurrenceDTO } from './CreateEventRecurrence.dto';
+import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateEventDTO {
@@ -32,4 +36,9 @@ export class CreateEventDTO {
     @IsNotEmpty()
     @ApiProperty()
     isFullDay: boolean;
+
+    @ValidateIf((o) => o.recurrencePattern != null)
+    @ValidateNested()
+    @Type(() => CreateEventRecurrenceDTO)
+    recurrencePattern: CreateEventRecurrenceDTO;
 }

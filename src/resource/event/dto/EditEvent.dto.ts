@@ -1,4 +1,13 @@
-import { IsBoolean, IsDateString, IsOptional, IsString } from 'class-validator';
+import {
+    IsBoolean,
+    IsDateString,
+    IsOptional,
+    IsString,
+    ValidateIf,
+    ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { EditEventRecurrenceDTO } from './EditEventRecurrence.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class EditEventDTO {
@@ -26,4 +35,13 @@ export class EditEventDTO {
     @IsOptional()
     @ApiProperty({ required: false })
     isFullDay?: boolean;
+
+    @IsBoolean()
+    @IsOptional()
+    deleteRecurrence?: boolean;
+
+    @ValidateIf((o) => o.recurrencePattern != null)
+    @ValidateNested()
+    @Type(() => EditEventRecurrenceDTO)
+    recurrencePattern: EditEventRecurrenceDTO;
 }

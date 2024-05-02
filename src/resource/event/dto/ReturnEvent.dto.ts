@@ -1,3 +1,5 @@
+import { ReturnEventRecurrenceDTO } from './ReturnEventRecurrence.dto';
+
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ReturnEventDTO {
@@ -15,4 +17,5 @@ export class ReturnEventDTO {
     isFullDay: boolean;
     @ApiProperty()
     createdById: number;
+    recurrencePattern?: ReturnEventRecurrenceDTO;
 }
