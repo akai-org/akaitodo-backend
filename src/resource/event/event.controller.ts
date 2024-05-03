@@ -18,6 +18,7 @@ import {
     EditEventDTO,
     ReturnEventDTO,
 } from 'src/resource/event/dto';
+import { ReturnEventWithDatesDTO } from './dto/ReturnEventWithDates.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
     CreateEventByCurrentUserApi,
@@ -38,6 +39,19 @@ export class EventController {
     @GetUserEventsApi()
     getUserEvents(@GetUser('id') userId: number): Promise<ReturnEventDTO[]> {
         return this.eventService.getEventsByUserId(userId);
+    }
+
+    @Get('dates')
+    getUserEventsBetweenDates(
+        @GetUser('id') userId: number,
+        @Query('startDate') startDate: Date,
+        @Query('endDate') endDate: Date,
+    ): Promise<ReturnEventWithDatesDTO[]> {
+        return this.eventService.getEventsBetweenDates(
+            userId,
+            startDate,
+            endDate,
+        );
     }
 
     @Get(':id')
