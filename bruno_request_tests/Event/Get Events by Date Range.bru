@@ -1,0 +1,20 @@
+meta {
+  name: Get Events by Date Range
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:5000/events/dates?startDate=2024-01-01T00:00:00&endDate=2024-12-31T23:59:59
+  body: none
+  auth: bearer
+}
+
+query {
+  startDate: 2024-01-01T00:00:00
+  endDate: 2024-12-31T23:59:59
+}
+
+auth:bearer {
+  token: 
+}

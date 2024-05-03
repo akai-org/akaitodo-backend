@@ -8,6 +8,7 @@ import {
     Param,
     Patch,
     Post,
+    Query,
     UseGuards,
 } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard';
@@ -15,6 +16,7 @@ import { EventService } from 'src/resource/event/event.service';
 import { GetUser } from 'src/decorators';
 import { CreateEventDTO, ReturnEventDTO } from 'src/resource/event/dto';
 import { EditEventDTO } from 'src/resource/event/dto/EditEvent.dto';
+import { ReturnEventWithDatesDTO } from './dto/ReturnEventWithDates.dto';
 
 @UseGuards(JwtGuard)
 @Controller('events')
@@ -24,6 +26,19 @@ export class EventController {
     @Get()
     getUserEvents(@GetUser('id') userId: number): Promise<ReturnEventDTO[]> {
         return this.eventService.getEventsByUserId(userId);
+    }
+
+    @Get('dates')
+    getUserEventsBetweenDates(
+        @GetUser('id') userId: number,
+        @Query('startDate') startDate: Date,
+        @Query('endDate') endDate: Date,
+    ): Promise<ReturnEventWithDatesDTO[]> {
+        return this.eventService.getEventsBetweenDates(
+            userId,
+            startDate,
+            endDate,
+        );
     }
 
     @Get(':id')
