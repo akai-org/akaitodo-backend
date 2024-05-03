@@ -59,10 +59,8 @@ export class EventService {
                     id: event.id,
                     name: event.name,
                     description: event.description,
-                    startDate: new Date(event.startDate).toLocaleString(),
-                    endDate: event.endDate
-                        ? new Date(event.endDate).toLocaleString()
-                        : null,
+                    startDate: event.startDate,
+                    endDate: event.endDate,
                     isFullDay: event.isFullDay,
                     createdById: event.createdById,
                     eventDates: [
@@ -77,10 +75,8 @@ export class EventService {
                 id: event.id,
                 name: event.name,
                 description: event.description,
-                startDate: new Date(event.startDate).toLocaleString(),
-                endDate: event.endDate
-                    ? new Date(event.endDate).toLocaleString()
-                    : null,
+                startDate: event.startDate,
+                endDate: event.endDate,
                 isFullDay: event.isFullDay,
                 createdById: event.createdById,
                 eventDates: [],
