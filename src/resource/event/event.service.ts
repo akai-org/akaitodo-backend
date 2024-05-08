@@ -10,7 +10,7 @@ import {
 import { RecurrenceEntity } from '../../database/entities/recurrence.entity';
 import { ReturnEventWithDatesDTO } from './dto/ReturnEventWithDates.dto';
 import { RecurrenceType } from '../../types/enums';
-import { addDays } from '../../utils/DateUtils';
+import { addDays, nextMonthWithDate } from '../../utils/DateUtils';
 
 @Injectable()
 export class EventService {
@@ -53,9 +53,9 @@ export class EventService {
             },
             relations: { recurrencePattern: true },
         });
-        return toFilter.map((event) => {
+        return toFilter.reduce((filtered, event) => {
             if (event.recurrencePattern == null) {
-                return {
+                filtered.push({
                     id: event.id,
                     name: event.name,
                     description: event.description,
@@ -66,7 +66,8 @@ export class EventService {
                     eventDates: [
                         new Date(event.startDate).toLocaleDateString(),
                     ],
-                };
+                });
+                return filtered;
             }
 
             let start = new Date(event.startDate);
@@ -83,6 +84,9 @@ export class EventService {
             };
             let freq = 24 * 60 * 60 * 1000;
             let freqInDays: number, shift: number;
+            const endFilter = event.endDate
+                ? Math.min(new Date(endDate).getTime(), event.endDate.getTime())
+                : new Date(endDate).getTime();
             switch (event.recurrencePattern.recurrenceType) {
                 case RecurrenceType.DAILY:
                     freqInDays = event.recurrencePattern.separationCount + 1;
@@ -95,14 +99,12 @@ export class EventService {
                             new Date(startDate).getTime() + freq - shift,
                         );
                     }
-                    while (
-                        start.getTime() <= new Date(endDate).getTime() &&
-                        start.getTime() <= event.endDate.getTime()
-                    ) {
+                    while (start.getTime() <= endFilter) {
                         toReturn.eventDates.push(start.toLocaleDateString());
                         start = addDays(start, freqInDays);
                     }
-                    return toReturn;
+                    if (toReturn.eventDates.length > 0) filtered.push(toReturn);
+                    break;
                 case RecurrenceType.WEEKLY:
                     freqInDays =
                         (event.recurrencePattern.separationCount + 1) * 7;
@@ -115,20 +117,46 @@ export class EventService {
                             new Date(startDate).getTime() + freq - shift,
                         );
                     }
-                    while (
-                        start.getTime() <= new Date(endDate).getTime() &&
-                        start.getTime() <= event.endDate.getTime()
-                    ) {
+                    while (start.getTime() <= endFilter) {
                         toReturn.eventDates.push(start.toLocaleDateString());
                         start = addDays(start, freqInDays);
                     }
-                    return toReturn;
+                    if (toReturn.eventDates.length > 0) filtered.push(toReturn);
+                    break;
                 case RecurrenceType.MONTHLY:
+                    while (start.getTime() < new Date(startDate).getTime()) {
+                        start = nextMonthWithDate(
+                            start,
+                            event.recurrencePattern.separationCount + 1,
+                        );
+                    }
+                    while (start.getTime() <= endFilter) {
+                        toReturn.eventDates.push(start.toLocaleDateString());
+                        start = nextMonthWithDate(
+                            start,
+                            event.recurrencePattern.separationCount + 1,
+                        );
+                    }
+                    if (toReturn.eventDates.length > 0) filtered.push(toReturn);
                     break;
                 case RecurrenceType.YEARLY:
-                    break;
+                    while (start.getTime() < new Date(startDate).getTime()) {
+                        start = nextMonthWithDate(
+                            start,
+                            (event.recurrencePattern.separationCount + 1) * 12,
+                        );
+                    }
+                    while (start.getTime() <= endFilter) {
+                        toReturn.eventDates.push(start.toLocaleDateString());
+                        start = nextMonthWithDate(
+                            start,
+                            (event.recurrencePattern.separationCount + 1) * 12,
+                        );
+                    }
+                    if (toReturn.eventDates.length > 0) filtered.push(toReturn);
             }
-        });
+            return filtered;
+        }, []);
     }
 
     async createEvent(
