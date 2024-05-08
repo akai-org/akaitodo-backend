@@ -1,12 +1,12 @@
-import { EventEntity } from "src/database/entities/event.entity"
-import { NoteEntity } from "src/database/entities/notes.entity"
+import { ReturnEventDTO } from "src/resource/event/dto";
+import { NoteDTO } from "src/resource/notes/dto";
 import { ReturnTaskDTO } from "src/resource/task/dto";
 
 enum ResourceType {
-    NOTES = "NOTES",
-    TASKS = "TASKS",
-    EVENTS = "EVENTS"
+    NOTES = "notes",
+    TASKS = "tasks",
+    EVENTS = "events"
 }
 
-type Entity = NoteEntity | ReturnTaskDTO | EventEntity;
-export type SearchResult = Record<ResourceType, Entity[]>;
+type ReturnDTO = NoteDTO | ReturnTaskDTO | ReturnEventDTO;
+export type SearchResult = Record<ResourceType, ReturnDTO[]>;

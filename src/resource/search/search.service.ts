@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SearchResult } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Like } from 'typeorm';
+import { ILike } from 'typeorm';
 import { NoteEntity } from 'src/database/entities/notes.entity';
 import { TaskEntity } from 'src/database/entities/task.entity';
 import { EventEntity } from 'src/database/entities/event.entity';
@@ -17,41 +17,47 @@ export class SearchService {
         @InjectRepository(TaskEntity)
         private taskRepository: Repository<TaskEntity>,
         @InjectRepository(EventEntity)
-        private eventRepository: Repository<EventEntity>,
+        private eventRepository: Repository<EventEntity>
     ) {}
+
+    private initResultObject = {
+        notes: [],
+        tasks: [],
+        events: []
+    }
 
     async fetchAllBySearch(user: UserEntity, search: string): Promise<SearchResult> {
         const searchResult = {
-            NOTES: await this.findNotesBySearch(user, search),
-            TASKS: await this.findTasksBySearch(user, search),
-            EVENTS: await this.findEventsBySearch(user, search)
+            notes: await this.findNotesBySearch(user, search),
+            tasks: await this.findTasksBySearch(user, search),
+            events: await this.findEventsBySearch(user, search)
         };
         return searchResult;
     }
 
     async fetchNotesBySearch(user: UserEntity, search: string): Promise<SearchResult> {
+        const foundNotes = await this.findNotesBySearch(user, search);
         const searchResult = {
-            NOTES: await this.findNotesBySearch(user, search),
-            TASKS: [],
-            EVENTS: []
+            ...this.initResultObject,
+            notes: [...foundNotes],
         }
         return searchResult;
     }
 
     async fetchTasksBySearch(user: UserEntity, search: string) {
+        const foundTasks = await this.findTasksBySearch(user, search);
         const searchResult = {
-            NOTES: [],
-            TASKS: await this.findTasksBySearch(user, search),
-            EVENTS: []
+            ...this.initResultObject,
+            tasks: [...foundTasks],
         }
         return searchResult;
     }
 
     async fetchEventsBySearch(user: UserEntity, search: string) {
+        const foundEvents = await this.findEventsBySearch(user, search);
         const searchResult = {
-            NOTES: [],
-            TASKS: [],
-            EVENTS: await this.findEventsBySearch(user, search)
+            ...this.initResultObject,
+            events: [...foundEvents],
         }
         return searchResult;
     }
@@ -59,15 +65,14 @@ export class SearchService {
     private async findNotesBySearch(user: UserEntity, search: string) {
         const pattern = `%${search}%`;
         return this.noteRepository.find({
-            relations: ['user'],
             where: [
                 {
                     user: user,
-                    title: Like(pattern)
+                    title: ILike(pattern)
                 },
                 {
                     user: user,
-                    body: Like(pattern)
+                    body: ILike(pattern)
                 }
             ]
         });
@@ -76,15 +81,14 @@ export class SearchService {
     private async findTasksBySearch(user: UserEntity, search: string) {
         const pattern = `%${search}%`;
         return this.taskRepository.find({
-            relations: ['user'],
             where: [
                 {
                     user: user,
-                    name: Like(pattern)
+                    name: ILike(pattern)
                 },
                 {
                     user: user,
-                    description: Like(pattern)
+                    description: ILike(pattern)
                 }
             ]
         });
@@ -93,15 +97,14 @@ export class SearchService {
     private async findEventsBySearch(createdBy: UserEntity, search: string) {
         const pattern = `%${search}%`;
         return this.eventRepository.find({
-            relations: ['createdBy'],
             where: [
                 {
                     createdBy: createdBy,
-                    name: Like(pattern)
+                    name: ILike(pattern)
                 },
                 {
                     createdBy: createdBy,
-                    description: Like(pattern)
+                    description: ILike(pattern)
                 }
             ]
         });
