@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { NoteModule } from './resource/notes/notes.module';
 import { EventModule } from './resource/event/event.module';
 import { TaskModule } from './resource/task/task.module';
+import { SearchModule } from './resource/search/search.module';
 
 @Module({
     imports: [
@@ -32,6 +33,7 @@ import { TaskModule } from './resource/task/task.module';
         NoteModule,
         TaskModule,
         EventModule,
+        SearchModule
     ],
     controllers: [AppController],
     providers: [AppService],
