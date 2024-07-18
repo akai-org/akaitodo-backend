@@ -1,0 +1,32 @@
+{
+  "name": "AKAI DoDo - Backend",
+  "technologies": ["NestJS", "TypeORM", "MySQL"],
+  "description_pl": "Backend aplikacji do zarządzania czasem, z kalendarzem, wydarzeniami i notatkami",
+  "description_en": "Backend of a time management app, with a calendar, events and notes",
+  "contributors": [
+    {
+      "name": "Ania",
+      "url": "https://github.com/Aeri4a"
+    },
+    {
+      "name": "Stachu",
+      "url": "https://github.com/smazik02"
+    },
+    {
+      "name": "Ignacy",
+      "url": "https://github.com/IK541"
+    },
+    {
+      "name": "Michał",
+      "url": "https://github.com/m-olej"
+    },
+    {
+      "name": "Kuba T",
+      "url": "https://github.com/JakubTomasz"
+    },
+    {
+      "name": "Kuba F",
+      "url": "https://github.com/kabix09"
+    }
+  ]
+}
