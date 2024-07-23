@@ -1,24 +1,26 @@
 import {
+    BadRequestException,
     Body,
     Controller,
+    Delete,
     Get,
     HttpCode,
+    NotFoundException,
     Param,
     ParseIntPipe,
     Patch,
-    UseGuards,
     Post,
-    Delete,
-    NotFoundException,
-    BadRequestException,
+    UseGuards,
 } from '@nestjs/common';
 import { GetUser } from 'src/decorators';
 import { JwtGuard } from 'src/auth/guard';
-import { EditTaskDTO, ReturnTaskDTO, CreateTaskDTO } from './dto';
+import { CreateTaskDTO, EditTaskDTO, ReturnTaskDTO } from './dto';
 import { TaskService } from './task.service';
 import { UserEntity } from 'src/database/entities/user.entity';
+import { ApiTags } from '@nestjs/swagger';
 
 @UseGuards(JwtGuard)
+@ApiTags('Tasks')
 @Controller('tasks')
 export class TaskController {
     constructor(private readonly taskService: TaskService) {}

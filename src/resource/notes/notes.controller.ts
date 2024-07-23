@@ -1,20 +1,21 @@
 import {
+    Body,
     Controller,
     Get,
-    Post,
-    Body,
-    Patch,
     Param,
+    Patch,
+    Post,
     UseGuards,
 } from '@nestjs/common';
 import { NoteService } from './notes.service';
-import { NoteDTO } from './dto';
+import { editNoteDTO, NoteDTO } from './dto';
 import { JwtGuard } from '../../auth/guard';
-import { editNoteDTO } from './dto';
 import { GetUser } from '../../decorators';
 import { UserEntity } from 'src/database/entities/user.entity';
+import { ApiTags } from '@nestjs/swagger';
 
 @UseGuards(JwtGuard)
+@ApiTags('Notes')
 @Controller('notes')
 export class NoteController {
     constructor(private notesService: NoteService) {}

@@ -14,8 +14,10 @@ import { EditUserDTO, ReturnUserDTO } from './dto';
 import { UserService } from './user.service';
 import { UserRoleGuard } from './guard';
 import { UserRole } from 'src/types/enums';
+import { ApiTags } from '@nestjs/swagger';
 
 @UseGuards(JwtGuard)
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
     constructor(private readonly userservice: UserService) {}

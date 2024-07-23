@@ -1,15 +1,12 @@
-import {
-    Controller,
-    Get,
-    Param,
-    UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { SearchService } from './search.service';
 import { JwtGuard } from '../../auth/guard';
 import { GetUser } from '../../decorators';
 import { UserEntity } from 'src/database/entities/user.entity';
+import { ApiTags } from '@nestjs/swagger';
 
 @UseGuards(JwtGuard)
+@ApiTags('Search')
 @Controller('search')
 export class SearchController {
     constructor(private searchService: SearchService) {}
