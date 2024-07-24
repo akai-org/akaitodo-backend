@@ -17,12 +17,7 @@ async function bootstrap() {
         .setTitle('DoDo API')
         .setDescription('DoDo API Documentation')
         .setVersion('1.0')
-        // .addTag('Auth')
-        // .addTag('Events')
-        // .addTag('Notes')
-        // .addTag('Search')
-        // .addTag('Tasks')
-        // .addTag('Users')
+        .addBearerAuth()
         .build();
     const apiDocument = SwaggerModule.createDocument(app, apiConfig);
     SwaggerModule.setup('swagger', app, apiDocument);

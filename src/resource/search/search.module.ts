@@ -7,10 +7,15 @@ import { TaskEntity } from '../../database/entities/task.entity';
 import { EventEntity } from '../../database/entities/event.entity';
 import { UserEntity } from '../../database/entities/user.entity';
 
-
-
 @Module({
-    imports: [TypeOrmModule.forFeature([NoteEntity, TaskEntity, EventEntity, UserEntity])],
+    imports: [
+        TypeOrmModule.forFeature([
+            NoteEntity,
+            TaskEntity,
+            EventEntity,
+            UserEntity,
+        ]),
+    ],
     controllers: [SearchController],
     providers: [SearchService],
 })

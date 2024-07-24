@@ -17,6 +17,7 @@ import { CreateEventDTO, ReturnEventDTO } from 'src/resource/event/dto';
 import { EditEventDTO } from 'src/resource/event/dto/EditEvent.dto';
 import {
     ApiBadRequestResponse,
+    ApiBearerAuth,
     ApiBody,
     ApiCreatedResponse,
     ApiNoContentResponse,
@@ -28,6 +29,7 @@ import {
 @UseGuards(JwtGuard)
 @ApiTags('Events')
 @Controller('events')
+@ApiBearerAuth()
 export class EventController {
     constructor(private eventService: EventService) {}
 
@@ -68,8 +70,8 @@ export class EventController {
     }
 
     @HttpCode(HttpStatus.NO_CONTENT)
-    @ApiNoContentResponse()
     @Delete(':id')
+    @ApiNoContentResponse()
     deleteEvent(@Param('id') eventId: number): Promise<void> {
         return this.eventService.removeEventById(eventId);
     }

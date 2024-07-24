@@ -5,6 +5,7 @@ import {
     Delete,
     Get,
     HttpCode,
+    HttpStatus,
     NotFoundException,
     Param,
     ParseIntPipe,
@@ -17,15 +18,26 @@ import { JwtGuard } from 'src/auth/guard';
 import { CreateTaskDTO, EditTaskDTO, ReturnTaskDTO } from './dto';
 import { TaskService } from './task.service';
 import { UserEntity } from 'src/database/entities/user.entity';
-import { ApiTags } from '@nestjs/swagger';
+import {
+    ApiBadRequestResponse,
+    ApiBearerAuth,
+    ApiBody,
+    ApiCreatedResponse,
+    ApiNoContentResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiTags,
+} from '@nestjs/swagger';
 
 @UseGuards(JwtGuard)
 @ApiTags('Tasks')
+@ApiBearerAuth()
 @Controller('tasks')
 export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
     @Get('/user/all')
+    @ApiOkResponse({ type: [ReturnTaskDTO] })
     async getAllUserTasks(
         @GetUser() user: UserEntity,
     ): Promise<ReturnTaskDTO[]> {
@@ -33,6 +45,8 @@ export class TaskController {
     }
 
     @Get('/user/:id')
+    @ApiOkResponse({ type: ReturnTaskDTO })
+    @ApiNotFoundResponse({ description: 'Task not found' })
     async getUserTask(
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
@@ -46,6 +60,9 @@ export class TaskController {
     }
 
     @Post()
+    @ApiCreatedResponse({ type: ReturnTaskDTO })
+    @ApiBadRequestResponse({ description: 'Invalid body' })
+    @ApiBody({ type: CreateTaskDTO })
     async addTask(
         @GetUser() user: UserEntity,
         @Body() createTaskDTO: CreateTaskDTO,
@@ -54,6 +71,12 @@ export class TaskController {
     }
 
     @Patch(':id')
+    @ApiOkResponse({ type: ReturnTaskDTO })
+    @ApiBadRequestResponse({
+        description: 'Invalid body / ID is not valid in URL and body',
+    })
+    @ApiNotFoundResponse({ description: 'Task not found' })
+    @ApiBody({ type: EditTaskDTO })
     async editTask(
         @Param('id') id: number,
         @GetUser() user: UserEntity,
@@ -70,8 +93,10 @@ export class TaskController {
         return task;
     }
 
+    @HttpCode(HttpStatus.NO_CONTENT)
     @Delete(':id')
-    @HttpCode(204)
+    @ApiNoContentResponse()
+    @ApiNotFoundResponse({ description: 'Task not found' })
     async deleteTask(
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
