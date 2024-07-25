@@ -32,6 +32,7 @@ export class UserService {
 
     async getUserById(userId: number): Promise<ReturnUserDTO> {
         const user = await this.userRepository.findOneBy({ id: userId });
+        if (!user) throw new NotFoundException('User not found');
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { hash, ...result } = user;
         return result;

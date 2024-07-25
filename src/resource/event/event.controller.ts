@@ -15,23 +15,36 @@ import { EventService } from 'src/resource/event/event.service';
 import { GetUser } from 'src/decorators';
 import { CreateEventDTO, ReturnEventDTO } from 'src/resource/event/dto';
 import { EditEventDTO } from 'src/resource/event/dto/EditEvent.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+    CreateEventByCurrentUserApi,
+    DeleteEventApi,
+    EditEventApi,
+    GetEventByIdApi,
+    GetUserEventsApi,
+} from '../../decorators/OpenAPI/event.decorators';
 
 @UseGuards(JwtGuard)
+@ApiTags('Events')
 @Controller('events')
+@ApiBearerAuth()
 export class EventController {
     constructor(private eventService: EventService) {}
 
     @Get()
+    @GetUserEventsApi()
     getUserEvents(@GetUser('id') userId: number): Promise<ReturnEventDTO[]> {
         return this.eventService.getEventsByUserId(userId);
     }
 
     @Get(':id')
+    @GetEventByIdApi()
     getEventById(@Param('id') eventId: number): Promise<ReturnEventDTO> {
         return this.eventService.getEventById(eventId);
     }
 
     @Post()
+    @CreateEventByCurrentUserApi()
     createEventByCurrentUser(
         @GetUser('id') userId: number,
         @Body() eventDto: CreateEventDTO,
@@ -40,6 +53,7 @@ export class EventController {
     }
 
     @Patch(':id')
+    @EditEventApi()
     editEvent(
         @Param('id') eventId: number,
         @Body() editEventDto: EditEventDTO,
@@ -49,6 +63,7 @@ export class EventController {
 
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete(':id')
+    @DeleteEventApi()
     deleteEvent(@Param('id') eventId: number): Promise<void> {
         return this.eventService.removeEventById(eventId);
     }

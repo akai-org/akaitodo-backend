@@ -1,29 +1,41 @@
 import {
+    BadRequestException,
     Body,
     Controller,
+    Delete,
     Get,
     HttpCode,
+    HttpStatus,
+    NotFoundException,
     Param,
     ParseIntPipe,
     Patch,
-    UseGuards,
     Post,
-    Delete,
-    NotFoundException,
-    BadRequestException,
+    UseGuards,
 } from '@nestjs/common';
 import { GetUser } from 'src/decorators';
 import { JwtGuard } from 'src/auth/guard';
-import { EditTaskDTO, ReturnTaskDTO, CreateTaskDTO } from './dto';
+import { CreateTaskDTO, EditTaskDTO, ReturnTaskDTO } from './dto';
 import { TaskService } from './task.service';
 import { UserEntity } from 'src/database/entities/user.entity';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+    AddTaskApi,
+    DeleteTaskApi,
+    EditTaskApi,
+    GetAllUserTasksApi,
+    GetUserTaskApi,
+} from '../../decorators/OpenAPI/task.decorators';
 
 @UseGuards(JwtGuard)
+@ApiTags('Tasks')
+@ApiBearerAuth()
 @Controller('tasks')
 export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
     @Get('/user/all')
+    @GetAllUserTasksApi()
     async getAllUserTasks(
         @GetUser() user: UserEntity,
     ): Promise<ReturnTaskDTO[]> {
@@ -31,6 +43,7 @@ export class TaskController {
     }
 
     @Get('/user/:id')
+    @GetUserTaskApi()
     async getUserTask(
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
@@ -44,6 +57,7 @@ export class TaskController {
     }
 
     @Post()
+    @AddTaskApi()
     async addTask(
         @GetUser() user: UserEntity,
         @Body() createTaskDTO: CreateTaskDTO,
@@ -52,6 +66,7 @@ export class TaskController {
     }
 
     @Patch(':id')
+    @EditTaskApi()
     async editTask(
         @Param('id') id: number,
         @GetUser() user: UserEntity,
@@ -68,8 +83,9 @@ export class TaskController {
         return task;
     }
 
+    @HttpCode(HttpStatus.NO_CONTENT)
     @Delete(':id')
-    @HttpCode(204)
+    @DeleteTaskApi()
     async deleteTask(
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
