@@ -1,4 +1,4 @@
-import { UserRole } from 'src/types/enums';
+import { UserRole } from 'src/types';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ReturnUserDTO {

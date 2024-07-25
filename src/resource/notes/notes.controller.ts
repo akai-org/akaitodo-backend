@@ -17,7 +17,7 @@ import {
     AddNoteApi,
     EditNoteByIdApi,
     FetchUserNotesApi,
-} from '../../decorators/OpenAPI/notes.decorators';
+} from '../../decorators/OpenAPI';
 
 @UseGuards(JwtGuard)
 @ApiTags('Notes')

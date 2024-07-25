@@ -4,7 +4,7 @@ import { JwtGuard } from '../../auth/guard';
 import { GetUser } from '../../decorators';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { SearchApi } from '../../decorators/OpenAPI/search.decorators';
+import { SearchApi } from '../../decorators/OpenAPI';
 
 @UseGuards(JwtGuard)
 @ApiTags('Search')

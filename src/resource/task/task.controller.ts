@@ -25,7 +25,7 @@ import {
     EditTaskApi,
     GetAllUserTasksApi,
     GetUserTaskApi,
-} from '../../decorators/OpenAPI/task.decorators';
+} from '../../decorators/OpenAPI';
 
 @UseGuards(JwtGuard)
 @ApiTags('Tasks')

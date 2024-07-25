@@ -13,13 +13,9 @@ import { JwtGuard } from 'src/auth/guard';
 import { EditUserDTO, ReturnUserDTO } from './dto';
 import { UserService } from './user.service';
 import { UserRoleGuard } from './guard';
-import { UserRole } from 'src/types/enums';
+import { UserRole } from 'src/types';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import {
-    EditMeApi,
-    GetMeApi,
-    GetUserByIdApi,
-} from '../../decorators/OpenAPI/user.decorators';
+import { EditMeApi, GetMeApi, GetUserByIdApi } from '../../decorators/OpenAPI';
 
 @UseGuards(JwtGuard)
 @ApiTags('Users')
