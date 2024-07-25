@@ -40,5 +40,6 @@ export class CreateEventDTO {
     @ValidateIf((o) => o.recurrencePattern != null)
     @ValidateNested()
     @Type(() => CreateEventRecurrenceDTO)
+    @ApiProperty({ type: CreateEventRecurrenceDTO })
     recurrencePattern: CreateEventRecurrenceDTO;
 }

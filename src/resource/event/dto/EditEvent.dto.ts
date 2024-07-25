@@ -38,10 +38,12 @@ export class EditEventDTO {
 
     @IsBoolean()
     @IsOptional()
+    @ApiProperty({ required: false })
     deleteRecurrence?: boolean;
 
     @ValidateIf((o) => o.recurrencePattern != null)
     @ValidateNested()
     @Type(() => EditEventRecurrenceDTO)
-    recurrencePattern: EditEventRecurrenceDTO;
+    @ApiProperty({ type: EditEventRecurrenceDTO })
+    recurrencePattern?: EditEventRecurrenceDTO;
 }

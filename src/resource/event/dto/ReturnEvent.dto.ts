@@ -17,5 +17,6 @@ export class ReturnEventDTO {
     isFullDay: boolean;
     @ApiProperty()
     createdById: number;
+    @ApiProperty({ type: ReturnEventRecurrenceDTO })
     recurrencePattern?: ReturnEventRecurrenceDTO;
 }

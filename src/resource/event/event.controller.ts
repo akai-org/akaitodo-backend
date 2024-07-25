@@ -8,6 +8,7 @@ import {
     Param,
     Patch,
     Post,
+    Query,
     UseGuards,
 } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard';
@@ -18,7 +19,7 @@ import {
     EditEventDTO,
     ReturnEventDTO,
 } from 'src/resource/event/dto';
-import { ReturnEventWithDatesDTO } from './dto/ReturnEventWithDates.dto';
+import { ReturnEventWithDatesDTO } from './dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
     CreateEventByCurrentUserApi,
@@ -26,6 +27,7 @@ import {
     EditEventApi,
     GetEventByIdApi,
     GetUserEventsApi,
+    GetUserEventsBetweenDatesApi,
 } from '../../decorators/OpenAPI';
 
 @UseGuards(JwtGuard)
@@ -42,6 +44,7 @@ export class EventController {
     }
 
     @Get('dates')
+    @GetUserEventsBetweenDatesApi()
     getUserEventsBetweenDates(
         @GetUser('id') userId: number,
         @Query('startDate') startDate: Date,

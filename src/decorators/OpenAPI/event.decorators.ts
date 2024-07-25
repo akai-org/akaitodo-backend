@@ -6,15 +6,24 @@ import {
     ApiNotFoundResponse,
     ApiOkResponse,
 } from '@nestjs/swagger';
-import { EditEventDTO, ReturnEventDTO } from '../../resource/event/dto';
+import {
+    CreateEventDTO,
+    EditEventDTO,
+    ReturnEventDTO,
+    ReturnEventWithDatesDTO,
+} from '../../resource/event/dto';
 
 export function GetUserEventsApi() {
     return applyDecorators(ApiOkResponse({ type: [ReturnEventDTO] }));
 }
 
+export function GetUserEventsBetweenDatesApi() {
+    return applyDecorators(ApiOkResponse({ type: [ReturnEventDTO] }));
+}
+
 export function GetEventByIdApi() {
     return applyDecorators(
-        ApiOkResponse({ type: ReturnEventDTO }),
+        ApiOkResponse({ type: [ReturnEventWithDatesDTO] }),
         ApiNotFoundResponse({ description: 'Event not found' }),
     );
 }
@@ -23,6 +32,7 @@ export function CreateEventByCurrentUserApi() {
     return applyDecorators(
         ApiOkResponse({ type: ReturnEventDTO }),
         ApiNotFoundResponse({ description: 'Event not found' }),
+        ApiBody({ type: CreateEventDTO }),
     );
 }
 

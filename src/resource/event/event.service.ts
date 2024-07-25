@@ -8,8 +8,8 @@ import {
     ReturnEventDTO,
 } from 'src/resource/event/dto';
 import { RecurrenceEntity } from '../../database/entities/recurrence.entity';
-import { ReturnEventWithDatesDTO } from './dto/ReturnEventWithDates.dto';
-import { RecurrenceType } from '../../types/enums';
+import { ReturnEventWithDatesDTO } from './dto';
+import { RecurrenceType } from '../../types';
 import { addDays, nextMonthWithDate } from '../../utils/DateUtils';
 
 @Injectable()
