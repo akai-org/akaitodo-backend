@@ -12,15 +12,12 @@ import { editNoteDTO, NoteDTO } from './dto';
 import { JwtGuard } from '../../auth/guard';
 import { GetUser } from '../../decorators';
 import { UserEntity } from 'src/database/entities/user.entity';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
-    ApiBadRequestResponse,
-    ApiBearerAuth,
-    ApiBody,
-    ApiCreatedResponse,
-    ApiNotFoundResponse,
-    ApiOkResponse,
-    ApiTags,
-} from '@nestjs/swagger';
+    AddNoteApi,
+    EditNoteByIdApi,
+    FetchUserNotesApi,
+} from '../../decorators/OpenAPI/notes.decorators';
 
 @UseGuards(JwtGuard)
 @ApiTags('Notes')
@@ -30,24 +27,19 @@ export class NoteController {
     constructor(private notesService: NoteService) {}
 
     @Get()
-    @ApiOkResponse({ type: [NoteDTO] })
+    @FetchUserNotesApi()
     fetchUserNotes(@GetUser() user: UserEntity) {
         return this.notesService.fetchUserNotes(user);
     }
 
     @Post(':id')
-    @ApiCreatedResponse({ type: NoteDTO })
-    @ApiBadRequestResponse({ description: 'Invalid body' })
-    @ApiNotFoundResponse({ description: 'User not found' })
-    @ApiBody({ type: NoteDTO })
+    @AddNoteApi()
     addNote(@GetUser() user: UserEntity, @Body() noteDto: NoteDTO) {
         return this.notesService.addNote(user, noteDto);
     }
 
     @Patch(':id')
-    @ApiOkResponse()
-    @ApiBadRequestResponse({ description: 'Invalid body' })
-    @ApiBody({ type: editNoteDTO })
+    @EditNoteByIdApi()
     editNoteById(@Param('id') id: number, @Body() noteDto: editNoteDTO) {
         return this.notesService.editNoteById(id, noteDto);
     }

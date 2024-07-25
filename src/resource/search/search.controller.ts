@@ -3,8 +3,8 @@ import { SearchService } from './search.service';
 import { JwtGuard } from '../../auth/guard';
 import { GetUser } from '../../decorators';
 import { UserEntity } from 'src/database/entities/user.entity';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { SearchResultDto } from './dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { SearchApi } from '../../decorators/OpenAPI/search.decorators';
 
 @UseGuards(JwtGuard)
 @ApiTags('Search')
@@ -14,26 +14,38 @@ export class SearchController {
     constructor(private searchService: SearchService) {}
 
     @Get('/all/:search')
-    @ApiOkResponse({ type: SearchResultDto })
-    searchAll(@GetUser() user: UserEntity, @Param('search') search: string) {
+    @SearchApi()
+    async searchAll(
+        @GetUser() user: UserEntity,
+        @Param('search') search: string,
+    ) {
         return this.searchService.fetchAllBySearch(user, search);
     }
 
     @Get('/notes/:search')
-    @ApiOkResponse({ type: SearchResultDto })
-    searchNotes(@GetUser() user: UserEntity, @Param('search') search: string) {
+    @SearchApi()
+    async searchNotes(
+        @GetUser() user: UserEntity,
+        @Param('search') search: string,
+    ) {
         return this.searchService.fetchNotesBySearch(user, search);
     }
 
     @Get('/tasks/:search')
-    @ApiOkResponse({ type: SearchResultDto })
-    searchTasks(@GetUser() user: UserEntity, @Param('search') search: string) {
+    @SearchApi()
+    async searchTasks(
+        @GetUser() user: UserEntity,
+        @Param('search') search: string,
+    ) {
         return this.searchService.fetchTasksBySearch(user, search);
     }
 
     @Get('/events/:search')
-    @ApiOkResponse({ type: SearchResultDto })
-    searchEvents(@GetUser() user: UserEntity, @Param('search') search: string) {
+    @SearchApi()
+    async searchEvents(
+        @GetUser() user: UserEntity,
+        @Param('search') search: string,
+    ) {
         return this.searchService.fetchEventsBySearch(user, search);
     }
 }

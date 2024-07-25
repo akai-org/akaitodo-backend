@@ -14,24 +14,22 @@ import { EditUserDTO, ReturnUserDTO } from './dto';
 import { UserService } from './user.service';
 import { UserRoleGuard } from './guard';
 import { UserRole } from 'src/types/enums';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
-    ApiBadRequestResponse,
-    ApiBearerAuth,
-    ApiBody,
-    ApiNotFoundResponse,
-    ApiOkResponse,
-    ApiTags,
-} from '@nestjs/swagger';
+    EditMeApi,
+    GetMeApi,
+    GetUserByIdApi,
+} from '../../decorators/OpenAPI/user.decorators';
 
 @UseGuards(JwtGuard)
 @ApiTags('Users')
 @ApiBearerAuth()
 @Controller('users')
 export class UserController {
-    constructor(private readonly userservice: UserService) {}
+    constructor(private readonly userService: UserService) {}
 
     @Get('me')
-    @ApiOkResponse({ type: ReturnUserDTO })
+    @GetMeApi()
     getMe(@GetUser() user: UserEntity): ReturnUserDTO {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { hash, ...result } = user;
@@ -39,25 +37,21 @@ export class UserController {
     }
 
     @Patch('me')
-    @ApiOkResponse({ type: ReturnUserDTO })
-    @ApiBadRequestResponse({ description: 'Invalid body' })
-    @ApiNotFoundResponse({ description: 'User not found' })
-    @ApiBody({ type: EditUserDTO })
+    @EditMeApi()
     editMe(
         @GetUser('id') userId: number,
         @Body() editUserDto: EditUserDTO,
     ): Promise<ReturnUserDTO> {
-        return this.userservice.editMe(userId, editUserDto);
+        return this.userService.editMe(userId, editUserDto);
     }
 
     @ForRole(UserRole.ADMIN)
     @UseGuards(UserRoleGuard)
     @Get(':id')
-    @ApiOkResponse({ type: ReturnUserDTO })
-    @ApiNotFoundResponse({ description: 'User not found' })
+    @GetUserByIdApi()
     getUserById(
         @Param('id', ParseIntPipe) userId: number,
     ): Promise<ReturnUserDTO> {
-        return this.userservice.getUserById(userId);
+        return this.userService.getUserById(userId);
     }
 }

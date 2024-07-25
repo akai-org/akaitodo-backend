@@ -13,14 +13,14 @@ async function bootstrap() {
         }),
     );
 
-    const apiConfig = new DocumentBuilder()
+    const openApiConfig = new DocumentBuilder()
         .setTitle('DoDo API')
         .setDescription('DoDo API Documentation')
         .setVersion('1.0')
         .addBearerAuth()
         .build();
-    const apiDocument = SwaggerModule.createDocument(app, apiConfig);
-    SwaggerModule.setup('swagger', app, apiDocument);
+    const openApiDocument = SwaggerModule.createDocument(app, openApiConfig);
+    SwaggerModule.setup('swagger', app, openApiDocument);
 
     await app.listen(process.env.PORT || 5000, () => {
         console.log(

@@ -15,16 +15,14 @@ import { EventService } from 'src/resource/event/event.service';
 import { GetUser } from 'src/decorators';
 import { CreateEventDTO, ReturnEventDTO } from 'src/resource/event/dto';
 import { EditEventDTO } from 'src/resource/event/dto/EditEvent.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
-    ApiBadRequestResponse,
-    ApiBearerAuth,
-    ApiBody,
-    ApiCreatedResponse,
-    ApiNoContentResponse,
-    ApiNotFoundResponse,
-    ApiOkResponse,
-    ApiTags,
-} from '@nestjs/swagger';
+    CreateEventByCurrentUserApi,
+    DeleteEventApi,
+    EditEventApi,
+    GetEventByIdApi,
+    GetUserEventsApi,
+} from '../../decorators/OpenAPI/event.decorators';
 
 @UseGuards(JwtGuard)
 @ApiTags('Events')
@@ -34,22 +32,19 @@ export class EventController {
     constructor(private eventService: EventService) {}
 
     @Get()
-    @ApiOkResponse({ type: [ReturnEventDTO] })
+    @GetUserEventsApi()
     getUserEvents(@GetUser('id') userId: number): Promise<ReturnEventDTO[]> {
         return this.eventService.getEventsByUserId(userId);
     }
 
     @Get(':id')
-    @ApiOkResponse({ type: ReturnEventDTO })
-    @ApiNotFoundResponse({ description: 'Event not found' })
+    @GetEventByIdApi()
     getEventById(@Param('id') eventId: number): Promise<ReturnEventDTO> {
         return this.eventService.getEventById(eventId);
     }
 
     @Post()
-    @ApiCreatedResponse({ type: ReturnEventDTO })
-    @ApiBadRequestResponse({ description: 'Invalid body' })
-    @ApiBody({ type: CreateEventDTO })
+    @CreateEventByCurrentUserApi()
     createEventByCurrentUser(
         @GetUser('id') userId: number,
         @Body() eventDto: CreateEventDTO,
@@ -58,10 +53,7 @@ export class EventController {
     }
 
     @Patch(':id')
-    @ApiOkResponse({ type: ReturnEventDTO })
-    @ApiBadRequestResponse({ description: 'Invalid body' })
-    @ApiNotFoundResponse({ description: "Event doesn't exist" })
-    @ApiBody({ type: EditEventDTO })
+    @EditEventApi()
     editEvent(
         @Param('id') eventId: number,
         @Body() editEventDto: EditEventDTO,
@@ -71,7 +63,7 @@ export class EventController {
 
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete(':id')
-    @ApiNoContentResponse()
+    @DeleteEventApi()
     deleteEvent(@Param('id') eventId: number): Promise<void> {
         return this.eventService.removeEventById(eventId);
     }
