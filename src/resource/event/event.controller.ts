@@ -11,16 +11,9 @@ import {
     Query,
     UseGuards,
 } from '@nestjs/common';
-import { JwtGuard } from 'src/auth/guard';
-import { EventService } from 'src/resource/event/event.service';
-import { GetUser } from 'src/decorators';
-import {
-    CreateEventDTO,
-    EditEventDTO,
-    ReturnEventDTO,
-} from 'src/resource/event/dto';
-import { ReturnEventWithDatesDTO } from './dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtGuard } from 'src/auth/guard';
+import { GetUser } from 'src/decorators';
 import {
     CreateEventByCurrentUserApi,
     DeleteEventApi,
@@ -28,7 +21,14 @@ import {
     GetEventByIdApi,
     GetUserEventsApi,
     GetUserEventsBetweenDatesApi,
-} from '../../decorators/OpenAPI';
+} from 'src/decorators/OpenAPI';
+import {
+    CreateEventDTO,
+    EditEventDTO,
+    ReturnEventDTO,
+    ReturnEventWithDatesDTO,
+} from 'src/resource/event/dto';
+import { EventService } from 'src/resource/event/event.service';
 
 @UseGuards(JwtGuard)
 @ApiTags('Events')

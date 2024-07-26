@@ -1,16 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventEntity } from 'src/database/entities/event.entity';
-import { IsNull, Or, Raw, Repository } from 'typeorm';
+import { RecurrenceEntity } from 'src/database/entities/recurrence.entity';
 import {
     CreateEventDTO,
     EditEventDTO,
     ReturnEventDTO,
+    ReturnEventWithDatesDTO,
 } from 'src/resource/event/dto';
-import { RecurrenceEntity } from '../../database/entities/recurrence.entity';
-import { ReturnEventWithDatesDTO } from './dto';
-import { RecurrenceType } from '../../types';
-import { addDays, nextMonthWithDate } from '../../utils/DateUtils';
+import { RecurrenceType } from 'src/types';
+import { addDays, nextMonthWithDate } from 'src/utils/DateUtils';
+import { IsNull, Or, Raw, Repository } from 'typeorm';
 
 @Injectable()
 export class EventService {
@@ -83,59 +83,42 @@ export class EventService {
                     createdById: event.createdById,
                     eventDates: [],
                 };
-                let freq = 24 * 60 * 60 * 1000;
-                let freqInDays: number, shift: number;
                 const endFilter: number = event.endDate
                     ? Math.min(
                           new Date(endDate).getTime(),
                           event.endDate.getTime(),
                       )
                     : new Date(endDate).getTime();
+
+                if (
+                    event.recurrencePattern.recurrenceType ==
+                        RecurrenceType.DAILY ||
+                    event.recurrencePattern.recurrenceType ==
+                        RecurrenceType.WEEKLY
+                ) {
+                    const freqInDays =
+                        event.recurrencePattern.recurrenceType ==
+                        RecurrenceType.WEEKLY
+                            ? (event.recurrencePattern.separationCount + 1) * 7
+                            : event.recurrencePattern.separationCount + 1;
+                    if (start.getTime() < new Date(startDate).getTime()) {
+                        const freq = 24 * 60 * 60 * 1000 * freqInDays;
+                        const shift =
+                            (new Date(startDate).getTime() - start.getTime()) %
+                            freq;
+                        start = new Date(
+                            new Date(startDate).getTime() + freq - shift,
+                        );
+                    }
+                    while (start.getTime() <= endFilter) {
+                        toReturn.eventDates.push(start.toLocaleDateString());
+                        start = addDays(start, freqInDays);
+                    }
+                    if (toReturn.eventDates.length > 0) filtered.push(toReturn);
+                    return filtered;
+                }
+
                 switch (event.recurrencePattern.recurrenceType) {
-                    case RecurrenceType.DAILY:
-                        freqInDays =
-                            event.recurrencePattern.separationCount + 1;
-                        if (start.getTime() < new Date(startDate).getTime()) {
-                            freq = freq * freqInDays;
-                            shift =
-                                (new Date(startDate).getTime() -
-                                    start.getTime()) %
-                                freq;
-                            start = new Date(
-                                new Date(startDate).getTime() + freq - shift,
-                            );
-                        }
-                        while (start.getTime() <= endFilter) {
-                            toReturn.eventDates.push(
-                                start.toLocaleDateString(),
-                            );
-                            start = addDays(start, freqInDays);
-                        }
-                        if (toReturn.eventDates.length > 0)
-                            filtered.push(toReturn);
-                        break;
-                    case RecurrenceType.WEEKLY:
-                        freqInDays =
-                            (event.recurrencePattern.separationCount + 1) * 7;
-                        if (start.getTime() < new Date(startDate).getTime()) {
-                            freq = freq * freqInDays;
-                            shift =
-                                (new Date(startDate).getTime() -
-                                    start.getTime()) %
-                                freq;
-                            start = new Date(
-                                new Date(startDate).getTime() + freq - shift,
-                            );
-                        }
-                        while (start.getTime() <= endFilter) {
-                            toReturn.eventDates.push(
-                                start.toLocaleDateString(),
-                            );
-                            start = addDays(start, freqInDays);
-                        }
-                        if (toReturn.eventDates.length > 0)
-                            filtered.push(toReturn);
-                        break;
                     case RecurrenceType.MONTHLY:
                         while (
                             start.getTime() < new Date(startDate).getTime()

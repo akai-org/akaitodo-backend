@@ -1,6 +1,5 @@
-import { ReturnEventRecurrenceDTO } from './ReturnEventRecurrence.dto';
-
 import { ApiProperty } from '@nestjs/swagger';
+import { ReturnEventRecurrenceDTO } from 'src/resource/event/dto/ReturnEventRecurrence.dto';
 
 export class ReturnEventDTO {
     @ApiProperty()

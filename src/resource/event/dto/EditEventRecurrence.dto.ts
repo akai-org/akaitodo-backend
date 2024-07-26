@@ -1,6 +1,6 @@
-import { RecurrenceType } from '../../../types';
-import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { RecurrenceType } from 'src/types';
 
 export class EditEventRecurrenceDTO {
     @IsEnum(RecurrenceType)

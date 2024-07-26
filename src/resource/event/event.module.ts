@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { EventController } from './event.controller';
-import { EventService } from './event.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EventEntity } from '../../database/entities/event.entity';
-import { RecurrenceEntity } from '../../database/entities/recurrence.entity';
+import { EventEntity } from 'src/database/entities/event.entity';
+import { RecurrenceEntity } from 'src/database/entities/recurrence.entity';
+import { EventController } from 'src/resource/event/event.controller';
+import { EventService } from 'src/resource/event/event.service';
 
 @Module({
     controllers: [EventController],

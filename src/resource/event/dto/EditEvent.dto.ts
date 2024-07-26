@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
     IsBoolean,
     IsDateString,
@@ -6,9 +8,7 @@ import {
     ValidateIf,
     ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import { EditEventRecurrenceDTO } from './EditEventRecurrence.dto';
-import { ApiProperty } from '@nestjs/swagger';
+import { EditEventRecurrenceDTO } from 'src/resource/event/dto/EditEventRecurrence.dto';
 
 export class EditEventDTO {
     @IsString()

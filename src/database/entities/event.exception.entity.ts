@@ -1,3 +1,4 @@
+import { EventEntity } from 'src/database/entities/event.entity';
 import {
     Column,
     Entity,
@@ -5,7 +6,6 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import { EventEntity } from './event.entity';
 
 @Entity({ name: 'event_exception' })
 export class EventExceptionEntity {

@@ -7,9 +7,9 @@ import {
     ValidateIf,
     ValidateNested,
 } from 'class-validator';
-import { CreateEventRecurrenceDTO } from './CreateEventRecurrence.dto';
-import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { CreateEventRecurrenceDTO } from 'src/resource/event/dto/CreateEventRecurrence.dto';
 
 export class CreateEventDTO {
     @IsString()

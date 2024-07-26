@@ -1,3 +1,5 @@
+import { RecurrenceEntity } from 'src/database/entities/recurrence.entity';
+import { UserEntity } from 'src/database/entities/user.entity';
 import {
     Column,
     CreateDateColumn,
@@ -7,8 +9,6 @@ import {
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserEntity } from './user.entity';
-import { RecurrenceEntity } from './recurrence.entity';
 
 @Entity({ name: 'events' })
 export class EventEntity {
