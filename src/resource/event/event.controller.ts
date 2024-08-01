@@ -39,52 +39,54 @@ export class EventController {
 
     @Get()
     @GetUserEventsApi()
-    getUserEvents(@GetUser('id') userId: number): Promise<ReturnEventDTO[]> {
-        return this.eventService.getEventsByUserId(userId);
+    async getUserEvents(
+        @GetUser('id') userId: number,
+    ): Promise<ReturnEventDTO[]> {
+        return await this.eventService.getEventsByUserId(userId);
     }
 
     @Get('dates')
     @GetUserEventsBetweenDatesApi()
-    getUserEventsBetweenDates(
+    async getUserEventsBetweenDates(
         @GetUser('id') userId: number,
         @Query('startDate') startDate: Date,
         @Query('endDate') endDate: Date,
     ): Promise<ReturnEventWithDatesDTO[]> {
-        return this.eventService.getEventsBetweenDates(
+        return await this.eventService.getEventsBetweenDates(
             userId,
-            startDate,
-            endDate,
+            new Date(startDate),
+            new Date(endDate),
         );
     }
 
     @Get(':id')
     @GetEventByIdApi()
-    getEventById(@Param('id') eventId: number): Promise<ReturnEventDTO> {
-        return this.eventService.getEventById(eventId);
+    async getEventById(@Param('id') eventId: number): Promise<ReturnEventDTO> {
+        return await this.eventService.getEventById(eventId);
     }
 
     @Post()
     @CreateEventByCurrentUserApi()
-    createEventByCurrentUser(
+    async createEventByCurrentUser(
         @GetUser('id') userId: number,
         @Body() eventDto: CreateEventDTO,
     ): Promise<ReturnEventDTO> {
-        return this.eventService.createEvent(userId, eventDto);
+        return await this.eventService.createEvent(userId, eventDto);
     }
 
     @Patch(':id')
     @EditEventApi()
-    editEvent(
+    async editEvent(
         @Param('id') eventId: number,
         @Body() editEventDto: EditEventDTO,
     ): Promise<ReturnEventDTO> {
-        return this.eventService.editEventById(eventId, editEventDto);
+        return await this.eventService.editEventById(eventId, editEventDto);
     }
 
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete(':id')
     @DeleteEventApi()
-    deleteEvent(@Param('id') eventId: number): Promise<void> {
-        return this.eventService.removeEventById(eventId);
+    async deleteEvent(@Param('id') eventId: number): Promise<void> {
+        return await this.eventService.removeEventById(eventId);
     }
 }

@@ -3,16 +3,23 @@ export const addDays = (date: Date, days: number): Date => {
 };
 
 export const nextMonthWithDate = (date: Date, monthsToAdd: number): Date => {
+    let year = date.getFullYear();
     let month = date.getMonth();
     const dateInMonth = date.getDate();
     while (true) {
         month += monthsToAdd;
-        if (dateInMonth <= maxDayInMonth(month + 1, date.getFullYear())) {
+        if (month > 11) {
+            month = 0;
+            ++year;
+        }
+        if (month >= 10 && dateInMonth <= maxDayInMonth(month + 1, year)) {
+            break;
+        } else if (dateInMonth <= maxDayInMonth(0, year + 1)) {
             break;
         }
     }
     return new Date(
-        date.getFullYear(),
+        year,
         month,
         date.getDate(),
         date.getHours(),
