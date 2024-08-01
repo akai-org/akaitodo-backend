@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ReturnEventExceptionDTO } from 'src/resource/event/dto/ReturnEventException.dto';
 
 export class ReturnEventWithDatesDTO {
     @ApiProperty()
@@ -15,6 +16,8 @@ export class ReturnEventWithDatesDTO {
     isFullDay: boolean;
     @ApiProperty()
     createdById: number;
-    @ApiProperty({ type: [String] })
+    @ApiProperty({ type: [String], isArray: true })
     eventDates: string[];
+    @ApiProperty({ type: [ReturnEventExceptionDTO], required: false })
+    eventExceptions?: ReturnEventExceptionDTO[];
 }

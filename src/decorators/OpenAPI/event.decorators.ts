@@ -11,14 +11,14 @@ import {
     EditEventDTO,
     ReturnEventDTO,
     ReturnEventWithDatesDTO,
-} from '../../resource/event/dto';
+} from 'src/resource/event/dto';
 
 export function GetUserEventsApi() {
     return applyDecorators(ApiOkResponse({ type: [ReturnEventDTO] }));
 }
 
 export function GetUserEventsBetweenDatesApi() {
-    return applyDecorators(ApiOkResponse({ type: [ReturnEventDTO] }));
+    return applyDecorators(ApiOkResponse({ type: [ReturnEventWithDatesDTO] }));
 }
 
 export function GetEventByIdApi() {

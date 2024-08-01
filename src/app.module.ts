@@ -1,15 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { EventEntity } from 'src/database/entities/event.entity';
+import { EventExceptionEntity } from 'src/database/entities/event.exception.entity';
+import { RecurrenceEntity } from 'src/database/entities/recurrence.entity';
+import { UserEntity } from 'src/database/entities/user.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AppConfig, DatabaseConfig } from './config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './resource/user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { NoteModule } from './resource/notes/notes.module';
+import { AppConfig, DatabaseConfig } from './config';
 import { EventModule } from './resource/event/event.module';
-import { TaskModule } from './resource/task/task.module';
+import { NoteModule } from './resource/notes/notes.module';
 import { SearchModule } from './resource/search/search.module';
+import { TaskModule } from './resource/task/task.module';
+import { UserModule } from './resource/user/user.module';
 
 @Module({
     imports: [
@@ -26,6 +30,12 @@ import { SearchModule } from './resource/search/search.module';
             }),
             inject: [ConfigService],
         }),
+        TypeOrmModule.forFeature([
+            UserEntity,
+            EventEntity,
+            EventExceptionEntity,
+            RecurrenceEntity,
+        ]),
 
         // General controllers
         UserModule,
@@ -33,7 +43,7 @@ import { SearchModule } from './resource/search/search.module';
         NoteModule,
         TaskModule,
         EventModule,
-        SearchModule
+        SearchModule,
     ],
     controllers: [AppController],
     providers: [AppService],

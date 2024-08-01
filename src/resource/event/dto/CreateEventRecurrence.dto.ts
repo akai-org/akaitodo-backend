@@ -17,19 +17,4 @@ export class CreateEventRecurrenceDTO {
     @IsOptional()
     @ApiProperty({ required: false })
     numberOfOccurrences?: number;
-
-    @IsNumber()
-    @IsOptional()
-    @ApiProperty({ required: false })
-    dayOfWeek?: number;
-
-    @IsNumber()
-    @IsOptional()
-    @ApiProperty({ required: false })
-    dayOfMonth?: number;
-
-    @IsNumber()
-    @IsOptional()
-    @ApiProperty({ required: false })
-    monthOfYear?: number;
 }

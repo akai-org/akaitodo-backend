@@ -8,10 +8,4 @@ export class ReturnEventRecurrenceDTO {
     separationCount: number;
     @ApiProperty()
     numberOfOccurrences: number;
-    @ApiProperty()
-    dayOfWeek: number;
-    @ApiProperty()
-    dayOfMonth: number;
-    @ApiProperty()
-    monthOfYear: number;
 }

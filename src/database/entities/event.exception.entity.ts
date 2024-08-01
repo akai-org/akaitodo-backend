@@ -18,7 +18,10 @@ export class EventExceptionEntity {
     @Column({ name: 'is_cancelled', type: 'boolean' })
     isCancelled: boolean;
 
-    @Column({ name: 'start_date', type: 'datetime' })
+    @Column({ name: 'original_date', type: 'datetime' })
+    originalDate: Date;
+
+    @Column({ nullable: true, name: 'start_date', type: 'datetime' })
     startDate: Date;
 
     @Column({ nullable: true, name: 'end_date', type: 'datetime' })
@@ -30,7 +33,7 @@ export class EventExceptionEntity {
     @Column({ name: 'event_id' })
     mainEventId: number;
 
-    @ManyToOne(() => EventEntity)
+    @ManyToOne(() => EventEntity, (event) => event.eventExceptions)
     @JoinColumn({ name: 'event_id' })
     mainEvent: EventEntity;
 }

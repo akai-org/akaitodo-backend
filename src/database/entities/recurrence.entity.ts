@@ -1,3 +1,4 @@
+import { RecurrenceType } from 'src/types';
 import {
     Column,
     Entity,
@@ -5,7 +6,6 @@ import {
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import { RecurrenceType } from '../../types/enums';
 import { EventEntity } from './event.entity';
 
 @Entity({ name: 'recurrences' })
@@ -26,15 +26,6 @@ export class RecurrenceEntity {
 
     @Column({ name: 'occurrence_count', nullable: true })
     numberOfOccurrences: number;
-
-    @Column({ name: 'day_of_week', nullable: true })
-    dayOfWeek: number;
-
-    @Column({ name: 'day_of_month', nullable: true })
-    dayOfMonth: number;
-
-    @Column({ name: 'month_of_year', nullable: true })
-    monthOfYear: number;
 
     @Column({ name: 'event_id', nullable: true })
     eventId: number;

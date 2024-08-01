@@ -1,3 +1,4 @@
+import { EventExceptionEntity } from 'src/database/entities/event.exception.entity';
 import { RecurrenceEntity } from 'src/database/entities/recurrence.entity';
 import { UserEntity } from 'src/database/entities/user.entity';
 import {
@@ -6,6 +7,7 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
+    OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -48,4 +50,9 @@ export class EventEntity {
         nullable: true,
     })
     recurrencePattern: RecurrenceEntity;
+
+    @OneToMany(() => EventExceptionEntity, (exception) => exception.mainEvent, {
+        cascade: true,
+    })
+    eventExceptions: EventExceptionEntity[];
 }
