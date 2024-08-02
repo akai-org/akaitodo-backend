@@ -17,4 +17,6 @@ export class EditEventRecurrenceDTO {
     @IsOptional()
     @ApiProperty({ required: false })
     numberOfOccurrences?: number;
+
+    eventId?: number;
 }

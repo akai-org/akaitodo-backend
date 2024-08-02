@@ -22,10 +22,10 @@ export class EventExceptionEntity {
     originalDate: Date;
 
     @Column({ nullable: true, name: 'start_date', type: 'datetime' })
-    startDate: Date;
+    startDate?: Date;
 
     @Column({ nullable: true, name: 'end_date', type: 'datetime' })
-    endDate: Date;
+    endDate?: Date;
 
     @Column({ name: 'is_full_day', type: 'boolean' })
     isFullDay: boolean;
@@ -33,7 +33,9 @@ export class EventExceptionEntity {
     @Column({ name: 'event_id' })
     mainEventId: number;
 
-    @ManyToOne(() => EventEntity, (event) => event.eventExceptions)
+    @ManyToOne(() => EventEntity, (event) => event.eventExceptions, {
+        onDelete: 'CASCADE',
+    })
     @JoinColumn({ name: 'event_id' })
     mainEvent: EventEntity;
 }

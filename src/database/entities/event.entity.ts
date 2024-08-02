@@ -48,6 +48,7 @@ export class EventEntity {
     @OneToOne(() => RecurrenceEntity, (recurrence) => recurrence.event, {
         cascade: true,
         nullable: true,
+        orphanedRowAction: 'delete',
     })
     recurrencePattern: RecurrenceEntity;
 

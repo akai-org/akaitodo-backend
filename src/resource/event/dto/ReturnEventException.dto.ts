@@ -10,9 +10,9 @@ export class ReturnEventExceptionDTO {
     @ApiProperty()
     originalDate: Date;
     @ApiProperty()
-    startDate: Date;
+    startDate?: Date;
     @ApiProperty()
-    endDate: Date;
+    endDate?: Date;
     @ApiProperty()
     isFullDay: boolean;
     @ApiProperty()

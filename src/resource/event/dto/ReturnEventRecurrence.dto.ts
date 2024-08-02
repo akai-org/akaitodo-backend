@@ -7,5 +7,5 @@ export class ReturnEventRecurrenceDTO {
     @ApiProperty()
     separationCount: number;
     @ApiProperty()
-    numberOfOccurrences: number;
+    numberOfOccurrences?: number;
 }

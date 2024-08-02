@@ -2,12 +2,14 @@ import { applyDecorators } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
     ApiBody,
+    ApiCreatedResponse,
     ApiNoContentResponse,
     ApiNotFoundResponse,
     ApiOkResponse,
 } from '@nestjs/swagger';
 import {
     CreateEventDTO,
+    CreateEventExceptionDTO,
     EditEventDTO,
     ReturnEventDTO,
     ReturnEventExceptionDTO,
@@ -38,9 +40,16 @@ export function GetEventExceptionByIdApi() {
 
 export function CreateEventByCurrentUserApi() {
     return applyDecorators(
-        ApiOkResponse({ type: ReturnEventDTO }),
+        ApiCreatedResponse({ type: ReturnEventDTO }),
         ApiNotFoundResponse({ description: 'Event not found' }),
         ApiBody({ type: CreateEventDTO }),
+    );
+}
+
+export function AddEventExceptionApi() {
+    return applyDecorators(
+        ApiCreatedResponse({ type: ReturnEventExceptionDTO }),
+        ApiBody({ type: CreateEventExceptionDTO }),
     );
 }
 
@@ -54,5 +63,9 @@ export function EditEventApi() {
 }
 
 export function DeleteEventApi() {
+    return applyDecorators(ApiNoContentResponse());
+}
+
+export function DeleteExceptionApi() {
     return applyDecorators(ApiNoContentResponse());
 }

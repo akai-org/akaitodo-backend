@@ -5,6 +5,7 @@ import { EventExceptionEntity } from 'src/database/entities/event.exception.enti
 import { RecurrenceEntity } from 'src/database/entities/recurrence.entity';
 import {
     CreateEventDTO,
+    CreateEventExceptionDTO,
     EditEventDTO,
     ReturnEventDTO,
     ReturnEventExceptionDTO,
@@ -46,27 +47,6 @@ export class EventService {
         startDate: Date,
         endDate: Date,
     ): Promise<ReturnEventWithDatesDTO[]> {
-        // const toFilter = await this.eventRepository.find({
-        //     where: {
-        //         createdById: userId,
-        //         startDate: Raw((alias) => `${alias} <= DATE ('${endDate}')`),
-        //         endDate: Or(
-        //             IsNull(),
-        //             Raw((alias) => `${alias} >= DATE ('${startDate}')`),
-        //         ),
-        //         eventExceptions: {
-        //             startDate: Or(
-        //                 IsNull(),
-        //                 Raw((alias) => `${alias} <= DATE ('${endDate}')`),
-        //             ),
-        //             endDate: Or(
-        //                 IsNull(),
-        //                 Raw((alias) => `${alias} >= DATE ('${startDate}')`),
-        //             ),
-        //         },
-        //     },
-        //     relations: { recurrencePattern: true, eventExceptions: true },
-        // });
         const toFilter = await this.eventRepository.find({
             where: {
                 createdById: userId,
@@ -108,10 +88,6 @@ export class EventService {
                         const cancelledConditions =
                             exception.isCancelled == true &&
                             exception.originalDate <= endDate;
-                        // const exceptionConditions =
-                        //     exception.startDate <= endDate &&
-                        //     (exception.endDate == null ||
-                        //         exception.endDate >= startDate);
                         if (rescheduledConditions || cancelledConditions) {
                             toReturn.eventExceptions.push(exception);
                         }
@@ -212,6 +188,17 @@ export class EventService {
         return await this.eventRepository.save(event);
     }
 
+    async createException(
+        eventId: number,
+        exceptionDto: CreateEventExceptionDTO,
+    ): Promise<ReturnEventExceptionDTO> {
+        const exception = this.exceptionRepository.create({
+            ...exceptionDto,
+            mainEventId: eventId,
+        });
+        return await this.exceptionRepository.save(exception);
+    }
+
     async editEventById(
         eventId: number,
         editEventDto: EditEventDTO,
@@ -223,9 +210,11 @@ export class EventService {
 
         if (editEventDto.deleteRecurrence) {
             await this.recurrenceRepository.delete({ eventId });
+            delete editEventDto.recurrencePattern;
         }
         delete editEventDto.deleteRecurrence;
 
+        editEventDto.recurrencePattern.eventId = eventId;
         this.eventRepository.merge(eventToUpdate, editEventDto);
         await this.eventRepository.save(eventToUpdate);
 
@@ -234,5 +223,9 @@ export class EventService {
 
     async removeEventById(eventId: number): Promise<void> {
         await this.eventRepository.delete({ id: eventId });
+    }
+
+    async removeExceptionById(exceptionId: number): Promise<void> {
+        await this.exceptionRepository.delete({ id: exceptionId });
     }
 }

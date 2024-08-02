@@ -1,18 +1,9 @@
 import { RecurrenceType } from 'src/types';
-import {
-    Column,
-    Entity,
-    JoinColumn,
-    OneToOne,
-    PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { EventEntity } from './event.entity';
 
 @Entity({ name: 'recurrences' })
 export class RecurrenceEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
-
     @Column({
         name: 'recurrence_type',
         type: 'enum',
@@ -25,13 +16,12 @@ export class RecurrenceEntity {
     separationCount: number;
 
     @Column({ name: 'occurrence_count', nullable: true })
-    numberOfOccurrences: number;
+    numberOfOccurrences?: number;
 
-    @Column({ name: 'event_id', nullable: true })
+    @PrimaryColumn({ name: 'event_id' })
     eventId: number;
 
     @OneToOne(() => EventEntity, (event) => event.recurrencePattern, {
-        nullable: true,
         onDelete: 'CASCADE',
     })
     @JoinColumn({ name: 'event_id' })

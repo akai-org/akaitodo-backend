@@ -15,8 +15,10 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard';
 import { GetUser } from 'src/decorators';
 import {
+    AddEventExceptionApi,
     CreateEventByCurrentUserApi,
     DeleteEventApi,
+    DeleteExceptionApi,
     EditEventApi,
     GetEventByIdApi,
     GetEventExceptionByIdApi,
@@ -25,6 +27,7 @@ import {
 } from 'src/decorators/OpenAPI';
 import {
     CreateEventDTO,
+    CreateEventExceptionDTO,
     EditEventDTO,
     ReturnEventDTO,
     ReturnEventExceptionDTO,
@@ -84,6 +87,15 @@ export class EventController {
         return await this.eventService.createEvent(userId, eventDto);
     }
 
+    @Post('except/:id')
+    @AddEventExceptionApi()
+    async addEventException(
+        @Param('id') eventId: number,
+        @Body() exceptionDto: CreateEventExceptionDTO,
+    ): Promise<ReturnEventExceptionDTO> {
+        return await this.eventService.createException(eventId, exceptionDto);
+    }
+
     @Patch(':id')
     @EditEventApi()
     async editEvent(
@@ -97,6 +109,13 @@ export class EventController {
     @Delete(':id')
     @DeleteEventApi()
     async deleteEvent(@Param('id') eventId: number): Promise<void> {
-        return await this.eventService.removeEventById(eventId);
+        await this.eventService.removeEventById(eventId);
+    }
+
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @Delete('except/:id')
+    @DeleteExceptionApi()
+    async deleteException(@Param('id') exceptionId: number): Promise<void> {
+        await this.eventService.removeExceptionById(exceptionId);
     }
 }

@@ -44,6 +44,6 @@ export class EditEventDTO {
     @ValidateIf((o) => o.recurrencePattern != null)
     @ValidateNested()
     @Type(() => EditEventRecurrenceDTO)
-    @ApiProperty({ type: EditEventRecurrenceDTO })
+    @ApiProperty({ type: EditEventRecurrenceDTO, required: false })
     recurrencePattern?: EditEventRecurrenceDTO;
 }

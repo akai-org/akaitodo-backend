@@ -4,5 +4,6 @@ export * from './ReturnEventRecurrence.dto';
 export * from './ReturnEventException.dto';
 export * from './CreateEvent.dto';
 export * from './CreateEventRecurrence.dto';
+export * from './CreateEventException.dto';
 export * from './EditEvent.dto';
 export * from './EditEventRecurrence.dto';
