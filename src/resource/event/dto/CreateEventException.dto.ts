@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
     IsBoolean,
     IsDateString,
-    IsInt,
     IsNotEmpty,
     IsOptional,
 } from 'class-validator';
@@ -37,9 +36,4 @@ export class CreateEventExceptionDTO {
     @IsNotEmpty()
     @ApiProperty()
     isFullDay: boolean;
-
-    @IsInt()
-    @IsNotEmpty()
-    @ApiProperty()
-    mainEventId: number;
 }
