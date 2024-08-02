@@ -19,6 +19,7 @@ import {
     DeleteEventApi,
     EditEventApi,
     GetEventByIdApi,
+    GetEventExceptionByIdApi,
     GetUserEventsApi,
     GetUserEventsBetweenDatesApi,
 } from 'src/decorators/OpenAPI';
@@ -26,6 +27,7 @@ import {
     CreateEventDTO,
     EditEventDTO,
     ReturnEventDTO,
+    ReturnEventExceptionDTO,
     ReturnEventWithDatesDTO,
 } from 'src/resource/event/dto';
 import { EventService } from 'src/resource/event/event.service';
@@ -63,6 +65,14 @@ export class EventController {
     @GetEventByIdApi()
     async getEventById(@Param('id') eventId: number): Promise<ReturnEventDTO> {
         return await this.eventService.getEventById(eventId);
+    }
+
+    @Get('except/:id')
+    @GetEventExceptionByIdApi()
+    async getEventExceptionById(
+        @Param('id') exceptionId: number,
+    ): Promise<ReturnEventExceptionDTO> {
+        return await this.eventService.getExceptionById(exceptionId);
     }
 
     @Post()

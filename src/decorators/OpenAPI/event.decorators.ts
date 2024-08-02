@@ -10,6 +10,7 @@ import {
     CreateEventDTO,
     EditEventDTO,
     ReturnEventDTO,
+    ReturnEventExceptionDTO,
     ReturnEventWithDatesDTO,
 } from 'src/resource/event/dto';
 
@@ -25,6 +26,13 @@ export function GetEventByIdApi() {
     return applyDecorators(
         ApiOkResponse({ type: [ReturnEventWithDatesDTO] }),
         ApiNotFoundResponse({ description: 'Event not found' }),
+    );
+}
+
+export function GetEventExceptionByIdApi() {
+    return applyDecorators(
+        ApiOkResponse({ type: [ReturnEventExceptionDTO] }),
+        ApiNotFoundResponse({ description: 'Exception not found' }),
     );
 }
 

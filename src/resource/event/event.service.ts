@@ -7,6 +7,7 @@ import {
     CreateEventDTO,
     EditEventDTO,
     ReturnEventDTO,
+    ReturnEventExceptionDTO,
     ReturnEventWithDatesDTO,
 } from 'src/resource/event/dto';
 import { RecurrenceType } from 'src/types';
@@ -188,6 +189,16 @@ export class EventService {
             },
             [],
         );
+    }
+
+    async getExceptionById(
+        exceptionId: number,
+    ): Promise<ReturnEventExceptionDTO> {
+        const exception = await this.exceptionRepository.findOneBy({
+            id: exceptionId,
+        });
+        if (!exception) throw new NotFoundException('Exception not found');
+        return exception;
     }
 
     async createEvent(
