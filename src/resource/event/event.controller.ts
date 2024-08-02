@@ -47,7 +47,7 @@ export class EventController {
     async getUserEvents(
         @GetUser('id') userId: number,
     ): Promise<ReturnEventDTO[]> {
-        return await this.eventService.getEventsByUserId(userId);
+        return await this.eventService.fetchUserEvents(userId);
     }
 
     @Get('dates')
@@ -57,7 +57,7 @@ export class EventController {
         @Query('startDate') startDate: Date,
         @Query('endDate') endDate: Date,
     ): Promise<ReturnEventWithDatesDTO[]> {
-        return await this.eventService.getEventsBetweenDates(
+        return await this.eventService.fetchBetweenDates(
             userId,
             new Date(startDate),
             new Date(endDate),
@@ -67,7 +67,7 @@ export class EventController {
     @Get(':id')
     @GetEventByIdApi()
     async getEventById(@Param('id') eventId: number): Promise<ReturnEventDTO> {
-        return await this.eventService.getEventById(eventId);
+        return await this.eventService.fetchById(eventId);
     }
 
     @Get('except/:id')
@@ -75,7 +75,7 @@ export class EventController {
     async getEventExceptionById(
         @Param('id') exceptionId: number,
     ): Promise<ReturnEventExceptionDTO> {
-        return await this.eventService.getExceptionById(exceptionId);
+        return await this.eventService.fetchExceptionById(exceptionId);
     }
 
     @Post()
@@ -102,14 +102,14 @@ export class EventController {
         @Param('id') eventId: number,
         @Body() editEventDto: EditEventDTO,
     ): Promise<ReturnEventDTO> {
-        return await this.eventService.editEventById(eventId, editEventDto);
+        return await this.eventService.editById(eventId, editEventDto);
     }
 
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete(':id')
     @DeleteEventApi()
     async deleteEvent(@Param('id') eventId: number): Promise<void> {
-        await this.eventService.removeEventById(eventId);
+        await this.eventService.deleteById(eventId);
     }
 
     @HttpCode(HttpStatus.NO_CONTENT)

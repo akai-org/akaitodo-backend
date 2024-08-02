@@ -26,7 +26,7 @@ export class EventService {
         private readonly exceptionRepository: Repository<EventExceptionEntity>,
     ) {}
 
-    async getEventById(eventId: number): Promise<ReturnEventDTO> {
+    async fetchById(eventId: number): Promise<ReturnEventDTO> {
         const event = await this.eventRepository.findOne({
             where: { id: eventId },
             relations: { recurrencePattern: true },
@@ -35,14 +35,14 @@ export class EventService {
         return event;
     }
 
-    async getEventsByUserId(userId: number): Promise<ReturnEventDTO[]> {
+    async fetchUserEvents(userId: number): Promise<ReturnEventDTO[]> {
         return this.eventRepository.find({
             where: { createdById: userId },
             relations: { recurrencePattern: true, eventExceptions: true },
         });
     }
 
-    async getEventsBetweenDates(
+    async fetchBetweenDates(
         userId: number,
         startDate: Date,
         endDate: Date,
@@ -167,7 +167,7 @@ export class EventService {
         );
     }
 
-    async getExceptionById(
+    async fetchExceptionById(
         exceptionId: number,
     ): Promise<ReturnEventExceptionDTO> {
         const exception = await this.exceptionRepository.findOneBy({
@@ -199,7 +199,7 @@ export class EventService {
         return await this.exceptionRepository.save(exception);
     }
 
-    async editEventById(
+    async editById(
         eventId: number,
         editEventDto: EditEventDTO,
     ): Promise<ReturnEventDTO> {
@@ -221,7 +221,7 @@ export class EventService {
         return eventToUpdate;
     }
 
-    async removeEventById(eventId: number): Promise<void> {
+    async deleteById(eventId: number): Promise<void> {
         await this.eventRepository.delete({ id: eventId });
     }
 
