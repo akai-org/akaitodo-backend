@@ -7,6 +7,7 @@ import {
     CreateEventDTO,
     CreateEventExceptionDTO,
     EditEventDTO,
+    EditEventExceptionDTO,
     ReturnEventDTO,
     ReturnEventExceptionDTO,
     ReturnEventWithDatesDTO,
@@ -221,6 +222,23 @@ export class EventService {
         await this.eventRepository.save(eventToUpdate);
 
         return eventToUpdate;
+    }
+
+    async editExceptionById(
+        exceptionId: number,
+        editExceptionDto: EditEventExceptionDTO,
+    ): Promise<ReturnEventExceptionDTO> {
+        const exceptionToUpdate = await this.exceptionRepository.findOneBy({
+            id: exceptionId,
+        });
+        if (!exceptionToUpdate)
+            throw new NotFoundException('Exception not found');
+        this.exceptionRepository.merge(exceptionToUpdate, editExceptionDto);
+        await this.eventRepository.update(
+            { id: exceptionToUpdate.id },
+            { ...editExceptionDto },
+        );
+        return exceptionToUpdate;
     }
 
     async deleteById(eventId: number): Promise<void> {

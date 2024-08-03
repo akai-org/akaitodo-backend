@@ -11,6 +11,7 @@ import {
     CreateEventDTO,
     CreateEventExceptionDTO,
     EditEventDTO,
+    EditEventExceptionDTO,
     ReturnEventDTO,
     ReturnEventExceptionDTO,
     ReturnEventWithDatesDTO,
@@ -59,6 +60,15 @@ export function EditEventApi() {
         ApiBadRequestResponse({ description: 'Invalid body' }),
         ApiNotFoundResponse({ description: "Event doesn't exist" }),
         ApiBody({ type: EditEventDTO }),
+    );
+}
+
+export function EditExceptionApi() {
+    return applyDecorators(
+        ApiOkResponse({ type: ReturnEventExceptionDTO }),
+        ApiBadRequestResponse({ description: 'Invalid body' }),
+        ApiNotFoundResponse({ description: "Exception doesn't exist" }),
+        ApiBody({ type: EditEventExceptionDTO }),
     );
 }
 

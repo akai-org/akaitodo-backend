@@ -20,6 +20,7 @@ import {
     DeleteEventApi,
     DeleteExceptionApi,
     EditEventApi,
+    EditExceptionApi,
     GetEventByIdApi,
     GetEventExceptionByIdApi,
     GetUserEventsApi,
@@ -29,6 +30,7 @@ import {
     CreateEventDTO,
     CreateEventExceptionDTO,
     EditEventDTO,
+    EditEventExceptionDTO,
     ReturnEventDTO,
     ReturnEventExceptionDTO,
     ReturnEventWithDatesDTO,
@@ -103,6 +105,18 @@ export class EventController {
         @Body() editEventDto: EditEventDTO,
     ): Promise<ReturnEventDTO> {
         return await this.eventService.editById(eventId, editEventDto);
+    }
+
+    @Patch('except/:id')
+    @EditExceptionApi()
+    async editException(
+        @Param('id') exceptionId: number,
+        @Body() editExceptionDto: EditEventExceptionDTO,
+    ): Promise<ReturnEventExceptionDTO> {
+        return await this.eventService.editExceptionById(
+            exceptionId,
+            editExceptionDto,
+        );
     }
 
     @HttpCode(HttpStatus.NO_CONTENT)
