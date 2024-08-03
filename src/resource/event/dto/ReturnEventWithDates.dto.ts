@@ -7,11 +7,11 @@ export class ReturnEventWithDatesDTO {
     @ApiProperty()
     name: string;
     @ApiProperty()
-    description: string;
+    description?: string;
     @ApiProperty()
     startDate: Date;
     @ApiProperty()
-    endDate: Date;
+    endDate?: Date;
     @ApiProperty()
     isFullDay: boolean;
     @ApiProperty()

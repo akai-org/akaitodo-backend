@@ -10,17 +10,17 @@ export class ReturnEventDTO {
     @ApiProperty()
     name: string;
     @ApiProperty()
-    description: string;
+    description?: string;
     @ApiProperty()
     startDate: Date;
     @ApiProperty()
-    endDate: Date;
+    endDate?: Date;
     @ApiProperty()
     isFullDay: boolean;
     @ApiProperty()
     createdById: number;
-    @ApiProperty({ type: () => ReturnEventRecurrenceDTO, required: false })
+    @ApiProperty({ type: () => ReturnEventRecurrenceDTO })
     recurrencePattern?: ReturnEventRecurrenceDTO;
-    @ApiProperty({ type: [ReturnEventExceptionDTO], required: false })
+    @ApiProperty({ type: [ReturnEventExceptionDTO] })
     exceptions?: ReturnEventExceptionDTO[];
 }

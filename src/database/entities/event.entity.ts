@@ -21,13 +21,13 @@ export class EventEntity {
     name: string;
 
     @Column({ nullable: true })
-    description: string;
+    description?: string;
 
     @Column({ name: 'start_date', type: 'datetime' })
     startDate: Date;
 
     @Column({ name: 'end_date', type: 'datetime', nullable: true })
-    endDate: Date;
+    endDate?: Date;
 
     @Column({ name: 'is_full_day', type: 'boolean' })
     isFullDay: boolean;
@@ -50,7 +50,7 @@ export class EventEntity {
         nullable: true,
         orphanedRowAction: 'delete',
     })
-    recurrencePattern: RecurrenceEntity;
+    recurrencePattern?: RecurrenceEntity;
 
     @OneToMany(() => EventExceptionEntity, (exception) => exception.mainEvent, {
         cascade: true,

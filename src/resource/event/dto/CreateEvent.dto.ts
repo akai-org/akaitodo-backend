@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
     IsBoolean,
     IsDateString,
@@ -7,8 +9,6 @@ import {
     ValidateIf,
     ValidateNested,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import { CreateEventRecurrenceDTO } from 'src/resource/event/dto/CreateEventRecurrence.dto';
 
 export class CreateEventDTO {
@@ -40,6 +40,6 @@ export class CreateEventDTO {
     @ValidateIf((o) => o.recurrencePattern != null)
     @ValidateNested()
     @Type(() => CreateEventRecurrenceDTO)
-    @ApiProperty({ type: CreateEventRecurrenceDTO })
-    recurrencePattern: CreateEventRecurrenceDTO;
+    @ApiProperty({ type: CreateEventRecurrenceDTO, required: false })
+    recurrencePattern?: CreateEventRecurrenceDTO;
 }
