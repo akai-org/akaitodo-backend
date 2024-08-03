@@ -32,3 +32,8 @@ export const nextMonthWithDate = (date: Date, monthsToAdd: number): Date => {
 export const maxDayInMonth = (month: number, year: number): number => {
     return new Date(year, month, 0).getDate();
 };
+
+export const dateWithoutTimezone = (date: Date) => {
+    const tzOffset = date.getTimezoneOffset() * 60000; // offset in milisecs
+    return new Date(date.valueOf() - tzOffset).toISOString().slice(0, -1);
+};
