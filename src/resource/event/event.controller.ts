@@ -11,7 +11,11 @@ import {
     Query,
     UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBearerAuth,
+    ApiTags,
+    ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard';
 import { GetUser } from 'src/decorators';
 import {
@@ -41,6 +45,7 @@ import { EventService } from 'src/resource/event/event.service';
 @ApiTags('Events')
 @Controller('events')
 @ApiBearerAuth()
+@ApiUnauthorizedResponse({ description: 'Unauthorized' })
 export class EventController {
     constructor(private eventService: EventService) {}
 
