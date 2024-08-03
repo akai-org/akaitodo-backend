@@ -185,7 +185,8 @@ export class EventService {
             ...eventDto,
             createdById: userId,
         });
-        return await this.eventRepository.save(event);
+        await this.eventRepository.insert(event);
+        return event;
     }
 
     async createException(
@@ -196,7 +197,8 @@ export class EventService {
             ...exceptionDto,
             mainEventId: eventId,
         });
-        return await this.exceptionRepository.save(exception);
+        await this.exceptionRepository.insert(exception);
+        return exception;
     }
 
     async editById(
