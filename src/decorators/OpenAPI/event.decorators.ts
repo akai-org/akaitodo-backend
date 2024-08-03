@@ -26,14 +26,14 @@ export function GetUserEventsBetweenDatesApi() {
 
 export function GetEventByIdApi() {
     return applyDecorators(
-        ApiOkResponse({ type: [ReturnEventWithDatesDTO] }),
+        ApiOkResponse({ type: ReturnEventDTO }),
         ApiNotFoundResponse({ description: 'Event not found' }),
     );
 }
 
 export function GetEventExceptionByIdApi() {
     return applyDecorators(
-        ApiOkResponse({ type: [ReturnEventExceptionDTO] }),
+        ApiOkResponse({ type: ReturnEventExceptionDTO }),
         ApiNotFoundResponse({ description: 'Exception not found' }),
     );
 }
