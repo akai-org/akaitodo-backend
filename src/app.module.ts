@@ -1,10 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EventEntity } from 'src/database/entities/event.entity';
-import { EventExceptionEntity } from 'src/database/entities/event.exception.entity';
-import { RecurrenceEntity } from 'src/database/entities/recurrence.entity';
-import { UserEntity } from 'src/database/entities/user.entity';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -30,12 +26,6 @@ import { UserModule } from './resource/user/user.module';
             }),
             inject: [ConfigService],
         }),
-        TypeOrmModule.forFeature([
-            UserEntity,
-            EventEntity,
-            EventExceptionEntity,
-            RecurrenceEntity,
-        ]),
 
         // General controllers
         UserModule,

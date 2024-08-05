@@ -14,7 +14,13 @@ import {
 } from 'src/resource/event/dto';
 import { RecurrenceType } from 'src/types';
 import { addDays, nextMonthWithDate } from 'src/utils';
-import { IsNull, Or, Raw, Repository } from 'typeorm';
+import {
+    IsNull,
+    LessThanOrEqual,
+    MoreThanOrEqual,
+    Or,
+    Repository,
+} from 'typeorm';
 
 @Injectable()
 export class EventService {
@@ -51,16 +57,8 @@ export class EventService {
         const toFilter = await this.eventRepository.find({
             where: {
                 createdById: userId,
-                startDate: Raw(
-                    (alias) => `${alias} <= DATE ('${endDate.toISOString()})')`,
-                ),
-                endDate: Or(
-                    IsNull(),
-                    Raw(
-                        (alias) =>
-                            `${alias} >= DATE ('${startDate.toISOString()}')`,
-                    ),
-                ),
+                startDate: LessThanOrEqual(endDate),
+                endDate: Or(IsNull(), MoreThanOrEqual(startDate)),
             },
             relations: { recurrencePattern: true, eventExceptions: true },
         });

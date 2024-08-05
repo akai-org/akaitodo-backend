@@ -94,7 +94,7 @@ export class EventController {
         return await this.eventService.createEvent(userId, eventDto);
     }
 
-    @Post('except/:id')
+    @Post('exceptions/:id')
     @AddEventExceptionApi()
     async addEventException(
         @Param('id') eventId: number,
@@ -112,7 +112,7 @@ export class EventController {
         return await this.eventService.editById(eventId, editEventDto);
     }
 
-    @Patch('except/:id')
+    @Patch('exceptions/:id')
     @EditExceptionApi()
     async editException(
         @Param('id') exceptionId: number,
@@ -132,7 +132,7 @@ export class EventController {
     }
 
     @HttpCode(HttpStatus.NO_CONTENT)
-    @Delete('except/:id')
+    @Delete('exceptions/:id')
     @DeleteExceptionApi()
     async deleteException(@Param('id') exceptionId: number): Promise<void> {
         await this.eventService.removeExceptionById(exceptionId);

@@ -9,9 +9,4 @@ export class AppController {
     getHello(): string {
         return this.appService.getHello();
     }
-
-    @Get('seed')
-    async seedDatabase() {
-        return this.appService.seedDatabase();
-    }
 }
