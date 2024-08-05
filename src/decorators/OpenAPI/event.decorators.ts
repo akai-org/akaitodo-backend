@@ -2,14 +2,27 @@ import { applyDecorators } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
     ApiBody,
+    ApiCreatedResponse,
     ApiNoContentResponse,
     ApiNotFoundResponse,
     ApiOkResponse,
 } from '@nestjs/swagger';
-import { EditEventDTO, ReturnEventDTO } from '../../resource/event/dto';
+import {
+    CreateEventDTO,
+    CreateEventExceptionDTO,
+    EditEventDTO,
+    EditEventExceptionDTO,
+    ReturnEventDTO,
+    ReturnEventExceptionDTO,
+    ReturnEventWithDatesDTO,
+} from 'src/resource/event/dto';
 
 export function GetUserEventsApi() {
     return applyDecorators(ApiOkResponse({ type: [ReturnEventDTO] }));
+}
+
+export function GetUserEventsBetweenDatesApi() {
+    return applyDecorators(ApiOkResponse({ type: [ReturnEventWithDatesDTO] }));
 }
 
 export function GetEventByIdApi() {
@@ -19,10 +32,25 @@ export function GetEventByIdApi() {
     );
 }
 
+export function GetEventExceptionByIdApi() {
+    return applyDecorators(
+        ApiOkResponse({ type: ReturnEventExceptionDTO }),
+        ApiNotFoundResponse({ description: 'Exception not found' }),
+    );
+}
+
 export function CreateEventByCurrentUserApi() {
     return applyDecorators(
-        ApiOkResponse({ type: ReturnEventDTO }),
+        ApiCreatedResponse({ type: ReturnEventDTO }),
         ApiNotFoundResponse({ description: 'Event not found' }),
+        ApiBody({ type: CreateEventDTO }),
+    );
+}
+
+export function AddEventExceptionApi() {
+    return applyDecorators(
+        ApiCreatedResponse({ type: ReturnEventExceptionDTO }),
+        ApiBody({ type: CreateEventExceptionDTO }),
     );
 }
 
@@ -35,6 +63,19 @@ export function EditEventApi() {
     );
 }
 
+export function EditExceptionApi() {
+    return applyDecorators(
+        ApiOkResponse({ type: ReturnEventExceptionDTO }),
+        ApiBadRequestResponse({ description: 'Invalid body' }),
+        ApiNotFoundResponse({ description: "Exception doesn't exist" }),
+        ApiBody({ type: EditEventExceptionDTO }),
+    );
+}
+
 export function DeleteEventApi() {
+    return applyDecorators(ApiNoContentResponse());
+}
+
+export function DeleteExceptionApi() {
     return applyDecorators(ApiNoContentResponse());
 }

@@ -1,11 +1,16 @@
+import { EventExceptionEntity } from 'src/database/entities/event.exception.entity';
+import { RecurrenceEntity } from 'src/database/entities/recurrence.entity';
+import { UserEntity } from 'src/database/entities/user.entity';
 import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
     ManyToOne,
+    OneToMany,
+    OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserEntity } from './user.entity';
 
 @Entity({ name: 'events' })
 export class EventEntity {
@@ -16,13 +21,13 @@ export class EventEntity {
     name: string;
 
     @Column({ nullable: true })
-    description: string;
+    description?: string;
 
     @Column({ name: 'start_date', type: 'datetime' })
     startDate: Date;
 
     @Column({ name: 'end_date', type: 'datetime', nullable: true })
-    endDate: Date;
+    endDate?: Date;
 
     @Column({ name: 'is_full_day', type: 'boolean' })
     isFullDay: boolean;
@@ -33,9 +38,22 @@ export class EventEntity {
     })
     createdAt: Date;
 
-    @Column({ nullable: false })
+    @Column({ name: 'created_by_id' })
     createdById: number;
 
     @ManyToOne(() => UserEntity)
+    @JoinColumn({ name: 'created_by_id' })
     createdBy: UserEntity;
+
+    @OneToOne(() => RecurrenceEntity, (recurrence) => recurrence.event, {
+        cascade: true,
+        nullable: true,
+        orphanedRowAction: 'delete',
+    })
+    recurrencePattern?: RecurrenceEntity;
+
+    @OneToMany(() => EventExceptionEntity, (exception) => exception.mainEvent, {
+        cascade: true,
+    })
+    eventExceptions: EventExceptionEntity[];
 }

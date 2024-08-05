@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AppConfig, DatabaseConfig } from './config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './resource/user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { NoteModule } from './resource/notes/notes.module';
+import { AppConfig, DatabaseConfig } from './config';
 import { EventModule } from './resource/event/event.module';
-import { TaskModule } from './resource/task/task.module';
+import { NoteModule } from './resource/notes/notes.module';
 import { SearchModule } from './resource/search/search.module';
+import { TaskModule } from './resource/task/task.module';
+import { UserModule } from './resource/user/user.module';
 
 @Module({
     imports: [
@@ -33,7 +33,7 @@ import { SearchModule } from './resource/search/search.module';
         NoteModule,
         TaskModule,
         EventModule,
-        SearchModule
+        SearchModule,
     ],
     controllers: [AppController],
     providers: [AppService],
