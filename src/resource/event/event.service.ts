@@ -125,10 +125,15 @@ export class EventService {
                             ? (eventSeparation + 1) * 7
                             : eventSeparation + 1;
                     if (start.getTime() < startDate.getTime()) {
-                        const freq = 24 * 60 * 60 * 1000 * freqInDays;
-                        const shift =
-                            (startDate.getTime() - start.getTime()) % freq;
-                        start = new Date(startDate.getTime() + freq - shift);
+                        const freqInMs = 24 * 60 * 60 * 1000 * freqInDays;
+                        const shiftInMs =
+                            (startDate.getTime() - start.getTime()) % freqInMs;
+                        const oldStart = new Date(start);
+                        start = new Date(
+                            startDate.getTime() + freqInMs - shiftInMs,
+                        );
+                        eventCount -=
+                            (start.getTime() - oldStart.getTime()) / freqInMs;
                     }
                     while (start.getTime() <= endFilter && eventCount-- > 0) {
                         if (
