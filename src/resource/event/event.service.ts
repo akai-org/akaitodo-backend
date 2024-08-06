@@ -133,7 +133,8 @@ export class EventService {
                             startDate.getTime() + freqInMs - shiftInMs,
                         );
                         eventCount -=
-                            (start.getTime() - oldStart.getTime()) / freqInMs;
+                            (start.getTime() - oldStart.getTime() - 1) /
+                            freqInMs;
                     }
                     while (start.getTime() <= endFilter && eventCount-- > 0) {
                         if (
