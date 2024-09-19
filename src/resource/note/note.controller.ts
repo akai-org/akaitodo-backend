@@ -28,19 +28,19 @@ export class NoteController {
 
     @Get()
     @GetUserNotesApi()
-    getUserNotes(@GetUser() user: UserEntity) {
+    getUserNotes(@GetUser() user: UserEntity): Promise<NoteDTO[]> {
         return this.notesService.fetchUserNotes(user);
     }
 
     @Post(':id')
     @AddNoteApi()
-    addNote(@GetUser() user: UserEntity, @Body() noteDto: NoteDTO) {
+    addNote(@GetUser() user: UserEntity, @Body() noteDto: NoteDTO): Promise<NoteDTO> {
         return this.notesService.addNote(user, noteDto);
     }
 
     @Patch(':id')
     @EditNoteApi()
-    editNote(@Param('id') id: number, @Body() noteDto: editNoteDTO) {
+    editNote(@Param('id') id: number, @Body() noteDto: editNoteDTO): Promise<void> {
         return this.notesService.editNoteById(id, noteDto);
     }
 }
