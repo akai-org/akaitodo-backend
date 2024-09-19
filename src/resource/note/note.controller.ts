@@ -32,7 +32,7 @@ export class NoteController {
         return this.notesService.fetchUser(user);
     }
 
-    @Post(':id')
+    @Post()
     @AddNoteApi()
     addNote(@GetUser() user: UserEntity, @Body() noteDto: NoteDTO): Promise<NoteDTO> {
         return this.notesService.add(user, noteDto);
