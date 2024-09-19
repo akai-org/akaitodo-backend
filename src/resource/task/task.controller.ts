@@ -34,7 +34,7 @@ import {
 export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
-    @Get('/user/all')
+    @Get()
     @GetUserTasksApi()
     async getUserTasks(
         @GetUser() user: UserEntity,
@@ -42,7 +42,7 @@ export class TaskController {
         return await this.taskService.getAllUserTasks(user);
     }
 
-    @Get('/user/:id')
+    @Get(':id')
     @GetTaskbyIdApi()
     async getTaskById(
         @GetUser() user: UserEntity,
