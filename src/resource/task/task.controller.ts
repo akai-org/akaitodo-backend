@@ -39,7 +39,7 @@ export class TaskController {
     async getUserTasks(
         @GetUser() user: UserEntity,
     ): Promise<ReturnTaskDTO[]> {
-        return await this.taskService.getAllUserTasks(user);
+        return await this.taskService.fetchUser(user);
     }
 
     @Get(':id')
@@ -48,7 +48,7 @@ export class TaskController {
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
     ): Promise<ReturnTaskDTO> {
-        const task = await this.taskService.getUserTask(user, taskId);
+        const task = await this.taskService.fetch(user, taskId);
         if (!task) {
             throw new NotFoundException('Task not found');
         }
@@ -62,7 +62,7 @@ export class TaskController {
         @GetUser() user: UserEntity,
         @Body() createTaskDTO: CreateTaskDTO,
     ): Promise<ReturnTaskDTO> {
-        return await this.taskService.addTask(user, createTaskDTO);
+        return await this.taskService.add(user, createTaskDTO);
     }
 
     @Patch(':id')
@@ -76,7 +76,7 @@ export class TaskController {
             throw new BadRequestException('ID is not valid in URL and body');
         }
 
-        const task = await this.taskService.editTask(user, editTask);
+        const task = await this.taskService.edit(user, editTask);
         if (!task) {
             throw new NotFoundException('Task not found');
         }
@@ -90,7 +90,7 @@ export class TaskController {
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
     ): Promise<void> {
-        const isTaskRemoved = await this.taskService.deleteTask(user, taskId);
+        const isTaskRemoved = await this.taskService.delete(user, taskId);
         if (!isTaskRemoved) throw new NotFoundException('Task not found');
         return;
     }

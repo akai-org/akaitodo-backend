@@ -12,14 +12,14 @@ export class NoteService {
         private noteRepository: Repository<NoteEntity>,
     ) {}
 
-    async fetchUserNotes(user: UserEntity): Promise<NoteDTO[]> {
+    async fetchUser(user: UserEntity): Promise<NoteDTO[]> {
         return this.noteRepository.find({
             relations: ['user'],
             where: { user },
         });
     }
 
-    async addNote(user: UserEntity, noteDto: NoteDTO): Promise<NoteDTO> {
+    async add(user: UserEntity, noteDto: NoteDTO): Promise<NoteDTO> {
         if (!user)
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         const newNote = this.noteRepository.create({ ...noteDto, user });
@@ -27,7 +27,7 @@ export class NoteService {
         return this.noteRepository.save(newNote);
     }
 
-    async editNoteById(id: number, noteDto: editNoteDTO): Promise<void> {
+    async edit(id: number, noteDto: editNoteDTO): Promise<void> {
         this.noteRepository.update({ id }, { ...noteDto });
     }
 }
