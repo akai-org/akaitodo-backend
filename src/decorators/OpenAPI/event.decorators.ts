@@ -39,7 +39,7 @@ export function GetEventExceptionByIdApi() {
     );
 }
 
-export function CreateEventByCurrentUserApi() {
+export function AddEventApi() {
     return applyDecorators(
         ApiCreatedResponse({ type: ReturnEventDTO }),
         ApiNotFoundResponse({ description: 'Event not found' }),

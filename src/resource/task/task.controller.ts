@@ -23,8 +23,8 @@ import {
     AddTaskApi,
     DeleteTaskApi,
     EditTaskApi,
-    GetAllUserTasksApi,
-    GetUserTaskApi,
+    GetUserTasksApi as GetUserTasksApi,
+    GetTaskByIdApi as GetTaskbyIdApi,
 } from '../../decorators/OpenAPI';
 
 @UseGuards(JwtGuard)
@@ -35,16 +35,16 @@ export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
     @Get('/user/all')
-    @GetAllUserTasksApi()
-    async getAllUserTasks(
+    @GetUserTasksApi()
+    async getUserTasks(
         @GetUser() user: UserEntity,
     ): Promise<ReturnTaskDTO[]> {
         return await this.taskService.getAllUserTasks(user);
     }
 
     @Get('/user/:id')
-    @GetUserTaskApi()
-    async getUserTask(
+    @GetTaskbyIdApi()
+    async getTaskById(
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
     ): Promise<ReturnTaskDTO> {

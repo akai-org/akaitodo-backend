@@ -20,7 +20,7 @@ import { JwtGuard } from 'src/auth/guard';
 import { GetUser } from 'src/decorators';
 import {
     AddEventExceptionApi,
-    CreateEventByCurrentUserApi,
+    AddEventApi,
     DeleteEventApi,
     DeleteExceptionApi,
     EditEventApi,
@@ -86,8 +86,8 @@ export class EventController {
     }
 
     @Post()
-    @CreateEventByCurrentUserApi()
-    async createEventByCurrentUser(
+    @AddEventApi()
+    async addEvent(
         @GetUser('id') userId: number,
         @Body() eventDto: CreateEventDTO,
     ): Promise<ReturnEventDTO> {

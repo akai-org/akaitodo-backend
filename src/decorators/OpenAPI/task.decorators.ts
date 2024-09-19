@@ -13,11 +13,11 @@ import {
     ReturnTaskDTO,
 } from '../../resource/task/dto';
 
-export function GetAllUserTasksApi() {
+export function GetUserTasksApi() {
     return applyDecorators(ApiOkResponse({ type: [ReturnTaskDTO] }));
 }
 
-export function GetUserTaskApi() {
+export function GetTaskByIdApi() {
     return applyDecorators(
         ApiOkResponse({ type: ReturnTaskDTO }),
         ApiNotFoundResponse({ description: 'Task not found' }),

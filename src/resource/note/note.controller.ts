@@ -15,8 +15,8 @@ import { UserEntity } from 'src/database/entities/user.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
     AddNoteApi,
-    EditNoteByIdApi,
-    FetchUserNotesApi,
+    EditNoteApi as EditNoteApi,
+    GetUserNotesApi as GetUserNotesApi,
 } from '../../decorators/OpenAPI';
 
 @UseGuards(JwtGuard)
@@ -27,8 +27,8 @@ export class NoteController {
     constructor(private notesService: NoteService) {}
 
     @Get()
-    @FetchUserNotesApi()
-    fetchUserNotes(@GetUser() user: UserEntity) {
+    @GetUserNotesApi()
+    getUserNotes(@GetUser() user: UserEntity) {
         return this.notesService.fetchUserNotes(user);
     }
 
@@ -39,8 +39,8 @@ export class NoteController {
     }
 
     @Patch(':id')
-    @EditNoteByIdApi()
-    editNoteById(@Param('id') id: number, @Body() noteDto: editNoteDTO) {
+    @EditNoteApi()
+    editNote(@Param('id') id: number, @Body() noteDto: editNoteDTO) {
         return this.notesService.editNoteById(id, noteDto);
     }
 }
