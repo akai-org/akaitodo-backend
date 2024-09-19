@@ -1,5 +1,5 @@
 import { ReturnEventDTO } from 'src/resource/event/dto';
-import { NoteDTO } from 'src/resource/notes/dto';
+import { NoteDTO } from 'src/resource/note/dto';
 import { ReturnTaskDTO } from 'src/resource/task/dto';
 import { ApiProperty } from '@nestjs/swagger';
 

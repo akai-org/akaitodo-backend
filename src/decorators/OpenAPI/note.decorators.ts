@@ -6,7 +6,7 @@ import {
     ApiNotFoundResponse,
     ApiOkResponse,
 } from '@nestjs/swagger';
-import { editNoteDTO, NoteDTO } from '../../resource/notes/dto';
+import { editNoteDTO, NoteDTO } from '../../resource/note/dto';
 
 export function FetchUserNotesApi() {
     return applyDecorators(ApiOkResponse({ type: [NoteDTO] }));

@@ -7,7 +7,7 @@ import {
     Post,
     UseGuards,
 } from '@nestjs/common';
-import { NoteService } from './notes.service';
+import { NoteService } from './note.service';
 import { editNoteDTO, NoteDTO } from './dto';
 import { JwtGuard } from '../../auth/guard';
 import { GetUser } from '../../decorators';
