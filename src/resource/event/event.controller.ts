@@ -74,7 +74,7 @@ export class EventController {
     @Get(':id')
     @GetEventByIdApi()
     async getEventById(@Param('id') eventId: number): Promise<ReturnEventDTO> {
-        return await this.eventService.fetch(eventId);
+        return await this.eventService.fetchById(eventId);
     }
 
     @Get('except/:id')

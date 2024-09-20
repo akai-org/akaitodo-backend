@@ -12,7 +12,7 @@ export class TaskService {
         private readonly taskRepository: Repository<TaskEntity>,
     ) {}
 
-    async fetch(user: UserEntity, id: number): Promise<TaskEntity> {
+    async fetchById(user: UserEntity, id: number): Promise<TaskEntity> {
         return await this.taskRepository.findOne({
             where: { id, user },
         });

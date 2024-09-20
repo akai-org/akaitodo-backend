@@ -48,7 +48,7 @@ export class TaskController {
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
     ): Promise<ReturnTaskDTO> {
-        const task = await this.taskService.fetch(user, taskId);
+        const task = await this.taskService.fetchById(user, taskId);
         if (!task) {
             throw new NotFoundException('Task not found');
         }

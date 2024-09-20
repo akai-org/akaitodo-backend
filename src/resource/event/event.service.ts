@@ -33,7 +33,7 @@ export class EventService {
         private readonly exceptionRepository: Repository<EventExceptionEntity>,
     ) {}
 
-    async fetch(eventId: number): Promise<ReturnEventDTO> {
+    async fetchById(eventId: number): Promise<ReturnEventDTO> {
         const event = await this.eventRepository.findOne({
             where: { id: eventId },
             relations: { recurrencePattern: true },
