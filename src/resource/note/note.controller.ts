@@ -15,8 +15,8 @@ import { UserEntity } from 'src/database/entities/user.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
     AddNoteApi,
-    EditNoteApi as EditNoteApi,
-    GetUserNotesApi as GetUserNotesApi,
+    EditNoteApi,
+    GetUserNotesApi
 } from '../../decorators/OpenAPI';
 
 @UseGuards(JwtGuard)

@@ -23,8 +23,8 @@ import {
     AddTaskApi,
     DeleteTaskApi,
     EditTaskApi,
-    GetUserTasksApi as GetUserTasksApi,
-    GetTaskByIdApi as GetTaskbyIdApi,
+    GetUserTasksApi,
+    GetTaskByIdApi
 } from '../../decorators/OpenAPI';
 
 @UseGuards(JwtGuard)
@@ -43,7 +43,7 @@ export class TaskController {
     }
 
     @Get(':id')
-    @GetTaskbyIdApi()
+    @GetTaskByIdApi()
     async getTaskById(
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
