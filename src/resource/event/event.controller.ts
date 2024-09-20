@@ -54,7 +54,7 @@ export class EventController {
     async getUserEvents(
         @GetUser('id') userId: number,
     ): Promise<ReturnEventDTO[]> {
-        return await this.eventService.fetchUser(userId);
+        return await this.eventService.fetchByUser(userId);
     }
 
     @Get('dates')

@@ -42,7 +42,7 @@ export class EventService {
         return event;
     }
 
-    async fetchUser(userId: number): Promise<ReturnEventDTO[]> {
+    async fetchByUser(userId: number): Promise<ReturnEventDTO[]> {
         return this.eventRepository.find({
             where: { createdById: userId },
             relations: { recurrencePattern: true, eventExceptions: true },

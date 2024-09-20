@@ -12,7 +12,7 @@ export class NoteService {
         private noteRepository: Repository<NoteEntity>,
     ) {}
 
-    async fetchUser(user: UserEntity): Promise<NoteDTO[]> {
+    async fetchByUser(user: UserEntity): Promise<NoteDTO[]> {
         return this.noteRepository.find({
             relations: ['user'],
             where: { user },

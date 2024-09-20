@@ -18,7 +18,7 @@ export class TaskService {
         });
     }
 
-    async fetchUser(user: UserEntity): Promise<ReturnTaskDTO[]> {
+    async fetchByUser(user: UserEntity): Promise<ReturnTaskDTO[]> {
         return await this.taskRepository.find({
             where: { user },
         });

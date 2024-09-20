@@ -29,7 +29,7 @@ export class NoteController {
     @Get()
     @GetUserNotesApi()
     getUserNotes(@GetUser() user: UserEntity): Promise<NoteDTO[]> {
-        return this.notesService.fetchUser(user);
+        return this.notesService.fetchByUser(user);
     }
 
     @Post()

@@ -39,7 +39,7 @@ export class TaskController {
     async getUserTasks(
         @GetUser() user: UserEntity,
     ): Promise<ReturnTaskDTO[]> {
-        return await this.taskService.fetchUser(user);
+        return await this.taskService.fetchByUser(user);
     }
 
     @Get(':id')
