@@ -5,14 +5,14 @@ import {
     NotFoundException,
     UnauthorizedException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../database/entities/user.entity';
-import { QueryFailedError, Repository } from 'typeorm';
-import { AuthDTO, JwtTokenDTO, RegisterDTO } from './dto';
-import * as argon from 'argon2';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as argon from 'argon2';
 import { OAuth2Client, TokenPayload } from 'google-auth-library';
+import { QueryFailedError, Repository } from 'typeorm';
+import { UserEntity } from '../database/entities/user.entity';
+import { AuthDTO, JwtTokenDTO, RegisterDTO } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -98,6 +98,9 @@ export class AuthService {
             .catch(() => {
                 throw new ForbiddenException();
             });
+
+        if (payload == undefined)
+            throw new ForbiddenException('Invalid Google credentials');
 
         const user = await this.userRepository.findOneBy({
             email: payload.email,

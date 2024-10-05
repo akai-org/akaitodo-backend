@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TaskEntity } from 'src/database/entities/task.entity';
-import { Repository } from 'typeorm';
-import { EditTaskDTO, ReturnTaskDTO, CreateTaskDTO } from './dto';
 import { UserEntity } from 'src/database/entities/user.entity';
+import { Repository } from 'typeorm';
+import { CreateTaskDTO, EditTaskDTO, ReturnTaskDTO } from './dto';
 
 @Injectable()
 export class TaskService {
@@ -12,7 +12,7 @@ export class TaskService {
         private readonly taskRepository: Repository<TaskEntity>,
     ) {}
 
-    async fetchById(user: UserEntity, id: number): Promise<TaskEntity> {
+    async fetchById(user: UserEntity, id: number): Promise<TaskEntity | null> {
         return await this.taskRepository.findOne({
             where: { id, user },
         });
@@ -35,13 +35,13 @@ export class TaskService {
     async edit(
         user: UserEntity,
         editTask: EditTaskDTO,
-    ): Promise<ReturnTaskDTO> {
+    ): Promise<ReturnTaskDTO | null> {
         const task = await this.taskRepository.findOneBy({
             id: editTask.id,
             user,
         });
         if (!task) {
-            throw new NotFoundException('Task not found');
+            return null;
         }
         return await this.taskRepository.save({ ...editTask });
     }

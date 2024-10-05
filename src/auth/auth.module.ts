@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { OAuth2Client } from 'google-auth-library';
+import { UserEntity } from 'src/database/entities/user.entity';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from 'src/database/entities/user.entity';
-import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy';
-import { OAuth2Client } from 'google-auth-library';
 
 @Module({
     imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule.register({})],

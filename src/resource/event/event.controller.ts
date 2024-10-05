@@ -5,6 +5,7 @@ import {
     Get,
     HttpCode,
     HttpStatus,
+    NotFoundException,
     Param,
     Patch,
     Post,
@@ -19,8 +20,8 @@ import {
 import { JwtGuard } from 'src/auth/guard';
 import { GetUser } from 'src/decorators';
 import {
-    AddEventExceptionApi,
     AddEventApi,
+    AddEventExceptionApi,
     DeleteEventApi,
     DeleteExceptionApi,
     EditEventApi,
@@ -74,7 +75,9 @@ export class EventController {
     @Get(':id')
     @GetEventByIdApi()
     async getEventById(@Param('id') eventId: number): Promise<ReturnEventDTO> {
-        return await this.eventService.fetchById(eventId);
+        const event = await this.eventService.fetchById(eventId);
+        if (!event) throw new NotFoundException('Event not found');
+        return event;
     }
 
     @Get('except/:id')
@@ -82,7 +85,10 @@ export class EventController {
     async getEventExceptionById(
         @Param('id') exceptionId: number,
     ): Promise<ReturnEventExceptionDTO> {
-        return await this.eventService.fetchExceptionById(exceptionId);
+        const exception =
+            await this.eventService.fetchExceptionById(exceptionId);
+        if (!exception) throw new NotFoundException('Exception not found');
+        return exception;
     }
 
     @Post()
@@ -109,7 +115,12 @@ export class EventController {
         @Param('id') eventId: number,
         @Body() editEventDto: EditEventDTO,
     ): Promise<ReturnEventDTO> {
-        return await this.eventService.edit(eventId, editEventDto);
+        const updatedEvent = await this.eventService.edit(
+            eventId,
+            editEventDto,
+        );
+        if (!updatedEvent) throw new NotFoundException('Event not found');
+        return updatedEvent;
     }
 
     @Patch('exceptions/:id')
@@ -118,10 +129,13 @@ export class EventController {
         @Param('id') exceptionId: number,
         @Body() editExceptionDto: EditEventExceptionDTO,
     ): Promise<ReturnEventExceptionDTO> {
-        return await this.eventService.editException(
+        const editedException = await this.eventService.editException(
             exceptionId,
             editExceptionDto,
         );
+        if (!editedException)
+            throw new NotFoundException('Exception not found');
+        return editedException;
     }
 
     @HttpCode(HttpStatus.NO_CONTENT)

@@ -8,7 +8,7 @@ import {
     ApiOkResponse,
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { AuthDTO, JwtTokenDTO, RegisterDTO } from '../../auth/dto';
+import { AuthDTO, JwtTokenDTO, RegisterDTO } from 'src/auth/dto';
 
 export function RegisterApi() {
     return applyDecorators(
@@ -36,7 +36,7 @@ export function LoginApi() {
 export function GoogleLoginApi() {
     return applyDecorators(
         ApiOkResponse({ type: JwtTokenDTO }),
-        ApiForbiddenResponse(),
+        ApiForbiddenResponse({ description: 'Invalid Google credentials' }),
         ApiConflictResponse({ description: 'Email already used' }),
     );
 }

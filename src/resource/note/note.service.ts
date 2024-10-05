@@ -1,9 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NoteEntity } from 'src/database/entities/notes.entity';
-import { Repository } from 'typeorm';
-import { NoteDTO, editNoteDTO } from './dto';
 import { UserEntity } from 'src/database/entities/user.entity';
+import { Repository } from 'typeorm';
+import { editNoteDTO, NoteDTO } from './dto';
 
 @Injectable()
 export class NoteService {
@@ -19,15 +19,14 @@ export class NoteService {
         });
     }
 
-    async add(user: UserEntity, noteDto: NoteDTO): Promise<NoteDTO> {
-        if (!user)
-            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    async add(user: UserEntity, noteDto: NoteDTO): Promise<NoteDTO | null> {
+        if (!user) return null;
         const newNote = this.noteRepository.create({ ...noteDto, user });
 
         return this.noteRepository.save(newNote);
     }
 
     async edit(id: number, noteDto: editNoteDTO): Promise<void> {
-        this.noteRepository.update({ id }, { ...noteDto });
+        await this.noteRepository.update({ id }, { ...noteDto });
     }
 }

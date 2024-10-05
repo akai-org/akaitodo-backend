@@ -13,19 +13,19 @@ import {
     Post,
     UseGuards,
 } from '@nestjs/common';
-import { GetUser } from 'src/decorators';
-import { JwtGuard } from 'src/auth/guard';
-import { CreateTaskDTO, EditTaskDTO, ReturnTaskDTO } from './dto';
-import { TaskService } from './task.service';
-import { UserEntity } from 'src/database/entities/user.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtGuard } from 'src/auth/guard';
+import { UserEntity } from 'src/database/entities/user.entity';
+import { GetUser } from 'src/decorators';
 import {
     AddTaskApi,
     DeleteTaskApi,
     EditTaskApi,
+    GetTaskByIdApi,
     GetUserTasksApi,
-    GetTaskByIdApi
-} from '../../decorators/OpenAPI';
+} from 'src/decorators/OpenAPI';
+import { CreateTaskDTO, EditTaskDTO, ReturnTaskDTO } from './dto';
+import { TaskService } from './task.service';
 
 @UseGuards(JwtGuard)
 @ApiTags('Tasks')
@@ -36,9 +36,7 @@ export class TaskController {
 
     @Get()
     @GetUserTasksApi()
-    async getUserTasks(
-        @GetUser() user: UserEntity,
-    ): Promise<ReturnTaskDTO[]> {
+    async getUserTasks(@GetUser() user: UserEntity): Promise<ReturnTaskDTO[]> {
         return await this.taskService.fetchByUser(user);
     }
 

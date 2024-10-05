@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventEntity } from 'src/database/entities/event.entity';
 import { EventExceptionEntity } from 'src/database/entities/event.exception.entity';
@@ -33,13 +33,11 @@ export class EventService {
         private readonly exceptionRepository: Repository<EventExceptionEntity>,
     ) {}
 
-    async fetchById(eventId: number): Promise<ReturnEventDTO> {
-        const event = await this.eventRepository.findOne({
+    async fetchById(eventId: number): Promise<ReturnEventDTO | null> {
+        return await this.eventRepository.findOne({
             where: { id: eventId },
             relations: { recurrencePattern: true },
         });
-        if (!event) throw new NotFoundException('Event not found');
-        return event;
     }
 
     async fetchByUser(userId: number): Promise<ReturnEventDTO[]> {
@@ -80,15 +78,15 @@ export class EventService {
                 if (event.eventExceptions != null) {
                     event.eventExceptions.forEach((exception) => {
                         const rescheduledConditions =
-                            exception.isRescheduled == true &&
-                            exception.startDate <= endDate &&
+                            exception.isRescheduled &&
+                            exception.originalDate <= endDate &&
                             (exception.endDate == null ||
                                 exception.endDate >= startDate);
                         const cancelledConditions =
-                            exception.isCancelled == true &&
+                            exception.isCancelled &&
                             exception.originalDate <= endDate;
                         if (rescheduledConditions || cancelledConditions) {
-                            toReturn.eventExceptions.push(exception);
+                            toReturn.eventExceptions!.push(exception);
                         }
                     });
                 }
@@ -174,12 +172,10 @@ export class EventService {
 
     async fetchExceptionById(
         exceptionId: number,
-    ): Promise<ReturnEventExceptionDTO> {
-        const exception = await this.exceptionRepository.findOneBy({
+    ): Promise<ReturnEventExceptionDTO | null> {
+        return await this.exceptionRepository.findOneBy({
             id: exceptionId,
         });
-        if (!exception) throw new NotFoundException('Exception not found');
-        return exception;
     }
 
     async add(
@@ -209,11 +205,11 @@ export class EventService {
     async edit(
         eventId: number,
         editEventDto: EditEventDTO,
-    ): Promise<ReturnEventDTO> {
+    ): Promise<ReturnEventDTO | null> {
         const eventToUpdate = await this.eventRepository.findOne({
             where: { id: eventId },
         });
-        if (!eventToUpdate) throw new NotFoundException('Event not found');
+        if (!eventToUpdate) return null;
 
         if (editEventDto.deleteRecurrence) {
             await this.recurrenceRepository.delete({ eventId });
@@ -221,7 +217,9 @@ export class EventService {
         }
         delete editEventDto.deleteRecurrence;
 
-        editEventDto.recurrencePattern.eventId = eventId;
+        if (editEventDto.recurrencePattern)
+            editEventDto.recurrencePattern.eventId = eventId;
+
         this.eventRepository.merge(eventToUpdate, editEventDto);
         await this.eventRepository.save(eventToUpdate);
 
@@ -231,12 +229,11 @@ export class EventService {
     async editException(
         exceptionId: number,
         editExceptionDto: EditEventExceptionDTO,
-    ): Promise<ReturnEventExceptionDTO> {
+    ): Promise<ReturnEventExceptionDTO | null> {
         const exceptionToUpdate = await this.exceptionRepository.findOneBy({
             id: exceptionId,
         });
-        if (!exceptionToUpdate)
-            throw new NotFoundException('Exception not found');
+        if (!exceptionToUpdate) return null;
         this.exceptionRepository.merge(exceptionToUpdate, editExceptionDto);
         await this.eventRepository.update(
             { id: exceptionToUpdate.id },

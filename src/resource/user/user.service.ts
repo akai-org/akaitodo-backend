@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -14,9 +14,12 @@ export class UserService {
     async editMe(
         userId: number,
         editUserDto: EditUserDTO,
-    ): Promise<ReturnUserDTO> {
-        const user = await this.userRepository.findOneBy({ id: userId });
-        if (!user) throw new NotFoundException('User not found');
+    ): Promise<ReturnUserDTO | null> {
+        const userToUpdate = await this.userRepository.findOneBy({
+            id: userId,
+        });
+        if (!userToUpdate) return null;
+        this.userRepository.merge(userToUpdate, editUserDto);
         await this.userRepository.update(
             {
                 id: userId,
@@ -25,16 +28,14 @@ export class UserService {
                 ...editUserDto,
             },
         );
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { hash, ...result } = user;
-        return result;
+        delete userToUpdate.hash;
+        return userToUpdate;
     }
 
-    async getUserById(userId: number): Promise<ReturnUserDTO> {
+    async getUserById(userId: number): Promise<ReturnUserDTO | null> {
         const user = await this.userRepository.findOneBy({ id: userId });
-        if (!user) throw new NotFoundException('User not found');
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { hash, ...result } = user;
-        return result;
+        if (!user) return null;
+        delete user.hash;
+        return user;
     }
 }

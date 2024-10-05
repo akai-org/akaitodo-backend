@@ -1,12 +1,8 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { GoogleLoginApi, LoginApi, RegisterApi } from 'src/decorators/OpenAPI';
 import { AuthService } from './auth.service';
 import { AuthDTO, JwtTokenDTO, RegisterDTO } from './dto';
-import { ApiTags } from '@nestjs/swagger';
-import {
-    GoogleLoginApi,
-    LoginApi,
-    RegisterApi,
-} from '../decorators/OpenAPI/auth.decorators';
 
 @ApiTags('Auth')
 @Controller('auth')
