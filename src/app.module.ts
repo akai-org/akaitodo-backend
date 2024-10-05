@@ -6,7 +6,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { AppConfig, DatabaseConfig } from './config';
 import { EventModule } from './resource/event/event.module';
-import { NoteModule } from './resource/notes/notes.module';
+import { NoteModule } from './resource/note/note.module';
 import { SearchModule } from './resource/search/search.module';
 import { TaskModule } from './resource/task/task.module';
 import { UserModule } from './resource/user/user.module';

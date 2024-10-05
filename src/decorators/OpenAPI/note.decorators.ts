@@ -6,9 +6,9 @@ import {
     ApiNotFoundResponse,
     ApiOkResponse,
 } from '@nestjs/swagger';
-import { editNoteDTO, NoteDTO } from '../../resource/notes/dto';
+import { editNoteDTO, NoteDTO } from '../../resource/note/dto';
 
-export function FetchUserNotesApi() {
+export function GetUserNotesApi() {
     return applyDecorators(ApiOkResponse({ type: [NoteDTO] }));
 }
 
@@ -21,7 +21,7 @@ export function AddNoteApi() {
     );
 }
 
-export function EditNoteByIdApi() {
+export function EditNoteApi() {
     return applyDecorators(
         ApiOkResponse(),
         ApiBadRequestResponse({ description: 'Invalid body' }),

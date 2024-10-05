@@ -20,7 +20,7 @@ import { JwtGuard } from 'src/auth/guard';
 import { GetUser } from 'src/decorators';
 import {
     AddEventExceptionApi,
-    CreateEventByCurrentUserApi,
+    AddEventApi,
     DeleteEventApi,
     DeleteExceptionApi,
     EditEventApi,
@@ -54,7 +54,7 @@ export class EventController {
     async getUserEvents(
         @GetUser('id') userId: number,
     ): Promise<ReturnEventDTO[]> {
-        return await this.eventService.fetchUserEvents(userId);
+        return await this.eventService.fetchByUser(userId);
     }
 
     @Get('dates')
@@ -86,12 +86,12 @@ export class EventController {
     }
 
     @Post()
-    @CreateEventByCurrentUserApi()
-    async createEventByCurrentUser(
+    @AddEventApi()
+    async addEvent(
         @GetUser('id') userId: number,
         @Body() eventDto: CreateEventDTO,
     ): Promise<ReturnEventDTO> {
-        return await this.eventService.createEvent(userId, eventDto);
+        return await this.eventService.add(userId, eventDto);
     }
 
     @Post('exceptions/:id')
@@ -100,7 +100,7 @@ export class EventController {
         @Param('id') eventId: number,
         @Body() exceptionDto: CreateEventExceptionDTO,
     ): Promise<ReturnEventExceptionDTO> {
-        return await this.eventService.createException(eventId, exceptionDto);
+        return await this.eventService.addException(eventId, exceptionDto);
     }
 
     @Patch(':id')
@@ -109,7 +109,7 @@ export class EventController {
         @Param('id') eventId: number,
         @Body() editEventDto: EditEventDTO,
     ): Promise<ReturnEventDTO> {
-        return await this.eventService.editById(eventId, editEventDto);
+        return await this.eventService.edit(eventId, editEventDto);
     }
 
     @Patch('exceptions/:id')
@@ -118,7 +118,7 @@ export class EventController {
         @Param('id') exceptionId: number,
         @Body() editExceptionDto: EditEventExceptionDTO,
     ): Promise<ReturnEventExceptionDTO> {
-        return await this.eventService.editExceptionById(
+        return await this.eventService.editException(
             exceptionId,
             editExceptionDto,
         );
@@ -128,13 +128,13 @@ export class EventController {
     @Delete(':id')
     @DeleteEventApi()
     async deleteEvent(@Param('id') eventId: number): Promise<void> {
-        await this.eventService.deleteById(eventId);
+        await this.eventService.delete(eventId);
     }
 
     @HttpCode(HttpStatus.NO_CONTENT)
     @Delete('exceptions/:id')
     @DeleteExceptionApi()
     async deleteException(@Param('id') exceptionId: number): Promise<void> {
-        await this.eventService.removeExceptionById(exceptionId);
+        await this.eventService.deleteException(exceptionId);
     }
 }

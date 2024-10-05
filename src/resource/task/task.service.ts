@@ -12,19 +12,19 @@ export class TaskService {
         private readonly taskRepository: Repository<TaskEntity>,
     ) {}
 
-    async getUserTask(user: UserEntity, id: number): Promise<TaskEntity> {
+    async fetchById(user: UserEntity, id: number): Promise<TaskEntity> {
         return await this.taskRepository.findOne({
             where: { id, user },
         });
     }
 
-    async getAllUserTasks(user: UserEntity): Promise<ReturnTaskDTO[]> {
+    async fetchByUser(user: UserEntity): Promise<ReturnTaskDTO[]> {
         return await this.taskRepository.find({
             where: { user },
         });
     }
 
-    async addTask(
+    async add(
         user: UserEntity,
         createTaskDTO: CreateTaskDTO,
     ): Promise<ReturnTaskDTO> {
@@ -32,7 +32,7 @@ export class TaskService {
         return await this.taskRepository.save({ ...newTask, user });
     }
 
-    async editTask(
+    async edit(
         user: UserEntity,
         editTask: EditTaskDTO,
     ): Promise<ReturnTaskDTO> {
@@ -46,7 +46,7 @@ export class TaskService {
         return await this.taskRepository.save({ ...editTask });
     }
 
-    async deleteTask(user: UserEntity, id: number): Promise<boolean> {
+    async delete(user: UserEntity, id: number): Promise<boolean> {
         const task = await this.taskRepository.findOneBy({
             id,
             user,

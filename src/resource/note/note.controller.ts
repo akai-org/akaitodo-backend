@@ -7,7 +7,7 @@ import {
     Post,
     UseGuards,
 } from '@nestjs/common';
-import { NoteService } from './notes.service';
+import { NoteService } from './note.service';
 import { editNoteDTO, NoteDTO } from './dto';
 import { JwtGuard } from '../../auth/guard';
 import { GetUser } from '../../decorators';
@@ -15,8 +15,8 @@ import { UserEntity } from 'src/database/entities/user.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
     AddNoteApi,
-    EditNoteByIdApi,
-    FetchUserNotesApi,
+    EditNoteApi,
+    GetUserNotesApi
 } from '../../decorators/OpenAPI';
 
 @UseGuards(JwtGuard)
@@ -27,20 +27,20 @@ export class NoteController {
     constructor(private notesService: NoteService) {}
 
     @Get()
-    @FetchUserNotesApi()
-    fetchUserNotes(@GetUser() user: UserEntity) {
-        return this.notesService.fetchUserNotes(user);
+    @GetUserNotesApi()
+    getUserNotes(@GetUser() user: UserEntity): Promise<NoteDTO[]> {
+        return this.notesService.fetchByUser(user);
     }
 
-    @Post(':id')
+    @Post()
     @AddNoteApi()
-    addNote(@GetUser() user: UserEntity, @Body() noteDto: NoteDTO) {
-        return this.notesService.addNote(user, noteDto);
+    addNote(@GetUser() user: UserEntity, @Body() noteDto: NoteDTO): Promise<NoteDTO> {
+        return this.notesService.add(user, noteDto);
     }
 
     @Patch(':id')
-    @EditNoteByIdApi()
-    editNoteById(@Param('id') id: number, @Body() noteDto: editNoteDTO) {
-        return this.notesService.editNoteById(id, noteDto);
+    @EditNoteApi()
+    editNote(@Param('id') id: number, @Body() noteDto: editNoteDTO): Promise<void> {
+        return this.notesService.edit(id, noteDto);
     }
 }

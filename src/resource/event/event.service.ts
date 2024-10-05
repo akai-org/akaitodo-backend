@@ -42,7 +42,7 @@ export class EventService {
         return event;
     }
 
-    async fetchUserEvents(userId: number): Promise<ReturnEventDTO[]> {
+    async fetchByUser(userId: number): Promise<ReturnEventDTO[]> {
         return this.eventRepository.find({
             where: { createdById: userId },
             relations: { recurrencePattern: true, eventExceptions: true },
@@ -182,7 +182,7 @@ export class EventService {
         return exception;
     }
 
-    async createEvent(
+    async add(
         userId: number,
         eventDto: CreateEventDTO,
     ): Promise<ReturnEventDTO> {
@@ -194,7 +194,7 @@ export class EventService {
         return event;
     }
 
-    async createException(
+    async addException(
         eventId: number,
         exceptionDto: CreateEventExceptionDTO,
     ): Promise<ReturnEventExceptionDTO> {
@@ -206,7 +206,7 @@ export class EventService {
         return exception;
     }
 
-    async editById(
+    async edit(
         eventId: number,
         editEventDto: EditEventDTO,
     ): Promise<ReturnEventDTO> {
@@ -228,7 +228,7 @@ export class EventService {
         return eventToUpdate;
     }
 
-    async editExceptionById(
+    async editException(
         exceptionId: number,
         editExceptionDto: EditEventExceptionDTO,
     ): Promise<ReturnEventExceptionDTO> {
@@ -245,11 +245,11 @@ export class EventService {
         return exceptionToUpdate;
     }
 
-    async deleteById(eventId: number): Promise<void> {
+    async delete(eventId: number): Promise<void> {
         await this.eventRepository.delete({ id: eventId });
     }
 
-    async removeExceptionById(exceptionId: number): Promise<void> {
+    async deleteException(exceptionId: number): Promise<void> {
         await this.exceptionRepository.delete({ id: exceptionId });
     }
 }
