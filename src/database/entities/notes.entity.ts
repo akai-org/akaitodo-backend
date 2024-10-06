@@ -28,8 +28,8 @@ export class NoteEntity {
         id: number,
         title: string,
         body: string,
-        createdAt: Date,
-        icon: string,
+        createdAt: Date | undefined,
+        icon: string | undefined,
         color: string,
         user: UserEntity,
     ) {

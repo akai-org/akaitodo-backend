@@ -60,14 +60,14 @@ export class EventEntity {
     constructor(
         id: number,
         name: string,
-        description: string,
+        description: string | undefined,
         startDate: Date,
-        endDate: Date,
+        endDate: Date | undefined,
         isFullDay: boolean,
         createdAt: Date,
         createdById: number,
         createdBy: UserEntity,
-        recurrencePattern: RecurrenceEntity,
+        recurrencePattern: RecurrenceEntity | undefined,
         eventExceptions: EventExceptionEntity[],
     ) {
         this.id = id;

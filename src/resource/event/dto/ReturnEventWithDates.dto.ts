@@ -24,13 +24,13 @@ export class ReturnEventWithDatesDTO {
     constructor(
         id: number,
         name: string,
-        description: string,
+        description: string | undefined,
         startDate: Date,
-        endDate: Date,
+        endDate: Date | undefined,
         isFullDay: boolean,
         createdById: number,
         eventDates: string[],
-        eventExceptions: ReturnEventExceptionDTO[],
+        eventExceptions: ReturnEventExceptionDTO[] | undefined,
     ) {
         this.id = id;
         this.name = name;

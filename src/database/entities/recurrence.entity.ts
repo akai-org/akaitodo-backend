@@ -30,7 +30,7 @@ export class RecurrenceEntity {
     constructor(
         recurrenceType: RecurrenceType,
         separationCount: number,
-        numberOfOccurrences: number,
+        numberOfOccurrences: number | undefined,
         eventId: number,
         event: EventEntity,
     ) {

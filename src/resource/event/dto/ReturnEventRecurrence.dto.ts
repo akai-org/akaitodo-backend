@@ -12,7 +12,7 @@ export class ReturnEventRecurrenceDTO {
     constructor(
         recurrenceType: RecurrenceType,
         separationCount: number,
-        numberOfOccurrences: number,
+        numberOfOccurrences: number | undefined,
     ) {
         this.recurrenceType = recurrenceType;
         this.separationCount = separationCount;

@@ -29,7 +29,7 @@ export class UserEntity {
         id: number,
         username: string,
         email: string,
-        hash: string,
+        hash: string | undefined,
         isLocal: boolean,
         role: UserRole,
     ) {

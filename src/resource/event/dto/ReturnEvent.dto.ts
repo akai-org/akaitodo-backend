@@ -32,8 +32,8 @@ export class ReturnEventDTO {
         endDate: Date,
         isFullDay: boolean,
         createdById: number,
-        recurrencePattern: ReturnEventRecurrenceDTO,
-        exceptions: ReturnEventExceptionDTO[],
+        recurrencePattern: ReturnEventRecurrenceDTO | undefined,
+        exceptions: ReturnEventExceptionDTO[] | undefined,
     ) {
         this.id = id;
         this.name = name;

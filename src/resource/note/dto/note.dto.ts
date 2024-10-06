@@ -30,9 +30,9 @@ export class NoteDTO {
         id: number,
         title: string,
         body: string,
-        createdAt: Date,
-        icon: string,
-        color: string,
+        createdAt: Date | undefined,
+        icon: string | undefined,
+        color: string | undefined,
     ) {
         this.id = id;
         this.title = title;

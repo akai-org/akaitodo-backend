@@ -23,8 +23,8 @@ export class ReturnEventExceptionDTO {
         isRescheduled: boolean,
         isCancelled: boolean,
         originalDate: Date,
-        startDate: Date,
-        endDate: Date,
+        startDate: Date | undefined,
+        endDate: Date | undefined,
         isFullDay: boolean,
         mainEventId: number,
     ) {
