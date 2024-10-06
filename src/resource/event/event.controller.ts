@@ -5,7 +5,6 @@ import {
     Get,
     HttpCode,
     HttpStatus,
-    NotFoundException,
     Param,
     Patch,
     Post,
@@ -70,18 +69,13 @@ export class EventController {
     @Get(':id')
     @GetEventByIdApi()
     async getEventById(@Param('id') eventId: number) {
-        const event = await this.eventService.fetchById(eventId);
-        if (!event) throw new NotFoundException('Event not found');
-        return event;
+        return await this.eventService.fetchById(eventId);
     }
 
     @Get('except/:id')
     @GetEventExceptionByIdApi()
     async getEventExceptionById(@Param('id') exceptionId: number) {
-        const exception =
-            await this.eventService.fetchExceptionById(exceptionId);
-        if (!exception) throw new NotFoundException('Exception not found');
-        return exception;
+        return await this.eventService.fetchExceptionById(exceptionId);
     }
 
     @Post()
@@ -108,12 +102,7 @@ export class EventController {
         @Param('id') eventId: number,
         @Body() editEventDto: EditEventDTO,
     ) {
-        const updatedEvent = await this.eventService.edit(
-            eventId,
-            editEventDto,
-        );
-        if (!updatedEvent) throw new NotFoundException('Event not found');
-        return updatedEvent;
+        return await this.eventService.edit(eventId, editEventDto);
     }
 
     @Patch('exceptions/:id')
@@ -122,13 +111,10 @@ export class EventController {
         @Param('id') exceptionId: number,
         @Body() editExceptionDto: EditEventExceptionDTO,
     ) {
-        const editedException = await this.eventService.editException(
+        return await this.eventService.editException(
             exceptionId,
             editExceptionDto,
         );
-        if (!editedException)
-            throw new NotFoundException('Exception not found');
-        return editedException;
     }
 
     @HttpCode(HttpStatus.NO_CONTENT)

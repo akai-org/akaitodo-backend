@@ -9,12 +9,13 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { plainToInstance } from 'class-transformer';
 import { JwtGuard } from 'src/auth/guard';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { ForRole, GetUser } from 'src/decorators';
 import { EditMeApi, GetMeApi, GetUserByIdApi } from 'src/decorators/OpenAPI';
 import { UserRole } from 'src/types';
-import { EditUserDTO } from './dto';
+import { EditUserDTO, ReturnUserDTO } from './dto';
 import { UserRoleGuard } from './guard';
 import { UserService } from './user.service';
 
@@ -28,8 +29,7 @@ export class UserController {
     @Get('me')
     @GetMeApi()
     getMe(@GetUser() user: UserEntity) {
-        delete user.hash;
-        return user;
+        return plainToInstance(ReturnUserDTO, user);
     }
 
     @Patch('me')
@@ -38,9 +38,7 @@ export class UserController {
         @GetUser('id') userId: number,
         @Body() editUserDto: EditUserDTO,
     ) {
-        const user = await this.userService.editMe(userId, editUserDto);
-        if (!user) throw new NotFoundException('User not found');
-        return user;
+        return await this.userService.editMe(userId, editUserDto);
     }
 
     @ForRole(UserRole.ADMIN)

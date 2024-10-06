@@ -46,12 +46,7 @@ export class TaskController {
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
     ) {
-        const task = await this.taskService.fetchById(user, taskId);
-        if (!task) {
-            throw new NotFoundException('Task not found');
-        }
-
-        return task;
+        return await this.taskService.fetchById(user, taskId);
     }
 
     @Post()
@@ -74,11 +69,7 @@ export class TaskController {
             throw new BadRequestException('ID is not valid in URL and body');
         }
 
-        const task = await this.taskService.edit(user, editTask);
-        if (!task) {
-            throw new NotFoundException('Task not found');
-        }
-        return task;
+        return await this.taskService.edit(user, editTask);
     }
 
     @HttpCode(HttpStatus.NO_CONTENT)

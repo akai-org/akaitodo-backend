@@ -2,8 +2,6 @@ import {
     Body,
     Controller,
     Get,
-    HttpException,
-    HttpStatus,
     Param,
     Patch,
     Post,
@@ -37,10 +35,7 @@ export class NoteController {
     @Post()
     @AddNoteApi()
     async addNote(@GetUser() user: UserEntity, @Body() noteDto: NoteDTO) {
-        const note = await this.notesService.add(user, noteDto);
-        if (!note)
-            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-        return note;
+        return await this.notesService.add(user, noteDto);
     }
 
     @Patch(':id')

@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
 import { NoteEntity } from 'src/database/entities/notes.entity';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -13,17 +14,19 @@ export class NoteService {
     ) {}
 
     async fetchByUser(user: UserEntity) {
-        return this.noteRepository.find({
+        const notes = await this.noteRepository.find({
             relations: ['user'],
             where: { user },
         });
+        return plainToInstance(NoteDTO, notes);
     }
 
     async add(user: UserEntity, noteDto: NoteDTO) {
-        if (!user) return null;
+        if (!user)
+            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         const newNote = this.noteRepository.create({ ...noteDto, user });
 
-        return this.noteRepository.save(newNote);
+        return plainToInstance(NoteDTO, this.noteRepository.save(newNote));
     }
 
     async edit(id: number, noteDto: editNoteDTO) {

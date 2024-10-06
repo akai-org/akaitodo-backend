@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { Repository } from 'typeorm';
-import { EditUserDTO } from './dto';
+import { EditUserDTO, ReturnUserDTO } from './dto';
 
 @Injectable()
 export class UserService {
@@ -15,7 +16,7 @@ export class UserService {
         const userToUpdate = await this.userRepository.findOneBy({
             id: userId,
         });
-        if (!userToUpdate) return null;
+        if (!userToUpdate) throw new NotFoundException('User not found');
         this.userRepository.merge(userToUpdate, editUserDto);
         await this.userRepository.update(
             {
@@ -25,14 +26,12 @@ export class UserService {
                 ...editUserDto,
             },
         );
-        delete userToUpdate.hash;
-        return userToUpdate;
+        return plainToInstance(ReturnUserDTO, userToUpdate);
     }
 
     async getUserById(userId: number) {
         const user = await this.userRepository.findOneBy({ id: userId });
-        if (!user) return null;
-        delete user.hash;
-        return user;
+        if (!user) throw new NotFoundException('User not found');
+        return plainToInstance(ReturnUserDTO, user);
     }
 }

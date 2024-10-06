@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserEntity } from 'src/database/entities/user.entity';
+import { ReturnUserDTO } from 'src/resource/user/dto';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -21,8 +23,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
     async validate(payload: { sub: number; email: string }) {
         const user = await this.userRepository.findOneBy({ id: payload.sub });
-        if (!user) return null;
-        delete user.hash;
-        return user;
+        return user ? plainToInstance(ReturnUserDTO, user) : null;
     }
 }

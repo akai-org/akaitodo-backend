@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
 import { TaskEntity } from 'src/database/entities/task.entity';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { Repository } from 'typeorm';
-import { CreateTaskDTO, EditTaskDTO } from './dto';
+import { CreateTaskDTO, EditTaskDTO, ReturnTaskDTO } from './dto';
 
 @Injectable()
 export class TaskService {
@@ -13,20 +14,29 @@ export class TaskService {
     ) {}
 
     async fetchById(user: UserEntity, id: number) {
-        return await this.taskRepository.findOne({
+        const task = await this.taskRepository.findOne({
             where: { id, user },
         });
+        if (!task) {
+            throw new NotFoundException('Task not found');
+        }
+        return plainToInstance(ReturnTaskDTO, task);
     }
 
     async fetchByUser(user: UserEntity) {
-        return await this.taskRepository.find({
+        const tasks = await this.taskRepository.find({
             where: { user },
         });
+        return plainToInstance(ReturnTaskDTO, tasks);
     }
 
     async add(user: UserEntity, createTaskDTO: CreateTaskDTO) {
         const newTask = this.taskRepository.create(createTaskDTO);
-        return await this.taskRepository.save({ ...newTask, user });
+        const addedTask: TaskEntity = await this.taskRepository.save({
+            ...newTask,
+            user,
+        });
+        return plainToInstance(ReturnTaskDTO, addedTask);
     }
 
     async edit(user: UserEntity, editTask: EditTaskDTO) {
@@ -35,9 +45,12 @@ export class TaskService {
             user,
         });
         if (!task) {
-            return null;
+            throw new NotFoundException('Task not found');
         }
-        return await this.taskRepository.save({ ...editTask });
+        const editedTask: TaskEntity = await this.taskRepository.save({
+            ...editTask,
+        });
+        return plainToInstance(ReturnTaskDTO, editedTask);
     }
 
     async delete(user: UserEntity, id: number) {
