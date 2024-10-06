@@ -17,4 +17,24 @@ export class ReturnEventExceptionDTO {
     isFullDay: boolean;
     @ApiProperty()
     mainEventId: number;
+
+    constructor(
+        id: number,
+        isRescheduled: boolean,
+        isCancelled: boolean,
+        originalDate: Date,
+        startDate: Date,
+        endDate: Date,
+        isFullDay: boolean,
+        mainEventId: number,
+    ) {
+        this.id = id;
+        this.isRescheduled = isRescheduled;
+        this.isCancelled = isCancelled;
+        this.originalDate = originalDate;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.isFullDay = isFullDay;
+        this.mainEventId = mainEventId;
+    }
 }

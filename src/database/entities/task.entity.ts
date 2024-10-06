@@ -17,4 +17,18 @@ export class TaskEntity {
 
     @ManyToOne(() => UserEntity)
     user: UserEntity;
+
+    constructor(
+        id: number,
+        name: string,
+        description: string,
+        isDone: boolean,
+        user: UserEntity,
+    ) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.isDone = isDone;
+        this.user = user;
+    }
 }

@@ -20,4 +20,26 @@ export class ReturnEventWithDatesDTO {
     eventDates: string[];
     @ApiProperty({ type: [ReturnEventExceptionDTO], required: false })
     eventExceptions?: ReturnEventExceptionDTO[];
+
+    constructor(
+        id: number,
+        name: string,
+        description: string,
+        startDate: Date,
+        endDate: Date,
+        isFullDay: boolean,
+        createdById: number,
+        eventDates: string[],
+        eventExceptions: ReturnEventExceptionDTO[],
+    ) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.isFullDay = isFullDay;
+        this.createdById = createdById;
+        this.eventDates = eventDates;
+        this.eventExceptions = eventExceptions;
+    }
 }

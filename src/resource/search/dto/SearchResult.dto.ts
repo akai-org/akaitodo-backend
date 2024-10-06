@@ -1,7 +1,7 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { ReturnEventDTO } from 'src/resource/event/dto';
 import { NoteDTO } from 'src/resource/note/dto';
 import { ReturnTaskDTO } from 'src/resource/task/dto';
-import { ApiProperty } from '@nestjs/swagger';
 
 enum ResourceType {
     NOTES = 'notes',
@@ -19,4 +19,14 @@ export class SearchResultDto {
     tasks: ReturnTaskDTO[];
     @ApiProperty()
     events: ReturnEventDTO[];
+
+    constructor(
+        notes: NoteDTO[],
+        tasks: ReturnTaskDTO[],
+        events: ReturnEventDTO[],
+    ) {
+        this.notes = notes;
+        this.tasks = tasks;
+        this.events = events;
+    }
 }

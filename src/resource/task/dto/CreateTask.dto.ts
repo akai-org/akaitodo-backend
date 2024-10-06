@@ -1,5 +1,5 @@
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 export class CreateTaskDTO {
     @IsString()
@@ -15,4 +15,10 @@ export class CreateTaskDTO {
     @IsBoolean()
     @ApiProperty({ required: false })
     isDone?: boolean;
+
+    constructor(name: string, description: string, isDone: boolean) {
+        this.name = name;
+        this.description = description;
+        this.isDone = isDone;
+    }
 }

@@ -13,6 +13,7 @@ const ormConfig = new DataSource({
     migrations: ['src/database/migrations/*{.ts,.js}'],
     migrationsTableName: 'migrations',
     migrationsRun: false,
+    entitySkipConstructor: true,
 });
 
 export default ormConfig;

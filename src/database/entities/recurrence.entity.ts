@@ -26,4 +26,18 @@ export class RecurrenceEntity {
     })
     @JoinColumn({ name: 'event_id' })
     event: EventEntity;
+
+    constructor(
+        recurrenceType: RecurrenceType,
+        separationCount: number,
+        numberOfOccurrences: number,
+        eventId: number,
+        event: EventEntity,
+    ) {
+        this.recurrenceType = recurrenceType;
+        this.separationCount = separationCount;
+        this.numberOfOccurrences = numberOfOccurrences;
+        this.eventId = eventId;
+        this.event = event;
+    }
 }

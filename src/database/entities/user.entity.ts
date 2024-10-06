@@ -24,4 +24,20 @@ export class UserEntity {
         default: UserRole.USER,
     })
     role: UserRole;
+
+    constructor(
+        id: number,
+        username: string,
+        email: string,
+        hash: string,
+        isLocal: boolean,
+        role: UserRole,
+    ) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.hash = hash;
+        this.isLocal = isLocal;
+        this.role = role;
+    }
 }

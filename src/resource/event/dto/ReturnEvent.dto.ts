@@ -23,4 +23,26 @@ export class ReturnEventDTO {
     recurrencePattern?: ReturnEventRecurrenceDTO;
     @ApiProperty({ type: [ReturnEventExceptionDTO] })
     exceptions?: ReturnEventExceptionDTO[];
+
+    constructor(
+        id: number,
+        name: string,
+        description: string,
+        startDate: Date,
+        endDate: Date,
+        isFullDay: boolean,
+        createdById: number,
+        recurrencePattern: ReturnEventRecurrenceDTO,
+        exceptions: ReturnEventExceptionDTO[],
+    ) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.isFullDay = isFullDay;
+        this.createdById = createdById;
+        this.recurrencePattern = recurrencePattern;
+        this.exceptions = exceptions;
+    }
 }
