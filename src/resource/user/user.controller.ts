@@ -2,7 +2,6 @@ import {
     Body,
     Controller,
     Get,
-    NotFoundException,
     Param,
     ParseIntPipe,
     Patch,
@@ -46,8 +45,6 @@ export class UserController {
     @Get(':id')
     @GetUserByIdApi()
     async getUserById(@Param('id', ParseIntPipe) userId: number) {
-        const user = await this.userService.getUserById(userId);
-        if (!user) throw new NotFoundException('User not found');
-        return user;
+        return await this.userService.getUserById(userId);
     }
 }
