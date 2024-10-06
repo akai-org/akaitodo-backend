@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TaskEntity } from 'src/database/entities/task.entity';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { Repository } from 'typeorm';
-import { CreateTaskDTO, EditTaskDTO, ReturnTaskDTO } from './dto';
+import { CreateTaskDTO, EditTaskDTO } from './dto';
 
 @Injectable()
 export class TaskService {
@@ -12,30 +12,24 @@ export class TaskService {
         private readonly taskRepository: Repository<TaskEntity>,
     ) {}
 
-    async fetchById(user: UserEntity, id: number): Promise<TaskEntity | null> {
+    async fetchById(user: UserEntity, id: number) {
         return await this.taskRepository.findOne({
             where: { id, user },
         });
     }
 
-    async fetchByUser(user: UserEntity): Promise<ReturnTaskDTO[]> {
+    async fetchByUser(user: UserEntity) {
         return await this.taskRepository.find({
             where: { user },
         });
     }
 
-    async add(
-        user: UserEntity,
-        createTaskDTO: CreateTaskDTO,
-    ): Promise<ReturnTaskDTO> {
+    async add(user: UserEntity, createTaskDTO: CreateTaskDTO) {
         const newTask = this.taskRepository.create(createTaskDTO);
         return await this.taskRepository.save({ ...newTask, user });
     }
 
-    async edit(
-        user: UserEntity,
-        editTask: EditTaskDTO,
-    ): Promise<ReturnTaskDTO | null> {
+    async edit(user: UserEntity, editTask: EditTaskDTO) {
         const task = await this.taskRepository.findOneBy({
             id: editTask.id,
             user,
@@ -46,7 +40,7 @@ export class TaskService {
         return await this.taskRepository.save({ ...editTask });
     }
 
-    async delete(user: UserEntity, id: number): Promise<boolean> {
+    async delete(user: UserEntity, id: number) {
         const task = await this.taskRepository.findOneBy({
             id,
             user,

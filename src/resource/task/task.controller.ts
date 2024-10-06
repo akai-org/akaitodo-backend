@@ -24,7 +24,7 @@ import {
     GetTaskByIdApi,
     GetUserTasksApi,
 } from 'src/decorators/OpenAPI';
-import { CreateTaskDTO, EditTaskDTO, ReturnTaskDTO } from './dto';
+import { CreateTaskDTO, EditTaskDTO } from './dto';
 import { TaskService } from './task.service';
 
 @UseGuards(JwtGuard)
@@ -36,7 +36,7 @@ export class TaskController {
 
     @Get()
     @GetUserTasksApi()
-    async getUserTasks(@GetUser() user: UserEntity): Promise<ReturnTaskDTO[]> {
+    async getUserTasks(@GetUser() user: UserEntity) {
         return await this.taskService.fetchByUser(user);
     }
 
@@ -45,7 +45,7 @@ export class TaskController {
     async getTaskById(
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
-    ): Promise<ReturnTaskDTO> {
+    ) {
         const task = await this.taskService.fetchById(user, taskId);
         if (!task) {
             throw new NotFoundException('Task not found');
@@ -59,7 +59,7 @@ export class TaskController {
     async addTask(
         @GetUser() user: UserEntity,
         @Body() createTaskDTO: CreateTaskDTO,
-    ): Promise<ReturnTaskDTO> {
+    ) {
         return await this.taskService.add(user, createTaskDTO);
     }
 
@@ -69,7 +69,7 @@ export class TaskController {
         @Param('id') id: number,
         @GetUser() user: UserEntity,
         @Body() editTask: EditTaskDTO,
-    ): Promise<ReturnTaskDTO> {
+    ) {
         if (id != editTask.id) {
             throw new BadRequestException('ID is not valid in URL and body');
         }
@@ -87,7 +87,7 @@ export class TaskController {
     async deleteTask(
         @GetUser() user: UserEntity,
         @Param('id', ParseIntPipe) taskId: number,
-    ): Promise<void> {
+    ) {
         const isTaskRemoved = await this.taskService.delete(user, taskId);
         if (!isTaskRemoved) throw new NotFoundException('Task not found');
         return;

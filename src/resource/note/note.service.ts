@@ -12,21 +12,21 @@ export class NoteService {
         private noteRepository: Repository<NoteEntity>,
     ) {}
 
-    async fetchByUser(user: UserEntity): Promise<NoteDTO[]> {
+    async fetchByUser(user: UserEntity) {
         return this.noteRepository.find({
             relations: ['user'],
             where: { user },
         });
     }
 
-    async add(user: UserEntity, noteDto: NoteDTO): Promise<NoteDTO | null> {
+    async add(user: UserEntity, noteDto: NoteDTO) {
         if (!user) return null;
         const newNote = this.noteRepository.create({ ...noteDto, user });
 
         return this.noteRepository.save(newNote);
     }
 
-    async edit(id: number, noteDto: editNoteDTO): Promise<void> {
+    async edit(id: number, noteDto: editNoteDTO) {
         await this.noteRepository.update({ id }, { ...noteDto });
     }
 }

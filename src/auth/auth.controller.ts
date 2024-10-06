@@ -11,14 +11,14 @@ export class AuthController {
 
     @Post('register')
     @RegisterApi()
-    register(@Body() registerDto: RegisterDTO): Promise<JwtTokenDTO> {
+    register(@Body() registerDto: RegisterDTO) {
         return this.authService.register(registerDto);
     }
 
     @HttpCode(HttpStatus.OK)
     @Post('login')
     @LoginApi()
-    login(@Body() authDto: AuthDTO): Promise<JwtTokenDTO> {
+    login(@Body() authDto: AuthDTO) {
         return this.authService.getAuthByUser(authDto);
     }
 

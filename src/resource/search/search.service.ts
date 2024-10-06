@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { SearchResult } from './dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
+import { EventEntity } from 'src/database/entities/event.entity';
 import { NoteEntity } from 'src/database/entities/notes.entity';
 import { TaskEntity } from 'src/database/entities/task.entity';
-import { EventEntity } from 'src/database/entities/event.entity';
 import { UserEntity } from 'src/database/entities/user.entity';
+import { ILike, Repository } from 'typeorm';
+import { SearchResult } from './dto';
 
 @Injectable()
 export class SearchService {

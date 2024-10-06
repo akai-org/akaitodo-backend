@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { Repository } from 'typeorm';
-import { EditUserDTO, ReturnUserDTO } from './dto';
+import { EditUserDTO } from './dto';
 
 @Injectable()
 export class UserService {
@@ -11,10 +11,7 @@ export class UserService {
         private readonly userRepository: Repository<UserEntity>,
     ) {}
 
-    async editMe(
-        userId: number,
-        editUserDto: EditUserDTO,
-    ): Promise<ReturnUserDTO | null> {
+    async editMe(userId: number, editUserDto: EditUserDTO) {
         const userToUpdate = await this.userRepository.findOneBy({
             id: userId,
         });
@@ -32,7 +29,7 @@ export class UserService {
         return userToUpdate;
     }
 
-    async getUserById(userId: number): Promise<ReturnUserDTO | null> {
+    async getUserById(userId: number) {
         const user = await this.userRepository.findOneBy({ id: userId });
         if (!user) return null;
         delete user.hash;

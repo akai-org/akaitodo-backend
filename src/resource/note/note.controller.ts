@@ -30,16 +30,13 @@ export class NoteController {
 
     @Get()
     @GetUserNotesApi()
-    getUserNotes(@GetUser() user: UserEntity): Promise<NoteDTO[]> {
+    getUserNotes(@GetUser() user: UserEntity) {
         return this.notesService.fetchByUser(user);
     }
 
     @Post()
     @AddNoteApi()
-    async addNote(
-        @GetUser() user: UserEntity,
-        @Body() noteDto: NoteDTO,
-    ): Promise<NoteDTO> {
+    async addNote(@GetUser() user: UserEntity, @Body() noteDto: NoteDTO) {
         const note = await this.notesService.add(user, noteDto);
         if (!note)
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -48,10 +45,7 @@ export class NoteController {
 
     @Patch(':id')
     @EditNoteApi()
-    async editNote(
-        @Param('id') id: number,
-        @Body() noteDto: editNoteDTO,
-    ): Promise<void> {
+    async editNote(@Param('id') id: number, @Body() noteDto: editNoteDTO) {
         return await this.notesService.edit(id, noteDto);
     }
 }

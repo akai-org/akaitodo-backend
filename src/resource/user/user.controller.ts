@@ -14,7 +14,7 @@ import { UserEntity } from 'src/database/entities/user.entity';
 import { ForRole, GetUser } from 'src/decorators';
 import { EditMeApi, GetMeApi, GetUserByIdApi } from 'src/decorators/OpenAPI';
 import { UserRole } from 'src/types';
-import { EditUserDTO, ReturnUserDTO } from './dto';
+import { EditUserDTO } from './dto';
 import { UserRoleGuard } from './guard';
 import { UserService } from './user.service';
 
@@ -27,7 +27,7 @@ export class UserController {
 
     @Get('me')
     @GetMeApi()
-    getMe(@GetUser() user: UserEntity): ReturnUserDTO {
+    getMe(@GetUser() user: UserEntity) {
         delete user.hash;
         return user;
     }
@@ -37,7 +37,7 @@ export class UserController {
     async editMe(
         @GetUser('id') userId: number,
         @Body() editUserDto: EditUserDTO,
-    ): Promise<ReturnUserDTO> {
+    ) {
         const user = await this.userService.editMe(userId, editUserDto);
         if (!user) throw new NotFoundException('User not found');
         return user;
@@ -47,9 +47,7 @@ export class UserController {
     @UseGuards(UserRoleGuard)
     @Get(':id')
     @GetUserByIdApi()
-    async getUserById(
-        @Param('id', ParseIntPipe) userId: number,
-    ): Promise<ReturnUserDTO> {
+    async getUserById(@Param('id', ParseIntPipe) userId: number) {
         const user = await this.userService.getUserById(userId);
         if (!user) throw new NotFoundException('User not found');
         return user;
