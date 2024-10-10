@@ -35,12 +35,15 @@ export class EventService {
     ) {}
 
     async fetchById(eventId: number) {
-        const event = await this.eventRepository.findOne({
-            where: { id: eventId },
-            relations: { recurrencePattern: true },
-        });
-        if (!event) throw new NotFoundException('Event not found');
-        return plainToInstance(ReturnEventDTO, event);
+        return await this.eventRepository
+            .findOneOrFail({
+                where: { id: eventId },
+                relations: { recurrencePattern: true },
+            })
+            .then((event) => plainToInstance(ReturnEventDTO, event))
+            .catch(() => {
+                throw new NotFoundException('Event not found');
+            });
     }
 
     async fetchByUser(userId: number) {
@@ -171,11 +174,16 @@ export class EventService {
     }
 
     async fetchExceptionById(exceptionId: number) {
-        const exception = await this.exceptionRepository.findOneBy({
-            id: exceptionId,
-        });
-        if (!exception) throw new NotFoundException('Exception not found');
-        return plainToInstance(ReturnEventExceptionDTO, exception);
+        return await this.exceptionRepository
+            .findOneByOrFail({
+                id: exceptionId,
+            })
+            .then((exception) =>
+                plainToInstance(ReturnEventExceptionDTO, exception),
+            )
+            .catch(() => {
+                throw new NotFoundException('Exception not found');
+            });
     }
 
     async add(userId: number, eventDto: CreateEventDTO) {
@@ -197,10 +205,13 @@ export class EventService {
     }
 
     async edit(eventId: number, editEventDto: EditEventDTO) {
-        const eventToUpdate = await this.eventRepository.findOne({
-            where: { id: eventId },
-        });
-        if (!eventToUpdate) throw new NotFoundException('Event not found');
+        const eventToUpdate = await this.eventRepository
+            .findOneOrFail({
+                where: { id: eventId },
+            })
+            .catch(() => {
+                throw new NotFoundException('Event not found');
+            });
 
         if (editEventDto.deleteRecurrence) {
             await this.recurrenceRepository.delete({ eventId });
@@ -221,11 +232,13 @@ export class EventService {
         exceptionId: number,
         editExceptionDto: EditEventExceptionDTO,
     ) {
-        const exceptionToUpdate = await this.exceptionRepository.findOneBy({
-            id: exceptionId,
-        });
-        if (!exceptionToUpdate)
-            throw new NotFoundException('Exception not found');
+        const exceptionToUpdate = await this.exceptionRepository
+            .findOneByOrFail({
+                id: exceptionId,
+            })
+            .catch(() => {
+                throw new NotFoundException('Exception not found');
+            });
         this.exceptionRepository.merge(exceptionToUpdate, editExceptionDto);
         await this.eventRepository.update(
             { id: exceptionToUpdate.id },

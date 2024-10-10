@@ -13,10 +13,14 @@ export class UserService {
     ) {}
 
     async editMe(userId: number, editUserDto: EditUserDTO) {
-        const userToUpdate = await this.userRepository.findOneBy({
-            id: userId,
-        });
-        if (!userToUpdate) throw new NotFoundException('User not found');
+        const userToUpdate = await this.userRepository
+            .findOneByOrFail({
+                id: userId,
+            })
+            .catch(() => {
+                throw new NotFoundException('User not found');
+            });
+
         this.userRepository.merge(userToUpdate, editUserDto);
         await this.userRepository.update(
             {
@@ -30,8 +34,11 @@ export class UserService {
     }
 
     async getUserById(userId: number) {
-        const user = await this.userRepository.findOneBy({ id: userId });
-        if (!user) throw new NotFoundException('User not found');
-        return plainToInstance(ReturnUserDTO, user);
+        return await this.userRepository
+            .findOneByOrFail({ id: userId })
+            .then((user) => plainToInstance(ReturnUserDTO, user))
+            .catch(() => {
+                throw new NotFoundException('User not found');
+            });
     }
 }

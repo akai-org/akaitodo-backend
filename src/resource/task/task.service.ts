@@ -14,13 +14,17 @@ export class TaskService {
     ) {}
 
     async fetchById(user: UserEntity, id: number) {
-        const task = await this.taskRepository.findOne({
-            where: { id, user },
-        });
-        if (!task) {
-            throw new NotFoundException('Task not found');
-        }
-        return plainToInstance(ReturnTaskDTO, task);
+        return await this.taskRepository
+            .findOneOrFail({
+                where: {
+                    id,
+                    user,
+                },
+            })
+            .then((task) => plainToInstance(ReturnTaskDTO, task))
+            .catch(() => {
+                throw new NotFoundException('Task not found');
+            });
     }
 
     async fetchByUser(user: UserEntity) {
@@ -40,13 +44,15 @@ export class TaskService {
     }
 
     async edit(user: UserEntity, editTask: EditTaskDTO) {
-        const task = await this.taskRepository.findOneBy({
-            id: editTask.id,
-            user,
-        });
-        if (!task) {
-            throw new NotFoundException('Task not found');
-        }
+        await this.taskRepository
+            .findOneByOrFail({
+                id: editTask.id,
+                user,
+            })
+            .catch(() => {
+                throw new NotFoundException('Task not found');
+            });
+
         const editedTask: TaskEntity = await this.taskRepository.save({
             ...editTask,
         });
