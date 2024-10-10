@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
 import { EventEntity } from 'src/database/entities/event.entity';
 import { EventExceptionEntity } from 'src/database/entities/event.exception.entity';
 import { RecurrenceEntity } from 'src/database/entities/recurrence.entity';
@@ -33,27 +34,27 @@ export class EventService {
         private readonly exceptionRepository: Repository<EventExceptionEntity>,
     ) {}
 
-    async fetchById(eventId: number): Promise<ReturnEventDTO> {
-        const event = await this.eventRepository.findOne({
-            where: { id: eventId },
-            relations: { recurrencePattern: true },
-        });
-        if (!event) throw new NotFoundException('Event not found');
-        return event;
+    async fetchById(eventId: number) {
+        return await this.eventRepository
+            .findOneOrFail({
+                where: { id: eventId },
+                relations: { recurrencePattern: true },
+            })
+            .then((event) => plainToInstance(ReturnEventDTO, event))
+            .catch(() => {
+                throw new NotFoundException('Event not found');
+            });
     }
 
-    async fetchByUser(userId: number): Promise<ReturnEventDTO[]> {
-        return this.eventRepository.find({
+    async fetchByUser(userId: number) {
+        const events = await this.eventRepository.find({
             where: { createdById: userId },
             relations: { recurrencePattern: true, eventExceptions: true },
         });
+        return plainToInstance(ReturnEventDTO, events);
     }
 
-    async fetchBetweenDates(
-        userId: number,
-        startDate: Date,
-        endDate: Date,
-    ): Promise<ReturnEventWithDatesDTO[]> {
+    async fetchBetweenDates(userId: number, startDate: Date, endDate: Date) {
         const toFilter = await this.eventRepository.find({
             where: {
                 createdById: userId,
@@ -80,15 +81,15 @@ export class EventService {
                 if (event.eventExceptions != null) {
                     event.eventExceptions.forEach((exception) => {
                         const rescheduledConditions =
-                            exception.isRescheduled == true &&
-                            exception.startDate <= endDate &&
+                            exception.isRescheduled &&
+                            exception.originalDate <= endDate &&
                             (exception.endDate == null ||
                                 exception.endDate >= startDate);
                         const cancelledConditions =
-                            exception.isCancelled == true &&
+                            exception.isCancelled &&
                             exception.originalDate <= endDate;
                         if (rescheduledConditions || cancelledConditions) {
-                            toReturn.eventExceptions.push(exception);
+                            toReturn.eventExceptions!.push(exception);
                         }
                     });
                 }
@@ -172,48 +173,45 @@ export class EventService {
         );
     }
 
-    async fetchExceptionById(
-        exceptionId: number,
-    ): Promise<ReturnEventExceptionDTO> {
-        const exception = await this.exceptionRepository.findOneBy({
-            id: exceptionId,
-        });
-        if (!exception) throw new NotFoundException('Exception not found');
-        return exception;
+    async fetchExceptionById(exceptionId: number) {
+        return await this.exceptionRepository
+            .findOneByOrFail({
+                id: exceptionId,
+            })
+            .then((exception) =>
+                plainToInstance(ReturnEventExceptionDTO, exception),
+            )
+            .catch(() => {
+                throw new NotFoundException('Exception not found');
+            });
     }
 
-    async add(
-        userId: number,
-        eventDto: CreateEventDTO,
-    ): Promise<ReturnEventDTO> {
+    async add(userId: number, eventDto: CreateEventDTO) {
         const event = this.eventRepository.create({
             ...eventDto,
             createdById: userId,
         });
         await this.eventRepository.insert(event);
-        return event;
+        return plainToInstance(ReturnEventDTO, event);
     }
 
-    async addException(
-        eventId: number,
-        exceptionDto: CreateEventExceptionDTO,
-    ): Promise<ReturnEventExceptionDTO> {
+    async addException(eventId: number, exceptionDto: CreateEventExceptionDTO) {
         const exception = this.exceptionRepository.create({
             ...exceptionDto,
             mainEventId: eventId,
         });
         await this.exceptionRepository.insert(exception);
-        return exception;
+        return plainToInstance(ReturnEventExceptionDTO, exception);
     }
 
-    async edit(
-        eventId: number,
-        editEventDto: EditEventDTO,
-    ): Promise<ReturnEventDTO> {
-        const eventToUpdate = await this.eventRepository.findOne({
-            where: { id: eventId },
-        });
-        if (!eventToUpdate) throw new NotFoundException('Event not found');
+    async edit(eventId: number, editEventDto: EditEventDTO) {
+        const eventToUpdate = await this.eventRepository
+            .findOneOrFail({
+                where: { id: eventId },
+            })
+            .catch(() => {
+                throw new NotFoundException('Event not found');
+            });
 
         if (editEventDto.deleteRecurrence) {
             await this.recurrenceRepository.delete({ eventId });
@@ -221,35 +219,39 @@ export class EventService {
         }
         delete editEventDto.deleteRecurrence;
 
-        editEventDto.recurrencePattern.eventId = eventId;
+        if (editEventDto.recurrencePattern)
+            editEventDto.recurrencePattern.eventId = eventId;
+
         this.eventRepository.merge(eventToUpdate, editEventDto);
         await this.eventRepository.save(eventToUpdate);
 
-        return eventToUpdate;
+        return plainToInstance(ReturnEventDTO, eventToUpdate);
     }
 
     async editException(
         exceptionId: number,
         editExceptionDto: EditEventExceptionDTO,
-    ): Promise<ReturnEventExceptionDTO> {
-        const exceptionToUpdate = await this.exceptionRepository.findOneBy({
-            id: exceptionId,
-        });
-        if (!exceptionToUpdate)
-            throw new NotFoundException('Exception not found');
+    ) {
+        const exceptionToUpdate = await this.exceptionRepository
+            .findOneByOrFail({
+                id: exceptionId,
+            })
+            .catch(() => {
+                throw new NotFoundException('Exception not found');
+            });
         this.exceptionRepository.merge(exceptionToUpdate, editExceptionDto);
         await this.eventRepository.update(
             { id: exceptionToUpdate.id },
             { ...editExceptionDto },
         );
-        return exceptionToUpdate;
+        return plainToInstance(ReturnEventExceptionDTO, exceptionToUpdate);
     }
 
-    async delete(eventId: number): Promise<void> {
+    async delete(eventId: number) {
         await this.eventRepository.delete({ id: eventId });
     }
 
-    async deleteException(exceptionId: number): Promise<void> {
+    async deleteException(exceptionId: number) {
         await this.exceptionRepository.delete({ id: exceptionId });
     }
 }

@@ -5,14 +5,14 @@ import {
     NotFoundException,
     UnauthorizedException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from '../database/entities/user.entity';
-import { QueryFailedError, Repository } from 'typeorm';
-import { AuthDTO, JwtTokenDTO, RegisterDTO } from './dto';
-import * as argon from 'argon2';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as argon from 'argon2';
 import { OAuth2Client, TokenPayload } from 'google-auth-library';
+import { QueryFailedError, Repository } from 'typeorm';
+import { UserEntity } from '../database/entities/user.entity';
+import { AuthDTO, JwtTokenDTO, RegisterDTO } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +24,7 @@ export class AuthService {
         readonly configService: ConfigService,
     ) {}
 
-    async register(registerDto: RegisterDTO): Promise<JwtTokenDTO> {
+    async register(registerDto: RegisterDTO) {
         const hashedPassword = await argon.hash(registerDto.password);
         try {
             const user = this.userRepository.create({
@@ -41,7 +41,7 @@ export class AuthService {
         }
     }
 
-    async registerGoogle(payload: TokenPayload): Promise<JwtTokenDTO> {
+    async registerGoogle(payload: TokenPayload) {
         try {
             const user = this.userRepository.create({
                 username: payload.name,
@@ -57,7 +57,7 @@ export class AuthService {
         }
     }
 
-    async getAuthByUser(authDto: AuthDTO): Promise<JwtTokenDTO> {
+    async getAuthByUser(authDto: AuthDTO) {
         const user = await this.userRepository.findOneBy({
             email: authDto.email,
         });
@@ -72,7 +72,7 @@ export class AuthService {
         return this.signToken(user.id, user.email);
     }
 
-    async signToken(userId: number, email: string): Promise<JwtTokenDTO> {
+    async signToken(userId: number, email: string) {
         const payload = {
             sub: userId,
             email,
@@ -83,12 +83,10 @@ export class AuthService {
             secret: this.configService.get('JWT_SECRET'),
         });
 
-        return {
-            accessToken: token,
-        };
+        return new JwtTokenDTO(token);
     }
 
-    async handleGoogleAuth(googleToken: string): Promise<JwtTokenDTO> {
+    async handleGoogleAuth(googleToken: string) {
         const payload = await this.googleClient
             .verifyIdToken({
                 idToken: googleToken,
@@ -98,6 +96,9 @@ export class AuthService {
             .catch(() => {
                 throw new ForbiddenException();
             });
+
+        if (payload == undefined)
+            throw new ForbiddenException('Invalid Google credentials');
 
         const user = await this.userRepository.findOneBy({
             email: payload.email,

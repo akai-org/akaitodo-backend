@@ -1,6 +1,6 @@
-import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
-import { UserRole } from '../../../types';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+import { UserRole } from 'src/types';
 
 export class EditUserDTO {
     @IsString()

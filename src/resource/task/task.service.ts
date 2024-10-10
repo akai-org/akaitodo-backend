@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToInstance } from 'class-transformer';
 import { TaskEntity } from 'src/database/entities/task.entity';
-import { Repository } from 'typeorm';
-import { EditTaskDTO, ReturnTaskDTO, CreateTaskDTO } from './dto';
 import { UserEntity } from 'src/database/entities/user.entity';
+import { Repository } from 'typeorm';
+import { CreateTaskDTO, EditTaskDTO, ReturnTaskDTO } from './dto';
 
 @Injectable()
 export class TaskService {
@@ -12,41 +13,53 @@ export class TaskService {
         private readonly taskRepository: Repository<TaskEntity>,
     ) {}
 
-    async fetchById(user: UserEntity, id: number): Promise<TaskEntity> {
-        return await this.taskRepository.findOne({
-            where: { id, user },
-        });
+    async fetchById(user: UserEntity, id: number) {
+        return await this.taskRepository
+            .findOneOrFail({
+                where: {
+                    id,
+                    user,
+                },
+            })
+            .then((task) => plainToInstance(ReturnTaskDTO, task))
+            .catch(() => {
+                throw new NotFoundException('Task not found');
+            });
     }
 
-    async fetchByUser(user: UserEntity): Promise<ReturnTaskDTO[]> {
-        return await this.taskRepository.find({
+    async fetchByUser(user: UserEntity) {
+        const tasks = await this.taskRepository.find({
             where: { user },
         });
+        return plainToInstance(ReturnTaskDTO, tasks);
     }
 
-    async add(
-        user: UserEntity,
-        createTaskDTO: CreateTaskDTO,
-    ): Promise<ReturnTaskDTO> {
+    async add(user: UserEntity, createTaskDTO: CreateTaskDTO) {
         const newTask = this.taskRepository.create(createTaskDTO);
-        return await this.taskRepository.save({ ...newTask, user });
-    }
-
-    async edit(
-        user: UserEntity,
-        editTask: EditTaskDTO,
-    ): Promise<ReturnTaskDTO> {
-        const task = await this.taskRepository.findOneBy({
-            id: editTask.id,
+        const addedTask: TaskEntity = await this.taskRepository.save({
+            ...newTask,
             user,
         });
-        if (!task) {
-            throw new NotFoundException('Task not found');
-        }
-        return await this.taskRepository.save({ ...editTask });
+        return plainToInstance(ReturnTaskDTO, addedTask);
     }
 
-    async delete(user: UserEntity, id: number): Promise<boolean> {
+    async edit(user: UserEntity, editTask: EditTaskDTO) {
+        await this.taskRepository
+            .findOneByOrFail({
+                id: editTask.id,
+                user,
+            })
+            .catch(() => {
+                throw new NotFoundException('Task not found');
+            });
+
+        const editedTask: TaskEntity = await this.taskRepository.save({
+            ...editTask,
+        });
+        return plainToInstance(ReturnTaskDTO, editedTask);
+    }
+
+    async delete(user: UserEntity, id: number) {
         const task = await this.taskRepository.findOneBy({
             id,
             user,

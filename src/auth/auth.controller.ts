@@ -1,12 +1,8 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthDTO, JwtTokenDTO, RegisterDTO } from './dto';
 import { ApiTags } from '@nestjs/swagger';
-import {
-    GoogleLoginApi,
-    LoginApi,
-    RegisterApi,
-} from '../decorators/OpenAPI/auth.decorators';
+import { GoogleLoginApi, LoginApi, RegisterApi } from 'src/decorators/OpenAPI';
+import { AuthService } from './auth.service';
+import { AuthDTO, RegisterDTO } from './dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -15,23 +11,21 @@ export class AuthController {
 
     @Post('register')
     @RegisterApi()
-    register(@Body() registerDto: RegisterDTO): Promise<JwtTokenDTO> {
+    register(@Body() registerDto: RegisterDTO) {
         return this.authService.register(registerDto);
     }
 
     @HttpCode(HttpStatus.OK)
     @Post('login')
     @LoginApi()
-    login(@Body() authDto: AuthDTO): Promise<JwtTokenDTO> {
+    login(@Body() authDto: AuthDTO) {
         return this.authService.getAuthByUser(authDto);
     }
 
     @HttpCode(HttpStatus.OK)
     @Post('google/login')
     @GoogleLoginApi()
-    async googleLogin(
-        @Body('gToken') googleToken: string,
-    ): Promise<JwtTokenDTO> {
+    async googleLogin(@Body('gToken') googleToken: string) {
         return this.authService.handleGoogleAuth(googleToken);
     }
 }

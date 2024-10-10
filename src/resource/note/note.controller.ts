@@ -7,17 +7,17 @@ import {
     Post,
     UseGuards,
 } from '@nestjs/common';
-import { NoteService } from './note.service';
-import { editNoteDTO, NoteDTO } from './dto';
-import { JwtGuard } from '../../auth/guard';
-import { GetUser } from '../../decorators';
-import { UserEntity } from 'src/database/entities/user.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtGuard } from 'src/auth/guard';
+import { UserEntity } from 'src/database/entities/user.entity';
+import { GetUser } from 'src/decorators';
 import {
     AddNoteApi,
     EditNoteApi,
-    GetUserNotesApi
-} from '../../decorators/OpenAPI';
+    GetUserNotesApi,
+} from 'src/decorators/OpenAPI';
+import { editNoteDTO, NoteDTO } from './dto';
+import { NoteService } from './note.service';
 
 @UseGuards(JwtGuard)
 @ApiTags('Notes')
@@ -28,19 +28,19 @@ export class NoteController {
 
     @Get()
     @GetUserNotesApi()
-    getUserNotes(@GetUser() user: UserEntity): Promise<NoteDTO[]> {
+    getUserNotes(@GetUser() user: UserEntity) {
         return this.notesService.fetchByUser(user);
     }
 
     @Post()
     @AddNoteApi()
-    addNote(@GetUser() user: UserEntity, @Body() noteDto: NoteDTO): Promise<NoteDTO> {
-        return this.notesService.add(user, noteDto);
+    async addNote(@GetUser() user: UserEntity, @Body() noteDto: NoteDTO) {
+        return await this.notesService.add(user, noteDto);
     }
 
     @Patch(':id')
     @EditNoteApi()
-    editNote(@Param('id') id: number, @Body() noteDto: editNoteDTO): Promise<void> {
-        return this.notesService.edit(id, noteDto);
+    async editNote(@Param('id') id: number, @Body() noteDto: editNoteDTO) {
+        return await this.notesService.edit(id, noteDto);
     }
 }

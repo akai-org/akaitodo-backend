@@ -1,5 +1,5 @@
+import { UserRole } from 'src/types';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { UserRole } from '../../types';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -13,7 +13,7 @@ export class UserEntity {
     email: string;
 
     @Column({ nullable: true })
-    hash: string;
+    hash?: string;
 
     @Column({ type: 'boolean', default: true })
     isLocal: boolean;
