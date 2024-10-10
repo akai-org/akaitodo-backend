@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class BaseUsers1708378303925 implements MigrationInterface {
+export class BaseUsers1728558414569 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
             `INSERT INTO users VALUES(1, "admin", "admin@local.host", "$argon2id$v=19$m=65536,t=3,p=4$VIdKpSJabFpUj4Q5LfsCyQ$+lK9AziRRoT66i2QKRlYSdSUbpQ9onbgmvqiJAfEYWA", true, "ADMIN")`,
