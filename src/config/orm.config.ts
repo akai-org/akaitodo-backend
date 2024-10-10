@@ -1,18 +1,20 @@
 import { DataSource } from 'typeorm';
 
+type LocalDatabaseTypes = 'mysql' | 'postgres' | 'mongodb';
+
 const ormConfig = new DataSource({
-    type: 'mysql',
-    host: process.env.DB_HOSTNAME,
+    type: process.env.DB_TYPE as LocalDatabaseTypes || 'mysql',
+    host: process.env.DB_HOSTNAME || 'localhost',
     port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 3306,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     entities: ['src/database/entities/*.entity{.ts,.js}'],
-    synchronize: process.env.NODE_ENV === 'dev',
-    logging: process.env.NODE_ENV === 'dev',
+    synchronize: false,
+    logging: true,
     migrations: ['src/database/migrations/*{.ts,.js}'],
     migrationsTableName: 'migrations',
-    migrationsRun: false,
+    migrationsRun: true,
     entitySkipConstructor: true,
 });
 

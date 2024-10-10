@@ -1,19 +1,5 @@
-version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    ports:
-      - ${PORT}:${PORT}
-    environment:
-      - PORT=${PORT}
-      - NODE_ENV=${NODE_ENV}
-    volumes:
-      - ./src:/app/src
-  
   mysql:
     image: mysql:8.3.0
     restart: always
@@ -25,3 +11,20 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - MYSQL_USER=${DB_USERNAME}
       - MYSQL_PASSWORD=${DB_PASSWORD}
+
+  app:
+    depends_on:
+      mysql:
+        condition: service_started
+        restart: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      - PORT=${PORT}
+      - NODE_ENV=${NODE_ENV}
+    volumes:
+      - ./src:/app/src
