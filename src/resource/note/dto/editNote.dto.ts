@@ -26,20 +26,4 @@ export class editNoteDTO {
     @IsOptional()
     @ApiProperty({ required: false })
     color?: string;
-
-    constructor(
-        id: number,
-        title: string,
-        body: string,
-        createdAt: Date,
-        icon: string,
-        color: string,
-    ) {
-        this.id = id;
-        this.title = title;
-        this.body = body;
-        this.createdAt = createdAt;
-        this.icon = icon;
-        this.color = color;
-    }
 }

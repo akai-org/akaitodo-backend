@@ -14,14 +14,4 @@ export class ReturnEventRecurrenceDTO {
     @ApiProperty()
     @Expose()
     numberOfOccurrences?: number;
-
-    constructor(
-        recurrenceType: RecurrenceType,
-        separationCount: number,
-        numberOfOccurrences: number | undefined,
-    ) {
-        this.recurrenceType = recurrenceType;
-        this.separationCount = separationCount;
-        this.numberOfOccurrences = numberOfOccurrences;
-    }
 }

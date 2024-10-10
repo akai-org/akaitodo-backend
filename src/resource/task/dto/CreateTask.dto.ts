@@ -15,10 +15,4 @@ export class CreateTaskDTO {
     @IsBoolean()
     @ApiProperty({ required: false })
     isDone?: boolean;
-
-    constructor(name: string, description: string, isDone: boolean) {
-        this.name = name;
-        this.description = description;
-        this.isDone = isDone;
-    }
 }

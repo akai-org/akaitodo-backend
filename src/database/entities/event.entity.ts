@@ -56,30 +56,4 @@ export class EventEntity {
         cascade: true,
     })
     eventExceptions: EventExceptionEntity[];
-
-    constructor(
-        id: number,
-        name: string,
-        description: string | undefined,
-        startDate: Date,
-        endDate: Date | undefined,
-        isFullDay: boolean,
-        createdAt: Date,
-        createdById: number,
-        createdBy: UserEntity,
-        recurrencePattern: RecurrenceEntity | undefined,
-        eventExceptions: EventExceptionEntity[],
-    ) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.isFullDay = isFullDay;
-        this.createdAt = createdAt;
-        this.createdById = createdById;
-        this.createdBy = createdBy;
-        this.recurrencePattern = recurrencePattern;
-        this.eventExceptions = eventExceptions;
-    }
 }

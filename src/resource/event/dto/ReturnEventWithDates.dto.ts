@@ -42,26 +42,4 @@ export class ReturnEventWithDatesDTO {
     @Type(() => ReturnEventRecurrenceDTO)
     @Expose()
     eventExceptions?: ReturnEventExceptionDTO[];
-
-    constructor(
-        id: number,
-        name: string,
-        description: string | undefined,
-        startDate: Date,
-        endDate: Date | undefined,
-        isFullDay: boolean,
-        createdById: number,
-        eventDates: string[],
-        eventExceptions: ReturnEventExceptionDTO[] | undefined,
-    ) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.isFullDay = isFullDay;
-        this.createdById = createdById;
-        this.eventDates = eventDates;
-        this.eventExceptions = eventExceptions;
-    }
 }

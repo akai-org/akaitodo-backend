@@ -23,22 +23,4 @@ export class NoteEntity {
 
     @ManyToOne(() => UserEntity)
     user: UserEntity;
-
-    constructor(
-        id: number,
-        title: string,
-        body: string,
-        createdAt: Date | undefined,
-        icon: string | undefined,
-        color: string,
-        user: UserEntity,
-    ) {
-        this.id = id;
-        this.title = title;
-        this.body = body;
-        this.createdAt = createdAt;
-        this.icon = icon;
-        this.color = color;
-        this.user = user;
-    }
 }

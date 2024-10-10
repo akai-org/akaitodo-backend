@@ -19,14 +19,4 @@ export class SearchResultDto {
     tasks: ReturnTaskDTO[];
     @ApiProperty()
     events: ReturnEventDTO[];
-
-    constructor(
-        notes: NoteDTO[],
-        tasks: ReturnTaskDTO[],
-        events: ReturnEventDTO[],
-    ) {
-        this.notes = notes;
-        this.tasks = tasks;
-        this.events = events;
-    }
 }

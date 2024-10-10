@@ -20,16 +20,4 @@ export class EditTaskDTO {
     @IsBoolean()
     @ApiProperty({ required: false })
     isDone?: boolean;
-
-    constructor(
-        id: number,
-        name: string,
-        description: string,
-        isDone: boolean,
-    ) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.isDone = isDone;
-    }
 }

@@ -38,26 +38,4 @@ export class EventExceptionEntity {
     })
     @JoinColumn({ name: 'event_id' })
     mainEvent: EventEntity;
-
-    constructor(
-        id: number,
-        isRescheduled: boolean,
-        isCancelled: boolean,
-        originalDate: Date,
-        startDate: Date | undefined,
-        endDate: Date | undefined,
-        isFullDay: boolean,
-        mainEventId: number,
-        mainEvent: EventEntity,
-    ) {
-        this.id = id;
-        this.isRescheduled = isRescheduled;
-        this.isCancelled = isCancelled;
-        this.originalDate = originalDate;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.isFullDay = isFullDay;
-        this.mainEventId = mainEventId;
-        this.mainEvent = mainEvent;
-    }
 }

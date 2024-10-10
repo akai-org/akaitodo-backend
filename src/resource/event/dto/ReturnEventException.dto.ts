@@ -33,24 +33,4 @@ export class ReturnEventExceptionDTO {
     @ApiProperty()
     @Expose()
     mainEventId: number;
-
-    constructor(
-        id: number,
-        isRescheduled: boolean,
-        isCancelled: boolean,
-        originalDate: Date,
-        startDate: Date | undefined,
-        endDate: Date | undefined,
-        isFullDay: boolean,
-        mainEventId: number,
-    ) {
-        this.id = id;
-        this.isRescheduled = isRescheduled;
-        this.isCancelled = isCancelled;
-        this.originalDate = originalDate;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.isFullDay = isFullDay;
-        this.mainEventId = mainEventId;
-    }
 }

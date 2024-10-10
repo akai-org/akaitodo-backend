@@ -23,18 +23,4 @@ export class ReturnTaskDTO {
     @ApiProperty({ type: () => UserEntity })
     @Type(() => ReturnUserDTO)
     user: ReturnUserDTO;
-
-    constructor(
-        id: number,
-        name: string,
-        description: string,
-        isDone: boolean,
-        user: UserEntity,
-    ) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.isDone = isDone;
-        this.user = user;
-    }
 }

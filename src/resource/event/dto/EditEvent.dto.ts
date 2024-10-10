@@ -46,22 +46,4 @@ export class EditEventDTO {
     @Type(() => EditEventRecurrenceDTO)
     @ApiProperty({ type: EditEventRecurrenceDTO, required: false })
     recurrencePattern?: EditEventRecurrenceDTO;
-
-    constructor(
-        name: string,
-        description: string,
-        startDate: Date,
-        endDate: Date,
-        isFullDay: boolean,
-        deleteRecurrence: boolean,
-        recurrencePattern: EditEventRecurrenceDTO,
-    ) {
-        this.name = name;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.isFullDay = isFullDay;
-        this.deleteRecurrence = deleteRecurrence;
-        this.recurrencePattern = recurrencePattern;
-    }
 }

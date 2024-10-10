@@ -17,10 +17,4 @@ export class EditUserDTO {
     @IsOptional()
     @ApiProperty({ required: false, enum: UserRole })
     role?: UserRole;
-
-    constructor(username: string, email: string, role: UserRole) {
-        this.username = username;
-        this.email = email;
-        this.role = role;
-    }
 }

@@ -17,14 +17,4 @@ export class CreateEventRecurrenceDTO {
     @IsOptional()
     @ApiProperty({ required: false })
     numberOfOccurrences?: number;
-
-    constructor(
-        recurrenceType: RecurrenceType,
-        separationCount: number,
-        numberOfOccurrences: number,
-    ) {
-        this.recurrenceType = recurrenceType;
-        this.separationCount = separationCount;
-        this.numberOfOccurrences = numberOfOccurrences;
-    }
 }

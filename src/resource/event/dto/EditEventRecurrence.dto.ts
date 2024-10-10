@@ -19,16 +19,4 @@ export class EditEventRecurrenceDTO {
     numberOfOccurrences?: number;
 
     eventId?: number;
-
-    constructor(
-        recurrenceType: RecurrenceType,
-        separationCount: number,
-        numberOfOccurrences: number,
-        eventId: number,
-    ) {
-        this.recurrenceType = recurrenceType;
-        this.separationCount = separationCount;
-        this.numberOfOccurrences = numberOfOccurrences;
-        this.eventId = eventId;
-    }
 }
