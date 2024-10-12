@@ -31,7 +31,7 @@ describe('UserModule', () => {
         );
 
         await app.listen(5000);
-        pactum.request.setBaseUrl('http://localhost:5000/');
+        pactum.request.setBaseUrl('http://localhost:5000');
     });
 
     afterAll(async () => {
@@ -40,20 +40,20 @@ describe('UserModule', () => {
 
     describe('Get me', () => {
         it('Should fail if no token', async () => {
-            await pactum.spec().get('users/me').expectStatus(401);
+            await pactum.spec().get('/users/me').expectStatus(401);
         });
 
         it('Should return correct user', async () => {
             await pactum
                 .spec()
-                .post('auth/login')
+                .post('/auth/login')
                 .withBody(new AuthDTO('admin@local.host', 'admin'))
                 .expectStatus(200)
                 .stores('adminToken', 'accessToken');
 
             await pactum
                 .spec()
-                .get('users/me')
+                .get('/users/me')
                 .withBearerToken('$S{adminToken}')
                 .expectStatus(200)
                 .expectJsonSchema({
@@ -80,13 +80,13 @@ describe('UserModule', () => {
         };
 
         it('Should fail if no token', async () => {
-            await pactum.spec().patch('users/me').expectStatus(401);
+            await pactum.spec().patch('/users/me').expectStatus(401);
         });
 
         it('Should fail if no body', async () => {
             await pactum
                 .spec()
-                .patch('users/me')
+                .patch('/users/me')
                 .withBearerToken('$S{adminToken}')
                 .expectStatus(400);
         });
@@ -94,7 +94,7 @@ describe('UserModule', () => {
         it('Should successfully edit user', async () => {
             await pactum
                 .spec()
-                .patch('users/me')
+                .patch('/users/me')
                 .withBearerToken('$S{adminToken}')
                 .withBody(dto)
                 .expectStatus(200)
@@ -117,13 +117,13 @@ describe('UserModule', () => {
 
     describe('Get User by Id', () => {
         it('Should fail if no token', async () => {
-            await pactum.spec().get('users/2').expectStatus(401);
+            await pactum.spec().get('/users/2').expectStatus(401);
         });
 
         it('Should fail if no user found', async () => {
             await pactum
                 .spec()
-                .get('users/222')
+                .get('/users/222')
                 .withBearerToken('$S{adminToken}')
                 .expectStatus(404);
         });
@@ -131,14 +131,14 @@ describe('UserModule', () => {
         it('Should fail if user is not an admin', async () => {
             await pactum
                 .spec()
-                .post('auth/login')
+                .post('/auth/login')
                 .withBody(new AuthDTO('user@local.host', 'user'))
                 .expectStatus(200)
                 .stores('userToken', 'userToken');
 
             await pactum
                 .spec()
-                .get('users/1')
+                .get('/users/1')
                 .withBearerToken('$S{userToken}')
                 .expectStatus(401);
         });
@@ -146,7 +146,7 @@ describe('UserModule', () => {
         it('Should return correct user', async () => {
             await pactum
                 .spec()
-                .get('users/2')
+                .get('/users/2')
                 .withBearerToken('$S{adminToken}')
                 .expectStatus(200)
                 .expectJsonSchema({

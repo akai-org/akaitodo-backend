@@ -43,6 +43,4 @@ describe('AppModule', () => {
             .expectStatus(200)
             .expectBody('Hello World!');
     });
-
-    it.todo('Should pass');
 });
