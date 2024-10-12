@@ -29,3 +29,16 @@ services:
       - NODE_ENV=${NODE_ENV}
     volumes:
       - ./src:/app/src
+
+  test-mysql:
+    image: mysql:8.3.0
+    restart: always
+    profiles: [test]
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    environment:
+      - MYSQL_HOST=${DB_HOSTNAME}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
