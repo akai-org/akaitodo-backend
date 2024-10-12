@@ -3,6 +3,7 @@ services:
   mysql:
     image: mysql:8.3.0
     restart: always
+    profiles: [frontend, backend]
     ports:
       - ${DB_PORT}:${DB_PORT}
     environment:
@@ -16,11 +17,11 @@ services:
     depends_on:
       mysql:
         condition: service_started
-        restart: true
     build:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    profiles: [frontend]
     ports:
       - ${PORT}:${PORT}
     environment:
