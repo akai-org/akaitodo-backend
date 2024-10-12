@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { EventEntity } from 'src/database/entities/event.entity';
@@ -21,6 +25,7 @@ import {
     MoreThanOrEqual,
     Or,
     Repository,
+    UpdateValuesMissingError,
 } from 'typeorm';
 
 @Injectable()
@@ -240,10 +245,19 @@ export class EventService {
                 throw new NotFoundException('Exception not found');
             });
         this.exceptionRepository.merge(exceptionToUpdate, editExceptionDto);
-        await this.eventRepository.update(
-            { id: exceptionToUpdate.id },
-            { ...editExceptionDto },
-        );
+
+        try {
+            await this.eventRepository.update(
+                { id: exceptionToUpdate.id },
+                { ...editExceptionDto },
+            );
+        } catch (error) {
+            if (error instanceof UpdateValuesMissingError)
+                throw new BadRequestException('Invalid body');
+
+            throw error;
+        }
+
         return plainToInstance(ReturnEventExceptionDTO, exceptionToUpdate);
     }
 

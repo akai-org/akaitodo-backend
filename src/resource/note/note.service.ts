@@ -1,9 +1,14 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    HttpException,
+    HttpStatus,
+    Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { NoteEntity } from 'src/database/entities/notes.entity';
 import { UserEntity } from 'src/database/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateValuesMissingError } from 'typeorm';
 import { editNoteDTO, NoteDTO } from './dto';
 
 @Injectable()
@@ -30,6 +35,13 @@ export class NoteService {
     }
 
     async edit(id: number, noteDto: editNoteDTO) {
-        await this.noteRepository.update({ id }, { ...noteDto });
+        try {
+            await this.noteRepository.update({ id }, { ...noteDto });
+        } catch (error) {
+            if (error instanceof UpdateValuesMissingError)
+                throw new BadRequestException('Invalid body');
+
+            throw error;
+        }
     }
 }

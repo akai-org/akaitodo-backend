@@ -1,8 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToInstance } from 'class-transformer';
 import { UserEntity } from 'src/database/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateValuesMissingError } from 'typeorm';
 import { EditUserDTO, ReturnUserDTO } from './dto';
 
 @Injectable()
@@ -22,14 +26,22 @@ export class UserService {
             });
 
         this.userRepository.merge(userToUpdate, editUserDto);
-        await this.userRepository.update(
-            {
-                id: userId,
-            },
-            {
-                ...editUserDto,
-            },
-        );
+        try {
+            await this.userRepository.update(
+                {
+                    id: userId,
+                },
+                {
+                    ...editUserDto,
+                },
+            );
+        } catch (error) {
+            if (error instanceof UpdateValuesMissingError)
+                throw new BadRequestException('Invalid body');
+
+            throw error;
+        }
+
         return plainToInstance(ReturnUserDTO, userToUpdate);
     }
 
