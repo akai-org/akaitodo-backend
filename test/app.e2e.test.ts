@@ -8,6 +8,7 @@ import { Test } from '@nestjs/testing';
 import * as pactum from 'pactum';
 import { AppModule } from 'src/app.module';
 import { AuthDTO, RegisterDTO } from 'src/auth/dto';
+import { CreateEventDTO, EditEventDTO } from 'src/resource/event/dto';
 import { editNoteDTO } from 'src/resource/note/dto';
 import { CreateTaskDTO, EditTaskDTO } from 'src/resource/task/dto';
 import { EditUserDTO } from 'src/resource/user/dto';
@@ -256,6 +257,20 @@ describe('App e2e test', () => {
                         role: 'ADMIN',
                     });
             });
+
+            it('Should return edited user', async () => {
+                await pactum
+                    .spec()
+                    .get('/users/me')
+                    .withBearerToken('$S{adminToken}')
+                    .expectStatus(200)
+                    .expectJson({
+                        id: 1,
+                        username: 'admin2',
+                        email: 'admin2@local.host',
+                        role: 'ADMIN',
+                    });
+            });
         });
 
         describe('Get User by Id', () => {
@@ -310,7 +325,211 @@ describe('App e2e test', () => {
         });
     });
 
-    describe('Event Module', () => {});
+    describe('Event Module', () => {
+        describe('Add event', () => {
+            const dto: CreateEventDTO = {
+                name: 'event',
+                startDate: new Date(2002, 9, 20),
+                isFullDay: true,
+            };
+
+            it('Should fail if no token', async () => {
+                await pactum.spec().post('/events').expectStatus(401);
+            });
+
+            it('Should fail if no body', async () => {
+                await pactum
+                    .spec()
+                    .post('/events')
+                    .withBearerToken('$S{adminToken}')
+                    .expectStatus(400);
+            });
+
+            it('Should fail if incomplete body', async () => {
+                await pactum
+                    .spec()
+                    .post('/events')
+                    .withBearerToken('$S{adminToken}')
+                    .withBody({ description: 'description' })
+                    .expectStatus(400);
+            });
+
+            it('Should add event', async () => {
+                await pactum
+                    .spec()
+                    .post('/events')
+                    .withBearerToken('$S{adminToken}')
+                    .withBody(dto)
+                    .expectStatus(201)
+                    .expectJsonSchema({
+                        properties: {
+                            id: { type: 'number' },
+                            name: { type: 'string' },
+                            startDate: { type: 'string' },
+                            isFullDay: { type: 'boolean' },
+                            createdById: { type: 'number' },
+                        },
+                    })
+                    .expectJson({
+                        ...dto,
+                        id: 1,
+                        startDate: `${dto.startDate.toISOString()}`,
+                        createdById: 1,
+                    })
+                    .stores('eventDate', 'startDate');
+            });
+        });
+
+        describe('Get User Events', () => {
+            it('Should fail if no token', async () => {
+                await pactum.spec().get('/events').expectStatus(401);
+            });
+
+            it("Should return user's tasks", async () => {
+                await pactum
+                    .spec()
+                    .get('/events')
+                    .withBearerToken('$S{adminToken}')
+                    .expectStatus(200)
+                    .expectJsonSchema({
+                        properties: {
+                            id: { type: 'number' },
+                            name: { type: 'string' },
+                            startDate: { type: 'string' },
+                            isFullDay: { type: 'boolean' },
+                            createdById: { type: 'number' },
+                        },
+                    })
+                    .expectJsonLength(1);
+            });
+        });
+
+        describe('Get Event by id', () => {
+            const dto = {
+                id: 1,
+                name: 'event',
+                startDate: '$S{eventDate}',
+                isFullDay: true,
+                createdById: 1,
+            };
+
+            it('Should fail if no token', async () => {
+                await pactum.spec().get('/events/1').expectStatus(401);
+            });
+
+            it('Should fail if event not found', async () => {
+                await pactum
+                    .spec()
+                    .get('/events/100')
+                    .withBearerToken('$S{adminToken}')
+                    .expectStatus(404);
+            });
+
+            it('Should return event', async () => {
+                await pactum
+                    .spec()
+                    .get('/events/1')
+                    .withBearerToken('$S{adminToken}')
+                    .expectStatus(200)
+                    .expectJsonSchema({
+                        properties: {
+                            id: { type: 'number' },
+                            name: { type: 'string' },
+                            startDate: { type: 'string' },
+                            isFullDay: { type: 'boolean' },
+                            createdById: { type: 'number' },
+                        },
+                    })
+                    .expectJson({
+                        ...dto,
+                        description: null,
+                        endDate: null,
+                        recurrencePattern: null,
+                    });
+            });
+        });
+
+        describe('Edit event', () => {
+            const dto: EditEventDTO = {
+                name: 'event2',
+                isFullDay: false,
+            };
+
+            it('Should fail if no token', async () => {
+                await pactum.spec().patch('/events/1').expectStatus(401);
+            });
+
+            it("Should fail if event doesn't exist", async () => {
+                await pactum
+                    .spec()
+                    .patch('/events/100')
+                    .withBearerToken('$S{adminToken}')
+                    .withBody(dto)
+                    .expectStatus(404);
+            });
+
+            it('Should update event', async () => {
+                await pactum
+                    .spec()
+                    .patch('/events/1')
+                    .withBearerToken('$S{adminToken}')
+                    .withBody(dto)
+                    .expectStatus(200)
+                    .expectJsonSchema({
+                        properties: {
+                            id: { type: 'number' },
+                            name: { type: 'string' },
+                            startDate: { type: 'string' },
+                            isFullDay: { type: 'boolean' },
+                            createdById: { type: 'number' },
+                        },
+                    })
+                    .expectBodyContains(dto.name)
+                    .expectBodyContains(dto.isFullDay);
+            });
+
+            it('Should return updated event', async () => {
+                await pactum
+                    .spec()
+                    .get('/events/1')
+                    .withBearerToken('$S{adminToken}')
+                    .expectStatus(200)
+                    .expectBodyContains(dto.name)
+                    .expectBodyContains(dto.isFullDay);
+            });
+        });
+
+        describe('Delete event', () => {
+            it('Should fail if no token', async () => {
+                await pactum.spec().delete('/events/1').expectStatus(401);
+            });
+
+            it('Should delete event', async () => {
+                await pactum
+                    .spec()
+                    .delete('/events/1')
+                    .withBearerToken('$S{adminToken}')
+                    .expectStatus(204);
+            });
+
+            it("Shouldn't return a deleted task", async () => {
+                await pactum
+                    .spec()
+                    .get('/events/1')
+                    .withBearerToken('$S{adminToken}')
+                    .expectStatus(404);
+            });
+
+            it('Should return 0 events', async () => {
+                await pactum
+                    .spec()
+                    .get('/events')
+                    .withBearerToken('$S{adminToken}')
+                    .expectStatus(200)
+                    .expectJsonLength(0);
+            });
+        });
+    });
 
     describe('Event Recurrence', () => {});
 
@@ -601,6 +820,28 @@ describe('App e2e test', () => {
                     .patch('/tasks/1')
                     .withBearerToken('$S{adminToken}')
                     .withBody(dto)
+                    .expectStatus(200)
+                    .expectJsonSchema({
+                        properties: {
+                            id: { type: 'number' },
+                            name: { type: 'string' },
+                            description: { type: 'string' },
+                            isDone: { type: 'boolean' },
+                        },
+                    })
+                    .expectJson({
+                        id: 1,
+                        name: dto.name,
+                        description: dto.description,
+                        isDone: dto.isDone,
+                    });
+            });
+
+            it('Should return an edited task', async () => {
+                await pactum
+                    .spec()
+                    .get('/tasks/1')
+                    .withBearerToken('$S{adminToken}')
                     .expectStatus(200)
                     .expectJsonSchema({
                         properties: {
