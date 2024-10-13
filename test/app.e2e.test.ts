@@ -8,6 +8,7 @@ import { Test } from '@nestjs/testing';
 import * as pactum from 'pactum';
 import { AppModule } from 'src/app.module';
 import { AuthDTO, RegisterDTO } from 'src/auth/dto';
+import { editNoteDTO } from 'src/resource/note/dto';
 import { CreateTaskDTO, EditTaskDTO } from 'src/resource/task/dto';
 import { EditUserDTO } from 'src/resource/user/dto';
 
@@ -311,7 +312,135 @@ describe('App e2e test', () => {
 
     describe('Event Module', () => {});
 
-    describe('Note Module', () => {});
+    describe('Event Recurrence', () => {});
+
+    describe('Note Module', () => {
+        describe('Add note', () => {
+            const dto = {
+                title: 'Note',
+                body: 'This is a body',
+                icon: 'icon',
+                color: 'black',
+            };
+
+            it('Should fail if no token', async () => {
+                await pactum.spec().post('/notes').expectStatus(401);
+            });
+
+            it('Should fail if no body', async () => {
+                await pactum
+                    .spec()
+                    .post('/notes')
+                    .withBearerToken('$S{adminToken}')
+                    .expectStatus(400);
+            });
+
+            it('Should fail if missing body props', async () => {
+                await pactum
+                    .spec()
+                    .post('/notes')
+                    .withBearerToken('$S{adminToken}')
+                    .withBody({ color: dto.color, icon: dto.icon })
+                    .expectStatus(400);
+            });
+
+            it('Should add a note', async () => {
+                await pactum
+                    .spec()
+                    .post('/notes')
+                    .withBearerToken('$S{adminToken}')
+                    .withBody(dto)
+                    .expectStatus(201)
+                    .expectJsonSchema({
+                        properties: {
+                            id: { type: 'number' },
+                            title: { type: 'string' },
+                            body: { type: 'string' },
+                            createdAt: { type: 'string' },
+                            icon: { type: 'string' },
+                            color: { type: 'string' },
+                        },
+                    })
+                    .expectBodyContains(dto.title)
+                    .expectBodyContains(dto.body)
+                    .expectBodyContains(dto.icon)
+                    .expectBodyContains(dto.color);
+            });
+        });
+
+        describe('Get User Notes', () => {
+            it('Should fail if no token', async () => {
+                await pactum.spec().get('/notes').expectStatus(401);
+            });
+
+            it('Should return user notes', async () => {
+                await pactum
+                    .spec()
+                    .get('/notes')
+                    .withBearerToken('$S{adminToken}')
+                    .expectStatus(200)
+                    .expectJsonSchema({
+                        properties: {
+                            id: { type: 'number' },
+                            title: { type: 'string' },
+                            body: { type: 'string' },
+                            createdAt: { type: 'string' },
+                            icon: { type: 'string' },
+                            color: { type: 'string' },
+                        },
+                    })
+                    .expectJsonLength(1);
+            });
+        });
+
+        describe('Edit note', () => {
+            const dto: editNoteDTO = {
+                title: 'Note2',
+                body: 'This is a body - 2',
+            };
+
+            it('Should fail if no token', async () => {
+                await pactum.spec().patch('/notes/1').expectStatus(401);
+            });
+
+            it('Should fail if no body', async () => {
+                await pactum
+                    .spec()
+                    .patch('/notes/1')
+                    .withBearerToken('$S{adminToken}')
+                    .expectStatus(400);
+            });
+
+            it('Should edit note', async () => {
+                await pactum
+                    .spec()
+                    .patch('/notes/1')
+                    .withBearerToken('$S{adminToken}')
+                    .withBody(dto)
+                    .expectStatus(200);
+            });
+
+            it('Should return correct note', async () => {
+                await pactum
+                    .spec()
+                    .get('/notes')
+                    .withBearerToken('$S{adminToken}')
+                    .expectStatus(200)
+                    .expectJsonSchema({
+                        properties: {
+                            id: { type: 'number' },
+                            title: { type: 'string' },
+                            body: { type: 'string' },
+                            createdAt: { type: 'string' },
+                            icon: { type: 'string' },
+                            color: { type: 'string' },
+                        },
+                    })
+                    .expectBodyContains(dto.title)
+                    .expectBodyContains(dto.body);
+            });
+        });
+    });
 
     describe('Task Module', () => {
         describe('Add task', () => {

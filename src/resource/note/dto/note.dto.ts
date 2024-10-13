@@ -17,8 +17,6 @@ export class NoteDTO {
     @Expose()
     body: string;
 
-    @IsString()
-    @IsOptional()
     @ApiProperty({ required: false })
     @Expose()
     createdAt?: Date;

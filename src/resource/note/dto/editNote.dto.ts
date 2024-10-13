@@ -2,8 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
 export class editNoteDTO {
-    id: number;
-
     @IsString()
     @IsOptional()
     @ApiProperty({ required: false })
