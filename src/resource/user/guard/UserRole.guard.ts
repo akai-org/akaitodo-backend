@@ -12,8 +12,7 @@ export class UserRoleGuard implements CanActivate {
             ROLE_KEY,
             [context.getHandler(), context.getClass()],
         );
-        const isRoleUnspecified: boolean = !requiredRole;
-        if (isRoleUnspecified) return true;
+        if (!requiredRole) return true;
 
         const { user } = context.switchToHttp().getRequest();
         return user.role == requiredRole;

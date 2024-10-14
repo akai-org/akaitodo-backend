@@ -2,6 +2,7 @@ import { applyDecorators } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
     ApiBody,
+    ApiForbiddenResponse,
     ApiNotFoundResponse,
     ApiOkResponse,
     ApiUnauthorizedResponse,
@@ -29,6 +30,7 @@ export function GetUserByIdApi() {
     return applyDecorators(
         ApiOkResponse({ type: ReturnUserDTO }),
         ApiUnauthorizedResponse({ description: 'Unauthorized' }),
+        ApiForbiddenResponse({ description: 'Forbidden resource' }),
         ApiNotFoundResponse({ description: 'User not found' }),
     );
 }

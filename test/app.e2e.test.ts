@@ -292,13 +292,13 @@ describe('App e2e test', () => {
                     .post('/auth/login')
                     .withBody(new AuthDTO('user@local.host', 'user'))
                     .expectStatus(200)
-                    .stores('userToken', 'userToken');
+                    .stores('userToken', 'accessToken');
 
                 await pactum
                     .spec()
                     .get('/users/1')
                     .withBearerToken('$S{userToken}')
-                    .expectStatus(401);
+                    .expectStatus(403);
             });
 
             it('Should return correct user', async () => {
